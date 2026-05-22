@@ -5,10 +5,21 @@
 @push('styles')
 <style>
     .hero-bg {
-        background: linear-gradient(135deg, #1a252f 0%, #2C3E50 60%, #1a252f 100%);
-        position: relative;
-        overflow: hidden;
+        background:
+        linear-gradient(
+            rgba(16,24,32,0.65),
+            rgba(16,24,32,0.78)
+        ),
+        url('/images/Nav_bg.jpg');
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    position: relative;
+    overflow: hidden;
     }
+
     .hero-bg::after {
         content: '';
         position: absolute;
@@ -395,84 +406,191 @@
 </section>
 
 {{-- ═══════════════════════════════════════════
-    MODAL TUTORIAL BENCANA
+    MODAL TUTORIAL BENCANA (FIXED HEIGHT & NEW LAYOUT)
 ════════════════════════════════════════════ --}}
-<div x-data="tutorialModal()"
+
+<div
+    x-data="tutorialModal()"
     x-show="open"
-    x-transition:enter="transition ease-out duration-200"
-    x-transition:enter-start="opacity-0"
-    x-transition:enter-end="opacity-100"
-    x-transition:leave="transition ease-in duration-150"
-    x-transition:leave-start="opacity-100"
-    x-transition:leave-end="opacity-0"
+    x-transition.opacity
+    x-cloak
+
     @open-tutorial.window="openModal($event.detail.bencana)"
-    @keydown.escape.window="open = false"
-    class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-    style="display:none">
+    @keydown.escape.window="closeModal()"
+    @click.self="closeModal()"
 
-    <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl max-h-[85vh] overflow-hidden flex flex-col"
-        @click.stop
-        x-transition:enter="transition ease-out duration-200"
-        x-transition:enter-start="opacity-0 scale-95"
-        x-transition:enter-end="opacity-100 scale-100">
+    x-effect="
+    if(open){
+        document.body.classList.add('overflow-hidden');
+        document.querySelector('nav')?.classList.add('pointer-events-none', '!z-0');
+    } else {
+        document.body.classList.remove('overflow-hidden');
+        document.querySelector('nav')?.classList.remove('pointer-events-none', '!z-0');
+    }
+    "
 
-        {{-- Header --}}
-        <div class="flex items-center justify-between p-6 border-b border-gray-100">
-            <div>
-                <p class="text-xs font-semibold text-siaga uppercase tracking-widest mb-1">Tutorial Bencana</p>
-                <h3 class="font-head font-bold text-navy text-xl" x-text="bencana"></h3>
+    class="modal-superfront p-4 bg-black/70 backdrop-blur-md"
+    :class="open ? '' : '!hidden'"
+>
+
+    {{-- WRAPPER UTAMA --}}
+
+    <div
+    @click.stop
+    class="relative w-full max-w-3xl bg-white rounded-[28px] shadow-[0_25px_80px_rgba(0,0,0,0.35)] flex flex-col h-[620px] overflow-hidden"
+    >
+
+        {{-- CLOSE BUTTON --}}
+        <button
+            @click="closeModal()"
+            class="absolute top-4 right-4 z-50 w-10 h-10 rounded-full bg-white shadow-md border border-gray-200 flex items-center justify-center hover:scale-105 transition-all duration-200"
+        >
+            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+
+        {{-- HEADER --}}
+        <div class="px-6 pt-5 pb-4 border-b border-gray-100 pr-14 shrink-0">
+            <div class="flex flex-wrap items-center gap-2 mb-2">
+                <div class="px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-[10px] font-semibold capitalize">
+                    <span x-text="bencana"></span>
+                </div>
             </div>
-            <button @click="open = false" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors">
-                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
+
+                <template x-if="fase !== 'saat'">
+                    <span>
+                        Tutorial <span class="capitalize" x-text="fase"></span> Bencana
+                    </span>
+                </template>
+            </h2>
+        </div>
+
+        {{-- TAB NAVIGASI --}}
+        <div class="grid grid-cols-3 border-b border-gray-100 shrink-0">
+            <button
+                @click="fase='sebelum'; currentStep=0"
+                :class="fase==='sebelum' ? 'border-b-2 border-siaga text-siaga bg-siaga/5' : 'text-gray-400 hover:bg-gray-50'"
+                class="h-12 text-sm font-semibold transition-all duration-200"
+            >
+                Sebelum
+            </button>
+            <button
+                @click="fase='saat'; currentStep=0"
+                :class="fase==='saat' ? 'border-b-2 border-danger text-danger bg-danger/5' : 'text-gray-400 hover:bg-gray-50'"
+                class="h-12 text-sm font-semibold transition-all duration-200"
+            >
+                Saat
+            </button>
+            <button
+                @click="fase='sesudah'; currentStep=0"
+                :class="fase==='sesudah' ? 'border-b-2 border-safe text-safe bg-safe/5' : 'text-gray-400 hover:bg-gray-50'"
+                class="h-12 text-sm font-semibold transition-all duration-200"
+            >
+                Sesudah
             </button>
         </div>
 
-        {{-- Tab fase --}}
-        <div class="flex border-b border-gray-100">
-            <button @click="fase = 'sebelum'"
-                    :class="fase === 'sebelum' ? 'border-b-2 border-siaga text-siaga' : 'text-gray-400'"
-                    class="flex-1 py-3 text-sm font-semibold transition-colors">Sebelum</button>
-            <button @click="fase = 'saat'"
-                    :class="fase === 'saat' ? 'border-b-2 border-danger text-danger' : 'text-gray-400'"
-                    class="flex-1 py-3 text-sm font-semibold transition-colors">Saat</button>
-            <button @click="fase = 'sesudah'"
-                    :class="fase === 'sesudah' ? 'border-b-2 border-safe text-safe' : 'text-gray-400'"
-                    class="flex-1 py-3 text-sm font-semibold transition-colors">Sesudah</button>
-        </div>
+        {{-- AREA CONTENT --}}
+        <div class="flex-1 overflow-y-auto p-5">
 
-        {{-- Konten step by step --}}
-        <div class="overflow-y-auto flex-1 p-6">
-            <div class="space-y-4">
-                <template x-for="(step, i) in getSteps()" :key="i">
-                    <div class="flex gap-4">
-                        <div class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-sm font-bold text-white"
-                             :class="fase === 'sebelum' ? 'bg-siaga' : fase === 'saat' ? 'bg-danger' : 'bg-safe'"
-                             x-text="i + 1"></div>
-                        <div class="flex-1">
-                            {{-- Placeholder gambar --}}
-                            <div class="img-ph w-full h-32 mb-3 text-xs">
-                                <svg class="w-8 h-8 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                </svg>
-                                <span>Animasi / Gambar Step <span x-text="i + 1"></span></span>
+            {{-- ═════════════════════════════
+                KHUSUS SAAT
+            ═════════════════════════════ --}}
+            <template x-if="fase === 'saat'">
+                <div class="h-full flex flex-col justify-between">
+                    
+                    {{-- HEADER PERTANYAAN --}}
+                    <div class="flex items-center justify-between gap-4 mb-4">
+                        <button @click="prevStep()" class="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center shrink-0 transition">
+                            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                        </button>
+                        
+                        <div class="text-center">
+                            <h3 class="font-head text-base sm:text-lg font-bold text-navy" x-text="currentQuestion() || 'Dimana Posisi Anda?'"></h3>
+                        </div>
+
+                        <button @click="nextStep()" class="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center shrink-0 transition">
+                            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </button>
+                    </div>
+
+                    {{-- DUA KARTU PILIHAN KONDISI (Grid 2 Kolom) --}}
+                    <div class="grid grid-cols-2 gap-4 my-auto">
+                        
+                        <div class="group border border-gray-200 hover:border-danger/40 rounded-2xl p-3 bg-gray-50/50 flex flex-col items-center text-center transition-all duration-300 shadow-sm">
+                            <span class="px-3 py-1 bg-gray-200 text-gray-700 font-bold text-xs rounded-full mb-3 group-hover:bg-danger group-hover:text-white transition-colors">
+                                Luar Ruangan
+                            </span>
+                            <div class="w-full h-[260px] rounded-2xl bg-gray-200 mb-3 overflow-hidden">
+                                <img src="/images/tutorial-gempa.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all">
                             </div>
-                            <p class="text-gray-700 text-sm leading-relaxed" x-text="step"></p>
+                            <p class="font-bold text-xs sm:text-sm text-navy leading-tight">Jauhi Benda Rawan & Tiang</p>
+                        </div>
+
+                        <div class="group border border-gray-200 hover:border-danger/40 rounded-2xl p-3 bg-gray-50/50 flex flex-col items-center text-center transition-all duration-300 shadow-sm">
+                            <span class="px-3 py-1 bg-gray-200 text-gray-700 font-bold text-xs rounded-full mb-3 group-hover:bg-danger group-hover:text-white transition-colors">
+                                Dalam Ruangan
+                            </span>
+                            <div class="w-full h-[260px] rounded-2xl bg-gray-200 mb-3 overflow-hidden">
+                                <img src="/images/tutorial-gempa.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all">
+                            </div>
+                            <p class="font-bold text-xs sm:text-sm text-navy leading-tight">Lindungi Kepala di Bawah Meja</p>
+                        </div>
+
+                    </div>
+
+                    {{-- BOTTOM AREA: FAST ACCESS BUTTONS & DONE --}}
+                    
+
+                        {{-- Fast Access Step Number di Paling Bawah --}}
+                        <div class="flex items-center justify-center gap-1.5 overflow-x-auto py-1">
+                            <template x-for="(item,index) in getSteps()" :key="index">
+                                <button
+                                    @click="currentStep=index"
+                                    :class="currentStep===index ? 'bg-danger text-white shadow-md' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'"
+                                    class="w-7 h-7 rounded-lg text-[11px] font-extrabold transition-all flex items-center justify-center shrink-0"
+                                >
+                                    <template x-if="index === 0">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                                    </template>
+                                    <template x-if="index !== 0">
+                                        <span x-text="index+1"></span>
+                                    </template>
+                                </button>
+                            </template>
                         </div>
                     </div>
-                </template>
-            </div>
-        </div>
 
-        {{-- Footer --}}
-        <div class="p-4 border-t border-gray-100 flex gap-2 justify-end">
-            <a :href="`{{ route('saat') }}`" class="px-4 py-2 bg-danger text-white text-sm font-semibold rounded-full">
-                🚨 Mode Darurat
-            </a>
-            <button @click="open = false" class="px-4 py-2 bg-gray-100 text-gray-600 text-sm font-semibold rounded-full hover:bg-gray-200">
-                Tutup
-            </button>
+                </div>
+            </template>
+
+            {{-- ═════════════════════════════
+                SEBELUM & SESUDAH 
+            ═════════════════════════════ --}}
+            <template x-if="fase !== 'saat'">
+                <div class="space-y-5">
+                    <template x-for="(step, i) in getSteps()" :key="i">
+                        <div class="flex gap-3.5 items-start">
+                            {{-- NUMBER BADGE --}}
+                            <div
+                                class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold text-white shadow-sm"
+                                :class="fase === 'sebelum' ? 'bg-siaga' : 'bg-safe'"
+                                x-text="i + 1"
+                            ></div>
+
+                            {{-- CONTENT STEP --}}
+                            <div class="flex-1">
+                              <div class="rounded-xl overflow-hidden h-44 bg-gray-100 mb-3 border border-gray-100 shadow-sm">
+                                    <img src="/images/tutorial-gempa.jpg" alt="Fase Image" class="w-full h-full object-cover">
+                                </div>
+                                <p class="text-gray-700 leading-relaxed text-xs sm:text-sm" x-text="step"></p>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+
         </div>
     </div>
 </div>
@@ -507,51 +625,85 @@
 
     // Alpine component tutorial modal
     function tutorialModal() {
-        return {
-            open: false,
-            bencana: '',
-            fase: 'sebelum',
+    return {
+        open: false,
+        bencana: '',
+        fase: 'saat',
+        currentStep: 0,
 
-            openModal(nama) {
-                this.bencana = nama;
-                this.fase = 'sebelum';
-                this.open = true;
-            },
+        openModal(nama) {
+            this.bencana = nama;
+            this.fase = 'saat';
+            this.currentStep = 0;
+            this.open = true;
 
-            // Data steps — nanti bisa diambil dari API/blade
-            steps: {
-                'Gempa Bumi': {
-                    sebelum: [
-                        'Identifikasi benda-benda yang rawan jatuh di sekitar rumah (lemari, foto, lampu gantung) dan amankan.',
-                        'Tentukan titik kumpul keluarga di luar ruangan yang jauh dari gedung tinggi.',
-                        'Siapkan tas siaga dengan dokumen penting, air, dan P3K.',
-                        'Pelajari cara mematikan gas, listrik, dan air secara manual.',
-                        'Latih anggota keluarga dengan simulasi gempa secara rutin.',
-                    ],
-                    saat: [
-                        'DROP — Jatuhkan diri ke lantai sebelum gempa menjatuhkanmu.',
-                        'COVER — Berlindunglah di bawah meja kokoh atau lindungi kepala dengan tangan.',
-                        'HOLD ON — Pegang erat tempat berlindungmu hingga guncangan berhenti.',
-                        'Jauhi jendela, kaca, dan benda yang bisa jatuh.',
-                        'Jika di luar, jauhi gedung, pohon, dan tiang listrik. Berjongkok di tanah terbuka.',
-                    ],
-                    sesudah: [
-                        'Periksa diri dan orang sekitar dari cedera sebelum bergerak.',
-                        'Waspada gempa susulan — segera ke area terbuka yang aman.',
-                        'Periksa kebocoran gas (cium bau), jangan nyalakan korek atau listrik.',
-                        'Dokumentasikan kerusakan untuk keperluan asuransi dan laporan.',
-                        'Ikuti informasi resmi dari BMKG dan BNPB untuk update kondisi.',
-                    ],
-                },
-            },
+            document.body.classList.add('overflow-hidden');
+        },
 
-            getSteps() {
-                return this.steps[this.bencana]?.[this.fase] ?? [
-                    'Konten untuk bencana ini sedang dalam penyusunan.',
-                    'Pantau terus pembaruan SiagaInd untuk informasi terbaru.',
-                ];
-            },
-        };
+        closeModal() {
+            this.open = false;
+
+            document.body.classList.remove('overflow-hidden');
+        },
+
+        steps: {
+            'Gempa Bumi': {
+
+                sebelum: [
+                    'Identifikasi benda yang rawan jatuh dan amankan.',
+                    'Siapkan tas siaga dan dokumen penting.',
+                    'Latih simulasi evakuasi keluarga.'
+                ],
+
+                saat: [
+                    {
+                        question: 'Apa yang harus dilakukan saat guncangan pertama terasa?',
+                        description: 'Segera jatuhkan badan ke lantai agar tidak kehilangan keseimbangan akibat getaran.'
+                    },
+
+                    {
+                        question: 'Dimana tempat paling aman saat gempa berlangsung?',
+                        description: 'Berlindung di bawah meja kokoh atau lindungi kepala menggunakan tangan dan jauhi kaca.'
+                    },
+
+                    {
+                        question: 'Apa yang harus dilakukan setelah guncangan berhenti?',
+                        description: 'Keluar menuju area terbuka dengan tenang dan hindari bangunan, tiang, atau kabel listrik.'
+                    }
+                ],
+
+                sesudah: [
+                    'Periksa kondisi diri dan keluarga.',
+                    'Waspada gempa susulan.',
+                    'Ikuti informasi resmi dari BMKG dan BNPB.'
+                ]
+            }
+        },
+
+        getSteps() {
+            return this.steps[this.bencana]?.[this.fase] ?? [];
+        },
+
+        currentQuestion() {
+            return this.getSteps()[this.currentStep]?.question ?? '';
+        },
+
+        currentDescription() {
+            return this.getSteps()[this.currentStep]?.description ?? '';
+        },
+
+        nextStep() {
+            if (this.currentStep < this.getSteps().length - 1) {
+                this.currentStep++;
+            }
+        },
+
+        prevStep() {
+            if (this.currentStep > 0) {
+                this.currentStep--;
+            }
+        }
     }
+}
 </script>
 @endpush
