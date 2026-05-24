@@ -23,7 +23,18 @@ class TasItemController extends Controller
         $tas = TasSiaga::findOrFail($data['tas_id']);
         abort_if($tas->session_id !== $request->session()->getId(), 403);
 
-        $item = TasItem::create($data);
+        // Mencegah duplikasi item yang sama di dalam satu tas
+        $item = TasItem::updateOrCreate(
+            [
+                'tas_id'    => $data['tas_id'],
+                'nama_item' => $data['nama_item']
+            ],
+            [
+                'zona'      => $data['zona'],
+                'jumlah'    => $data['jumlah'] ?? 1,
+                'satuan'    => $data['satuan'] ?? 'pcs'
+            ]
+        );
 
         return response()->json(['success' => true, 'item' => $item]);
     }
@@ -36,7 +47,7 @@ class TasItemController extends Controller
         ]);
 
         // Pastikan item milik session ini
-        abort_if($tasItem->tas->session_id !== $request->session()->getId(), 403);
+        abort_if(!$tasItem->tas || $tasItem->tas->session_id !== $request->session()->getId(), 403);
 
         $tasItem->update(['zona' => $data['zona']]);
 
@@ -46,7 +57,8 @@ class TasItemController extends Controller
     /** Hapus item */
     public function destroy(Request $request, TasItem $tasItem)
     {
-        abort_if($tasItem->tas->session_id !== $request->session()->getId(), 403);
+        // Pastikan item milik session ini
+        abort_if(!$tasItem->tas || $tasItem->tas->session_id !== $request->session()->getId(), 403);
 
         $tasItem->delete();
 

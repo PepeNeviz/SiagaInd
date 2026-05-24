@@ -23,51 +23,82 @@
 .tas-tab{white-space:nowrap;transition:all .2s}
 .tas-tab.active{background:#2C3E50;color:#fff;border-color:#2C3E50}
 .slim-scroll::-webkit-scrollbar{height:0}
-.icard{border:.5px solid #e5e7eb;border-radius:12px;padding:8px 6px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:grab;background:#fff;transition:opacity .2s}
+
+.icard {
+  border: .5px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 8px 6px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: grab;
+  background: #fff;
+  transition: opacity .2s;
+  
+  /* KUNCI PERBAIKAN MOBILE DRAG: */
+  touch-action: none !important; 
+  user-select: none !important;
+  -webkit-user-select: none;
+}
+
 .icard:active{cursor:grabbing}
-.icard.used{opacity:.32;cursor:default;pointer-events:none}
+
+.icard.used {
+  opacity: .32;
+  cursor: default;
+  pointer-events: auto; /* Pastikan bernilai auto agar delegeted click JS tetap mendeteksi kartu */
+}
+
 .zdot{width:6px;height:6px;border-radius:50%}
 .da{background:#C0392B}.db{background:#E67E22}.dc{background:#27AE60}
 .zona-bar{height:5px;border-radius:3px;background:#e5e7eb;overflow:hidden;flex:1;margin:0 8px}
 .zona-bar-fill{height:100%;border-radius:3px;transition:width .3s}
-#drag-ghost{position:fixed;pointer-events:none;z-index:9999;display:none;transform:translate(-50%,-50%);opacity:.82}
+
+#drag-ghost {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99999;
+  display: none;
+  left: 0;
+  top: 0;
+}
+
 .dim-input{width:64px;padding:4px 8px;border:1px solid #e5e7eb;border-radius:8px;font-size:12px;text-align:center;outline:none}
 .dim-input:focus{border-color:#2C3E50}
 @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-            animation: fadeIn 0.4s ease forwards;
-        }
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+    animation: fadeIn 0.4s ease forwards;
+}
 </style>
 @endpush
 
 @section('content')
-<div x-data="tasSiaga()" x-init="init()" class="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+<div x-data="tasSiaga" class="max-w-5xl mx-auto px-4 sm:px-6 py-10">
 
-  <body class="bg-gray-50 min-h-screen p-8 flex flex-col items-center justify-between font-sans">
+  {{-- HEADER BENCANA --}}
+  <div class="max-w-5xl w-full flex flex-col gap-12 my-10">
+      <div class="flex flex-wrap justify-center gap-4" id="category-buttons">
+          <button data-category="gempa" class="category-btn bg-gray-800 text-white font-medium py-3 px-6 rounded-xl transition duration-200">Gempa Bumi</button>
+          <button data-category="banjir" class="category-btn bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-3 px-6 rounded-xl transition duration-200">Banjir</button>
+          <button data-category="longsor" class="category-btn bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-3 px-6 rounded-xl transition duration-200">Longsor</button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="content-grid"></div>
+  </div>
 
-    <div class="max-w-5xl w-full flex flex-col gap-12 my-20">
-        
-        <div class="flex flex-wrap justify-center gap-4" id="category-buttons">
-            <button data-category="gempa" class="category-btn bg-gray-800 text-white font-medium py-3 px-6 rounded-xl transition duration-200">Gempa Bumi</button>
-            <button data-category="banjir" class="category-btn bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-3 px-6 rounded-xl transition duration-200">Banjir</button>
-            <button data-category="longsor" class="category-btn bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-3 px-6 rounded-xl transition duration-200">Longsor</button>
-        </div>
+  <hr class="border-gray-200 my-10">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="content-grid">
-            </div>
-    </div>
-
-  {{-- HEADER --}}
+  {{-- HEADER TAS --}}
   <div class="mb-6">
     <span class="inline-block px-3 py-1 bg-orange-100 text-orange-600 text-xs font-bold rounded-full uppercase tracking-widest mb-3">Sebelum Bencana</span>
     <h1 class="font-head text-4xl font-extrabold text-navy">Tas Siaga</h1>
     <p class="text-gray-500 mt-1 text-sm">Susun perlengkapan darurat sesuai prioritas akses.</p>
   </div>
 
-  {{-- TABS --}}
+  {{-- TABS SELEKTOR TAS --}}
   <div class="flex items-center gap-2 mb-6">
     <div class="flex gap-2 overflow-x-auto slim-scroll flex-1 pb-1">
       <template x-for="tas in semuaTas" :key="tas.id">
@@ -87,13 +118,13 @@
     </button>
   </div>
 
+  {{-- WORKSPACE UTAMA --}}
   <template x-if="activeTas">
     <div class="grid lg:grid-cols-2 gap-8 items-start">
 
-      {{-- KOLOM KIRI --}}
+      {{-- KOLOM KIRI: VISUALISASI TAS --}}
       <div class="space-y-4">
-
-        {{-- Kategori --}}
+        {{-- Kategori Umur --}}
         <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-2">
           <p class="font-head font-semibold text-navy text-sm">Kategori</p>
           <div class="grid grid-cols-4 gap-1.5">
@@ -107,7 +138,7 @@
           </div>
         </div>
 
-        {{-- Dimensi tas (editable) --}}
+        {{-- Dimensi Input --}}
         <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-3">
           <div class="flex items-center justify-between">
             <p class="font-head font-semibold text-navy text-sm">Dimensi Tas</p>
@@ -137,14 +168,14 @@
           <p class="text-xs text-gray-400">Mengubah dimensi akan mereset isi tas (skala berubah)</p>
         </div>
 
-        {{-- Info dimensi real-time --}}
+        {{-- Info Skala Realtime --}}
         <div class="bg-navy/5 rounded-xl px-4 py-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-navy font-medium">
           <span>📐 Tas: <strong x-text="bagCm.p + ' × ' + bagCm.t + ' cm'"></strong></span>
           <span>📦 Zona: <strong x-text="bagCm.p + ' × ' + bagCm.zh + ' cm'"></strong> per area</span>
-          <span class="text-gray-400 font-normal">skala: <span x-text="Math.round(pxPerCm*10)/10 + ' px/cm'"></span></span>
+          <span class="text-gray-400 font-normal">skala: <span x-text="pxPerCm + ' px/cm'"></span></span>
         </div>
 
-        {{-- TAS VISUAL --}}
+        {{-- Kanvas SVG Tas --}}
         <div class="flex flex-col items-center">
           <div id="bag-wrap">
             <svg id="bag-svg" viewBox="0 0 260 340" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -173,7 +204,7 @@
             </div>
           </div>
 
-          {{-- Zona stats --}}
+          {{-- Progress Bar Kapasitas Zona --}}
           <div class="w-full mt-3 space-y-1.5">
             <template x-for="z in zonaList" :key="z.key">
               <div class="flex items-center text-xs">
@@ -185,7 +216,7 @@
             </template>
           </div>
 
-          {{-- Tombol rapikan --}}
+          {{-- Kontrol Layout Otomatis --}}
           <div class="flex gap-2 mt-3 flex-wrap justify-center">
             <button @click="sortAll()" class="px-3 py-1.5 text-xs font-semibold border border-gray-200 rounded-full hover:bg-gray-50 transition-colors">✦ Rapikan Semua</button>
             <button @click="sortZona('sangat_penting')" class="px-3 py-1.5 text-xs font-semibold border border-red-200 text-red-600 rounded-full hover:bg-red-50">🔴 Atas</button>
@@ -196,7 +227,7 @@
         </div>
       </div>
 
-      {{-- KOLOM KANAN: Daftar Item --}}
+      {{-- KOLOM KANAN: DAFTAR ELEMEN ITEM --}}
       <div class="space-y-3">
         <div class="flex items-center justify-between">
           <h3 class="font-head font-bold text-navy text-lg">Daftar Item</h3>
@@ -209,40 +240,34 @@
         </div>
 
         <div class="grid grid-cols-3 sm:grid-cols-4 gap-3" id="item-grid-blade">
-          <template x-for="item in filteredRekomendasi" :key="item.id">
-            <div :data-item-id="item.id"
-                 :data-rotated="rotatedIds.includes(item.id) ? '1' : '0'"
-                 :class="{'used': usedIds.includes(item.id)}"
-                 class="icard relative">
+  <template x-for="item in filteredRekomendasi" :key="item.id">
+    <div :data-item-id="item.id"
+         :data-rotated="rotatedIds.includes(item.id) ? '1' : '0'"
+         :class="{'used': usedIds.includes(item.id)}"
+         draggable="false"
+         class="icard relative select-none">
 
-              {{-- Tombol rotate --}}
-              <button
-                x-show="!usedIds.includes(item.id)"
-                @click.stop="toggleRotate(item.id)"
-                :class="rotatedIds.includes(item.id) ? 'bg-orange-100 text-orange-500' : 'bg-gray-100 text-gray-400'"
-                class="absolute top-1.5 right-1.5 w-5 h-5 rounded-full flex items-center justify-center text-xs hover:opacity-80 transition-all"
-                title="Rotate item">
-                🔄
-              </button>
+      {{-- Rotate Button --}}
+      <button x-show="!usedIds.includes(item.id)"
+        @click.stop="toggleRotate(item.id)"
+        :class="rotatedIds.includes(item.id) ? 'bg-orange-100 text-orange-500' : 'bg-gray-100 text-gray-400'"
+        class="absolute top-1.5 right-1.5 w-5 h-5 rounded-full flex items-center justify-center text-xs hover:opacity-80 transition-all"
+        title="Rotate item">
+        🔄
+      </button>
 
-              {{-- Preview ukuran relatif --}}
-              <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden relative">
-                {{-- Box preview sesuai orientasi --}}
-                <div :style="getPreviewStyle(item)"
-                     class="rounded-sm opacity-60 border border-gray-300 bg-gray-300 transition-all duration-200">
-                </div>
-              </div>
+      {{-- Dimensi Mini Preview (Tambahkan draggable="false" pada gambarnya juga) --}}
+      <div draggable="false" class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden relative">
+        <div :style="getPreviewStyle(item)" class="rounded-sm opacity-60 border border-gray-300 bg-gray-300 transition-all duration-200"></div>
+      </div>
 
-              <p class="text-xs font-semibold text-navy text-center leading-tight" x-text="item.nama_item"></p>
-
-              {{-- Dimensi hint --}}
-              <span class="text-xs text-gray-400" x-text="getDimHint(item)"></span>
-
-              <span class="zdot" :class="item.zona_saran==='sangat_penting'?'da':item.zona_saran==='penting'?'db':'dc'"></span>
-              <span x-show="usedIds.includes(item.id)" class="text-xs text-gray-400">✓ Sudah</span>
-            </div>
-          </template>
-        </div>
+      <p class="text-xs font-semibold text-navy text-center leading-tight" x-text="item.nama_item"></p>
+      <span class="text-xs text-gray-400" x-text="getDimHint(item)"></span>
+      <span class="zdot" :class="item.zona_saran==='sangat_penting'?'da':item.zona_saran==='penting'?'db':'dc'"></span>
+      <span x-show="usedIds.includes(item.id)" class="text-xs text-gray-400">✓ Sudah</span>
+    </div>
+  </template>
+</div>
 
         <p class="text-xs text-gray-400 text-center">
           🔴 Sangat penting &nbsp;·&nbsp; 🟠 Penting &nbsp;·&nbsp; 🟢 Cukup penting<br>
@@ -260,7 +285,7 @@
     </div>
   </template>
 
-  {{-- EMPTY STATE --}}
+  {{-- EMPTY STATE TAS --}}
   <template x-if="!activeTas">
     <div class="text-center py-24">
       <div class="text-7xl mb-4">🎒</div>
@@ -305,44 +330,31 @@
             </template>
           </div>
         </div>
-
-        {{-- Input dimensi --}}
         <div>
-          <label class="block text-sm font-semibold text-navy mb-1">
-            Dimensi Tas <span class="text-gray-400 font-normal text-xs">(cm) — Liter otomatis dihitung</span>
-          </label>
+          <label class="block text-sm font-semibold text-navy mb-1">Dimensi Tas <span class="text-gray-400 font-normal text-xs">(cm)</span></label>
           <div class="flex items-center gap-2">
             <div class="flex-1">
               <p class="text-xs text-gray-400 text-center mb-1">Panjang</p>
-              <input type="number" x-model="$store.tasBuat.form.dim_p" @input="$store.tasBuat.hitungLiter()"
-                     placeholder="cm" min="1" max="200" step="0.5"
-                     class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-navy text-center"/>
+              <input type="number" x-model="$store.tasBuat.form.dim_p" @input="$store.tasBuat.hitungLiter()" placeholder="cm" min="1" max="200" step="0.5" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm text-center focus:outline-none focus:border-navy"/>
             </div>
             <span class="text-gray-300 mt-4">×</span>
             <div class="flex-1">
               <p class="text-xs text-gray-400 text-center mb-1">Lebar</p>
-              <input type="number" x-model="$store.tasBuat.form.dim_l" @input="$store.tasBuat.hitungLiter()"
-                     placeholder="cm" min="1" max="200" step="0.5"
-                     class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-navy text-center"/>
+              <input type="number" x-model="$store.tasBuat.form.dim_l" @input="$store.tasBuat.hitungLiter()" placeholder="cm" min="1" max="200" step="0.5" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm text-center focus:outline-none focus:border-navy"/>
             </div>
             <span class="text-gray-300 mt-4">×</span>
             <div class="flex-1">
               <p class="text-xs text-gray-400 text-center mb-1">Tinggi</p>
-              <input type="number" x-model="$store.tasBuat.form.dim_t" @input="$store.tasBuat.hitungLiter()"
-                     placeholder="cm" min="1" max="200" step="0.5"
-                     class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-navy text-center"/>
+              <input type="number" x-model="$store.tasBuat.form.dim_t" @input="$store.tasBuat.hitungLiter()" placeholder="cm" min="1" max="200" step="0.5" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm text-center focus:outline-none focus:border-navy"/>
             </div>
           </div>
-          {{-- Hasil liter --}}
           <div x-show="$store.tasBuat.form.liter" class="mt-2 bg-navy/5 rounded-xl px-3 py-2 flex items-center justify-between">
             <span class="text-xs text-gray-500">Kapasitas:</span>
             <span class="font-head font-bold text-navy text-sm" x-text="$store.tasBuat.form.liter + ' Liter'"></span>
           </div>
-          {{-- Atau input manual --}}
           <div class="mt-2">
             <p class="text-xs text-gray-400 mb-1">Atau input liter langsung:</p>
-            <input type="number" x-model="$store.tasBuat.form.liter" placeholder="Liter" min="1" max="500" step="0.1"
-                   class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-navy"/>
+            <input type="number" x-model="$store.tasBuat.form.liter" placeholder="Liter" min="1" max="500" step="0.1" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-navy"/>
           </div>
         </div>
       </div>
@@ -353,140 +365,120 @@
     </form>
   </div>
 </div>
-
 @endsection
 
 @push('scripts')
 <script>
+// ==========================================
+// 1. SERVICE WORKER PWA CODES
+// ==========================================
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('PWA Tas Siaga: Service Worker Berhasil Terdaftar! 😎', reg.scope))
+            .catch(err => console.error('PWA Tas Siaga: Gagal daftar Service Worker 😢', err));
+    });
+}
 
-// 1. Data konten untuk masing-masing kategori bencana
-        const bencanaData = {
-            gempa: [
-                "Mengenali Gempa Bumi serta memastikan struktur dan lokasi rumah aman dari risiko dan likuefaksi melalui evaluasi serta renovasi bangunan agar lebih tahan terhadap bahaya Gempa Bumi.",
-                "Memahami lokasi pintu, lift, dan tangga darurat untuk mencari tempat aman saat gempabumi serta mempelajari P3K, penggunaan alat pemadam kebakaran, dan mencatat nomor telepon penting untuk keadaan darurat.",
-                "Pastikan perabotan seperti lemari dan kabinet menempel pada dinding agar tidak roboh saat gempabumi lalu simpan bahan mudah terbakar di tempat aman yang tidak mudah pecah serta selalu matikan air gas dan listrik ketika tidak digunakan.",
-                "Letakkan benda-benda berat di bagian bawah dan pastikan benda yang tergantung seperti lampu memiliki kestabilan yang baik agar tidak jatuh saat terjadi Gempa Bumi."
-            ],
-            banjir: [
-                "Simpan dokumen-dokumen penting di dalam wadah kedap air dan letakkan di area rumah yang paling tinggi atau aman dari jangkauan air.",
-                "Pantau informasi prakiraan cuaca dan tinggi muka air secara berkala melalui kanal resmi BMKG atau BPBD setempat.",
-                "Matikan jaringan listrik dan cabut seluruh peralatan elektronik dari stopkontak saat air mulai meninggi untuk menghindari risiko kesetrum.",
-                "Siapkan tas siaga bencana yang berisi makanan siap saji, air minum, obat-obatan, dan lampu senter untuk evakuasi mandiri.",
-                "Scan dan simpan salinan digital dokumen penting seperti KTP KK ijazah sertifikat rumah buku tabungan dan surat berharga lainnya ke dalam penyimpanan online atau perangkat cadangan agar tetap aman dan mudah diakses apabila dokumen asli rusak atau hilang akibat banjir."
-            ],
-            longsor: [
-                "Hindari membangun rumah atau infrastruktur di bawah tebing curam atau di area lereng yang tidak memiliki pohon penahan.",
-                "Waspadai munculnya retakan baru di tanah, penurunan tanah mendadak, atau pohon yang tiba-tiba miring setelah hujan lebat.",
-                "Lakukan penghijauan dengan menanam pohon berakar dalam (seperti vetiver atau bambu) untuk memperkuat struktur tanah di area lereng.",
-                "Segera lakukan evakuasi ke zona aman jika terdengar suara gemuruh dari arah perbukitan setelah hujan turun berhari-hari."
-            ]
-        };
+// ==========================================
+// 2. DATA EDUKASI BENCANA & BANNER BUKAN ALPINE
+// ==========================================
+const bencanaData = {
+    gempa: [
+        "Mengenali Gempa Bumi serta memastikan struktur dan lokasi rumah aman dari risiko dan likuefaksi melalui evaluasi serta renovasi bangunan agar lebih tahan terhadap bahaya Gempa Bumi.",
+        "Memahami lokasi pintu, lift, dan tangga darurat untuk mencari tempat aman saat gempabumi serta mempelajari P3K, penggunaan alat pemadam kebakaran, dan mencatat nomor telepon penting untuk keadaan darurat.",
+        "Pastikan perabotan seperti lemari dan kabinet menempel pada dinding agar tidak roboh saat gempabumi lalu simpan bahan mudah terbakar di tempat aman yang tidak mudah pecah serta selalu matikan air gas dan listrik ketika tidak digunakan.",
+        "Letakkan benda-benda berat di bagian bawah dan pastikan benda yang tergantung seperti lampu memiliki kestabilan yang baik agar tidak jatuh saat terjadi Gempa Bumi."
+    ],
+    banjir: [
+        "Simpan dokumen-dokumen penting di dalam wadah kedap air dan letakkan di area rumah yang paling tinggi atau aman dari jangkauan air.",
+        "Pantau informasi prakiraan cuaca dan tinggi muka air secara berkala melalui kanal resmi BMKG atau BPBD setempat.",
+        "Matikan jaringan listrik dan cabut seluruh peralatan elektronik dari stopkontak saat air mulai meninggi untuk menghindari risiko kesetrum.",
+        "Siapkan tas siaga bencana yang berisi makanan siap saji, air minum, obat-obatan, dan lampu senter untuk evakuasi mandiri.",
+        "Scan dan simpan salinan digital dokumen penting seperti KTP KK ijazah sertifikat rumah buku tabungan dan surat berharga lainnya ke dalam penyimpanan online atau perangkat cadangan agar tetap aman dan mudah diakses apabila dokumen asli rusak atau hilang akibat banjir."
+    ],
+    longsor: [
+        "Hindari membangun rumah atau infrastruktur di bawah tebing curam atau di area lereng yang tidak memiliki pohon penahan.",
+        "Waspadai munculnya retakan baru di tanah, penurunan tanah mendadak, atau pohon yang tiba-tiba miring setelah hujan lebat.",
+        "Lakukan penghijauan dengan menanam pohon berakar dalam (seperti vetiver atau bambu) untuk memperkuat struktur tanah di area lereng.",
+        "Segera lakukan evakuasi ke zona aman jika terdengar suara gemuruh dari arah perbukitan setelah hujan turun berhari-hari."
+    ]
+};
 
-        // 2. Ambil elemen HTML yang dibutuhkan
-        const contentGrid = document.getElementById('content-grid');
-        const buttons = document.querySelectorAll('.category-btn');
+const contentGrid = document.getElementById('content-grid');
+const buttons = document.querySelectorAll('.category-btn');
 
-        // 3. Fungsi untuk merender/menindahkan konten ke dalam Grid
-        function renderContent(category) {
-            // Bersihkan isi grid terlebih dahulu
-            contentGrid.innerHTML = "";
+function renderContent(category) {
+    if(!contentGrid) return;
+    contentGrid.innerHTML = "";
+    const items = bencanaData[category] || [];
+    contentGrid.className = "flex flex-wrap justify-center gap-8 w-full";
+    items.forEach(text => {
+        const cardHtml = `
+            <div class="flex flex-col items-center text-center gap-4 opacity-0 animate-fade-in w-full md:w-[calc(50%-1rem)] max-w-[480px]">
+                <div class="w-full aspect-[4/2.5] bg-gray-300 rounded-2xl shadow-sm"></div>
+                <p class="text-sm text-gray-700 leading-relaxed max-w-[380px]">${text}</p>
+            </div>`;
+        contentGrid.insertAdjacentHTML('beforeend', cardHtml);
+    });
+}
 
-            // Ambil array teks berdasarkan kategori yang dipilih
-            const items = bencanaData[category];
+function updateButtonStyles(activeButton) {
+    buttons.forEach(btn => {
+        btn.classList.remove('bg-gray-800', 'text-white');
+        btn.classList.add('bg-gray-300', 'text-gray-800', 'hover:bg-gray-400');
+    });
+    activeButton.classList.remove('bg-gray-300', 'text-gray-800', 'hover:bg-gray-400');
+    activeButton.classList.add('bg-gray-800', 'text-white');
+}
 
-            // Mengubah class container utama secara dinamis agar mendukung perataan tengah di baris terakhir
-            contentGrid.className = "flex flex-wrap justify-center gap-8 w-full";
+buttons.forEach(button => {
+    button.addEventListener('click', function() {
+        const category = this.getAttribute('data-category');
+        renderContent(category);
+        updateButtonStyles(this);
+    });
+});
+renderContent('gempa');
 
-            // Looping data dan buat elemen HTML-nya
-            items.forEach(text => {
-                const cardHtml = `
-                    <div class="flex flex-col items-center text-center gap-4 opacity-0 animate-fade-in w-full md:w-[calc(50%-1rem)] max-w-[480px]">
-                        <div class="w-full aspect-[4/2.5] bg-gray-300 rounded-2xl shadow-sm"></div>
-                        <p class="text-sm text-gray-700 leading-relaxed max-w-[380px]">
-                            ${text}
-                        </p>
-                    </div>
-                `;
-                // Tambahkan kartu ke dalam grid
-                contentGrid.insertAdjacentHTML('beforeend', cardHtml);
-            });
-        }
-
-        // 4. Fungsi untuk mengatur gaya tombol aktif (Active State)
-        function updateButtonStyles(activeButton) {
-            buttons.forEach(btn => {
-                // Kembalikan semua tombol ke warna abu-abu (tidak aktif)
-                btn.classList.remove('bg-gray-800', 'text-white');
-                btn.classList.add('bg-gray-300', 'text-gray-800', 'hover:bg-gray-400');
-            });
-            // Berikan warna hitam/gelap pada tombol yang sedang aktif
-            activeButton.classList.remove('bg-gray-300', 'text-gray-800', 'hover:bg-gray-400');
-            activeButton.classList.add('bg-gray-800', 'text-white');
-        }
-
-        // 5. Tambahkan event listener 'click' pada setiap tombol
-        buttons.forEach(button => {
-            button.addEventListener('click', function() {
-                const category = this.getAttribute('data-category');
-                renderContent(category);
-                updateButtonStyles(this);
-            });
-        });
-
-        // 6. Jalankan konten "Gempa Bumi" secara default saat pertama kali web dibuka
-        renderContent('gempa');
-
-// ─── Ukuran fisik item dalam cm (terlipat/terdiri) ────────
-// Semua item diasumsikan dalam kondisi terlipat/terdiri di tas
+// ==========================================
+// 3. DIMENSI SEBENARNYA & DRAG MECHANISM CONSTANTS
+// ==========================================
 const ITEM_CM = {
-  // Berdiri tegak
-  'Air Minum':         {w: 7,  h: 23}, // botol 600ml berdiri
-  'Senter':            {w: 5,  h: 10}, // senter panjang berdiri
-  'Susu/Formula':      {w: 8,  h: 22}, // tetra pack berdiri
-  'Radio Portabel':    {w:12,  h: 18}, // berdiri
-  'Alat bantu':        {w: 8,  h: 25}, // tongkat lipat berdiri
-
-  // Berbaring (landscape)
-  'P3K':               {w: 20, h: 5}, // kotak P3K berbaring
-  'Masker':            {w: 7, h:  2}, // terlipat flat
-  'Makanan Kaleng':    {w: 5, h: 8}, // kaleng berbaring
-  'Dokumen Penting':   {w: 22, h:  3}, // dalam map tipis, berbaring
-  'Uang Tunai':        {w: 18, h:  3}, // amplop tipis berbaring
-  'Popok':             {w: 20, h:  8}, // terlipat berbaring
-  'Selimut darurat':   {w: 25, h:  6}, // digulung → berbaring lonjong
-
-  // Compact / hampir kotak
-  'Peluit darurat':    {w: 4, h:  4}, // kecil
-  'Korek api':         {w:  2, h:  4}, // kecil berdiri
-  'Baju ganti':        {w: 25, h:  6}, // terlipat rapi berbaring
-  'Tali':              {w: 5, h: 5}, // digulung jadi bundel kotak
-  'Obat Pribadi':      {w: 10, h:  8}, // kotak obat
-  'Power Bank':        {w: 10, h: 14}, // berbaring
-  'Obat Anak':         {w:  8, h:  8}, // kotak kecil
-  'Mainan kecil':      {w: 10, h: 10}, // kotak
-  'Obat Rutin':        {w:  8, h:  8}, // kotak kecil
-  'Kacamata cadangan': {w: 15, h:  6}, // dalam case tipis berbaring
+  'Air Minum':         {w: 7,   h: 23}, 
+  'Senter':            {w: 5,   h: 10}, 
+  'Susu/Formula':      {w: 8,   h: 22}, 
+  'Radio Portabel':    {w: 12,  h: 18}, 
+  'Alat bantu':        {w: 8,   h: 25}, 
+  'P3K':               {w: 20,  h: 5}, 
+  'Masker':            {w: 7,   h: 2}, 
+  'Makanan Kaleng':    {w: 5,   h: 8}, 
+  'Dokumen Penting':   {w: 22,  h: 3}, 
+  'Uang Tunai':        {w: 18,  h: 3}, 
+  'Popok':             {w: 20,  h: 8}, 
+  'Selimut darurat':   {w: 25,  h: 6}, 
+  'Peluit darurat':    {w: 4,   h: 4}, 
+  'Korek api':         {w: 2,   h: 4}, 
+  'Baju ganti':        {w: 25,  h: 6}, 
+  'Tali':              {w: 5,   h: 5}, 
+  'Obat Pribadi':      {w: 10,  h: 8}, 
+  'Power Bank':        {w: 10,  h: 14}, 
+  'Obat Anak':         {w: 8,   h: 8}, 
+  'Mainan kecil':      {w: 10,  h: 10}, 
+  'Obat Rutin':        {w: 8,   h: 8}, 
+  'Kacamata cadangan': {w: 15,  h: 6}
 };
 const DEFAULT_CM = {w: 10, h: 10};
 
-// ─── Bag & zona constants (px) ────────────────────────────
-const BAG_W   = 168;
-const ZONA_H  = {sangat_penting:72, penting:72, cukup_penting:74};
-const ZONA_TOP= {sangat_penting:0,  penting:72, cukup_penting:144};
-const ZONA_KEY= {sangat_penting:'a',penting:'b',cukup_penting:'c'};
-const ZONA_CLR= {sangat_penting:'#C0392B',penting:'#E67E22',cukup_penting:'#27AE60'};
+const BAG_W    = 168;
+const ZONA_H   = {sangat_penting:72, penting:72, cukup_penting:74};
+const ZONA_TOP = {sangat_penting:0,  penting:72, cukup_penting:144};
+const ZONA_KEY = {sangat_penting:'a', penting:'b', cukup_penting:'c'};
+const ZONA_CLR = {sangat_penting:'#C0392B', penting:'#E67E22', cukup_penting:'#27AE60'};
 
 let placed = {sangat_penting:[], penting:[], cukup_penting:[]};
 let dragging = null;
 let PX_PER_CM = 3;
-
-function itemPx(namaItem) {
-  const cm = ITEM_CM[namaItem] || DEFAULT_CM;
-  return {
-    w: Math.max(10, Math.round(cm.w * PX_PER_CM)),
-    h: Math.max(8,  Math.round(cm.h * PX_PER_CM)),
-  };
-}
 
 function rectsOverlap(a, b) {
   return !(a.x+a.w<=b.x || b.x+b.w<=a.x || a.y+a.h<=b.y || b.y+b.h<=a.y);
@@ -498,11 +490,13 @@ function findSnap(zona, px, prefX, prefY, excludeUid=null) {
   const cX = x => Math.max(0, Math.min(BAG_W - px.w, x));
   const cY = y => Math.max(zt, Math.min(zt + zh - px.h, y));
   const cx = cX(prefX), cy = cY(prefY);
+  
   const c = {x:cx, y:cy, w:px.w, h:px.h};
   if (!others.some(o => rectsOverlap(c, {x:o.x,y:o.y,w:o.px.w,h:o.px.h})))
     return {x:cx, y:cy, valid:true};
+    
   let best=null, bestD=Infinity;
-  for (let dy=-zh; dy<=zh; dy+=2)
+  for (let dy=-zh; dy<=zh; dy+=2) {
     for (let dx=-BAG_W; dx<=BAG_W; dx+=2) {
       const tx=cX(prefX+dx), ty=cY(prefY+dy);
       const tc={x:tx,y:ty,w:px.w,h:px.h};
@@ -511,6 +505,7 @@ function findSnap(zona, px, prefX, prefY, excludeUid=null) {
         if (d<bestD) { bestD=d; best={x:tx,y:ty}; }
       }
     }
+  }
   return best ? {...best, valid:true} : {x:cx, y:cy, valid:false};
 }
 
@@ -529,9 +524,15 @@ function sortZona(zona) {
 }
 
 function getPos(e) {
-  if (e.touches?.length)        return {x:e.touches[0].clientX, y:e.touches[0].clientY};
-  if (e.changedTouches?.length) return {x:e.changedTouches[0].clientX, y:e.changedTouches[0].clientY};
-  return {x:e.clientX, y:e.clientY};
+  // Jika disentuh lewat HP / Simulator Mobile
+  if (e.touches && e.touches.length > 0) {
+    return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }
+  if (e.changedTouches && e.changedTouches.length > 0) {
+    return { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY };
+  }
+  // Jika diklik lewat PC / Mouse
+  return { x: e.clientX, y: e.clientY };
 }
 
 function getZonaAt(relY) {
@@ -542,27 +543,18 @@ function getZonaAt(relY) {
 }
 
 function clearHL() {
-  ['zona-a','zona-b','zona-c'].forEach(id =>
-    document.getElementById(id)?.classList.remove('drag-v','drag-iv')
-  );
+  ['zona-a','zona-b','zona-c'].forEach(id => document.getElementById(id)?.classList.remove('drag-v','drag-iv'));
 }
 
-// ─── SVG per item (menggunakan w dan h dinamis) ───────────
-function makeSvg(nama, zona, w, h, rotated=false) {
-  const fill  = ZONA_CLR[zona] || '#888';
-  const fs    = Math.max(6, Math.min(10, Math.round(Math.min(w,h) / 3.5)));
-  // Potong nama jika terlalu panjang untuk kotak
+function makeSvg(nama, zona, w, h) {
+  const fill = ZONA_CLR[zona] || '#888';
+  const fs = Math.max(6, Math.min(10, Math.round(Math.min(w,h) / 3.5)));
   const maxChar = Math.floor(w / (fs * 0.62));
-  const label   = nama.length > maxChar ? nama.slice(0, maxChar - 1) + '…' : nama;
+  const label = nama.length > maxChar ? nama.slice(0, maxChar - 1) + '…' : nama;
 
   return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
     <rect width="${w}" height="${h}" rx="3" fill="${fill}" opacity="0.18" stroke="${fill}" stroke-width="1.5"/>
-    <text x="${w/2}" y="${h/2 + fs*0.38}"
-          text-anchor="middle"
-          font-size="${fs}"
-          fill="${fill}"
-          font-weight="700"
-          font-family="sans-serif">${label}</text>
+    <text x="${w/2}" y="${h/2 + fs*0.38}" text-anchor="middle" font-size="${fs}" fill="${fill}" font-weight="700" font-family="sans-serif">${label}</text>
   </svg>`;
 }
 
@@ -587,19 +579,48 @@ function removePlaced(p) {
 }
 
 function startDragCard(e, itemId, namaItem, zonaSaran, rotated=false) {
-  e.preventDefault();
   const pos = getPos(e);
+  
+  // Ambil ukuran item dari konstanta ITEM_CM
   const baseCm = ITEM_CM[namaItem] || DEFAULT_CM;
-  const cm  = rotated ? {w: baseCm.h, h: baseCm.w} : baseCm;
-  const px  = {
+  const cm = rotated ? {w: baseCm.h, h: baseCm.w} : baseCm;
+  const px = {
     w: Math.max(10, Math.round(cm.w * PX_PER_CM)),
     h: Math.max(8,  Math.round(cm.h * PX_PER_CM)),
   };
-  dragging = {itemId, namaItem, zonaSaran, px, isNew:true, placed:null, rotated};
-  const dg = document.getElementById('drag-ghost');
-  dg.innerHTML = makeSvg(namaItem, zonaSaran, px.w, px.h, rotated);
+  
+  dragging = {
+    itemId, 
+    namaItem, 
+    zonaSaran, 
+    px, 
+    isNew: true, 
+    placed: null, 
+    rotated,
+    offX: px.w / 2, 
+    offY: px.h / 2
+  };
+  
+  // Ambil element hantu drag
+  let dg = document.getElementById('drag-ghost');
+  if (!dg) {
+    // Jika element belum ada di HTML, kita buat paksa lewat script
+    dg = document.createElement('div');
+    dg.id = 'drag-ghost';
+    document.body.appendChild(dg);
+  }
+  
+  // Berikan style inline yang super ketat agar tidak tersembunyi
+  dg.innerHTML = makeSvg(namaItem, zonaSaran, px.w, px.h);
+  dg.style.position = 'fixed';
+  dg.style.zIndex = '99999'; // Angka z-index tertinggi agar berada di atas modal/layout manapun
+  dg.style.pointerEvents = 'none'; // Anti klik hantu
   dg.style.display = 'block';
-  moveGhost(pos.x, pos.y);
+  
+  // Jalankan pergeseran pertama
+  dg.style.left = pos.x + 'px';
+  dg.style.top = pos.y + 'px';
+  
   bindMove();
 }
 
@@ -607,8 +628,7 @@ function startDragPlaced(e, p, el) {
   e.preventDefault(); e.stopPropagation();
   const pos = getPos(e);
   const rect = el.getBoundingClientRect();
-  dragging = {itemId:p.itemId, namaItem:p.namaItem, zonaSaran:p.zona, px:p.px,
-              isNew:false, placed:p, offX:pos.x-rect.left, offY:pos.y-rect.top};
+  dragging = {itemId:p.itemId, namaItem:p.namaItem, zonaSaran:p.zona, px:p.px, isNew:false, placed:p, offX:pos.x-rect.left, offY:pos.y-rect.top};
   const dg = document.getElementById('drag-ghost');
   dg.innerHTML = makeSvg(p.namaItem, p.zona, p.px.w, p.px.h);
   dg.style.display = 'block';
@@ -619,16 +639,29 @@ function startDragPlaced(e, p, el) {
 
 function moveGhost(cx, cy) {
   const dg = document.getElementById('drag-ghost');
-  dg.style.left = cx+'px'; dg.style.top = cy+'px';
+  if (dg && dragging) {
+    // Kurangi langsung dengan offset agar pas di tengah jempol/jari user
+    const targetX = cx - (dragging.offX || 0);
+    const targetY = cy - (dragging.offY || 0);
+    
+    dg.style.left = '0px';
+    dg.style.top = '0px';
+    dg.style.transform = `translate3d(${targetX}px, ${targetY}px, 0)`;
+  }
 }
 
 function bindMove() {
+  // Listener untuk PC / Mouse
   document.addEventListener('mousemove', onMove);
   document.addEventListener('mouseup',   onUp);
-  document.addEventListener('touchmove', onMove, {passive:false});
-  document.addEventListener('touchend',  onUp);
+  
+  // Listener untuk HP / Touchscreen (Wajib passive: false agar koordinat realtime didengar)
+  document.addEventListener('touchmove', onMove, { passive: false });
+  document.addEventListener('touchend',  onUp, { passive: false });
 }
+
 function unbindMove() {
+  // Lepas semua listener saat item dilepas (drop) agar memori bersih
   document.removeEventListener('mousemove', onMove);
   document.removeEventListener('mouseup',   onUp);
   document.removeEventListener('touchmove', onMove);
@@ -637,94 +670,133 @@ function unbindMove() {
 
 function onMove(e) {
   if (!dragging) return;
-  e.preventDefault();
+  
+  // PENCEGAHAN KRUSIAL: Sinyalkan ke browser HP bahwa kita sedang memanipulasi element custom
+  if (e.cancelable) {
+    e.preventDefault();
+  }
+  
+  // Ambil koordinat pointer (jari/mouse) saat ini
   const pos = getPos(e);
+  
+  // Jika karena suatu hal koordinat gagal dibaca (NaN), hentikan script agar tidak merusak layout
+  if (!pos || isNaN(pos.x) || isNaN(pos.y)) return;
+  
   moveGhost(pos.x, pos.y);
+  
   const ia = document.getElementById('inner-area');
   if (!ia) return;
+  
   const ir = ia.getBoundingClientRect();
-  const offX = dragging.offX ?? dragging.px.w/2;
-  const offY = dragging.offY ?? dragging.px.h/2;
+  const offX = dragging.offX ?? dragging.px.w / 2;
+  const offY = dragging.offY ?? dragging.px.h / 2;
+  
   const relX = pos.x - ir.left - offX;
-  const relY = pos.y - ir.top  - offY;
-  const zona = getZonaAt(relY + dragging.px.h/2);
+  const relY = pos.y - ir.top - offY;
+  
+  const zona = getZonaAt(relY + dragging.px.h / 2);
   clearHL();
+  
   const gb = document.getElementById('ghost-box');
-  if (!zona) { gb.style.display='none'; return; }
+  if (!zona) { 
+    if (gb) gb.style.display = 'none'; 
+    return; 
+  }
+  
   const valid = zona === dragging.zonaSaran;
-  document.getElementById('zona-'+ZONA_KEY[zona])?.classList.add(valid?'drag-v':'drag-iv');
-  if (!valid) { gb.style.display='none'; return; }
+  document.getElementById('zona-' + ZONA_KEY[zona])?.classList.add(valid ? 'drag-v' : 'drag-iv');
+  
+  if (!valid) { 
+    if (gb) gb.style.display = 'none'; 
+    return; 
+  }
+  
   const excl = dragging.isNew ? null : dragging.placed.uid;
   const snap = findSnap(zona, dragging.px, relX, relY, excl);
-  // Tandai merah jika item terlalu tinggi atau tidak ada slot
   const overflowH = dragging.px.h > ZONA_H[zona];
-  gb.style.cssText = `display:block;left:${snap.x}px;top:${snap.y}px;width:${dragging.px.w}px;height:${dragging.px.h}px`;
-  gb.className = 'ghost-box' + (snap.valid && !overflowH ? '' : ' bad');
+  
+  if (gb) {
+    gb.style.cssText = `display:block;left:${snap.x}px;top:${snap.y}px;width:${dragging.px.w}px;height:${dragging.px.h}px;z-index:40;`;
+    gb.className = 'ghost-box' + (snap.valid && !overflowH ? '' : ' bad');
+  }
 }
 
 function onUp(e) {
   if (!dragging) return;
   unbindMove();
-  document.getElementById('drag-ghost').style.display = 'none';
-  document.getElementById('ghost-box').style.display  = 'none';
+  
+  const dg = document.getElementById('drag-ghost');
+  const gb = document.getElementById('ghost-box');
+  if (dg) dg.style.display = 'none';
+  if (gb) gb.style.display = 'none';
   clearHL();
+  
   const pos = getPos(e);
   const ia = document.getElementById('inner-area');
-  if (!ia) { dragging=null; return; }
+  
+  if (!ia) { dragging = null; return; }
+  
   const ir = ia.getBoundingClientRect();
-  const offX = dragging.offX ?? dragging.px.w/2;
-  const offY = dragging.offY ?? dragging.px.h/2;
+  const offX = dragging.offX ?? dragging.px.w / 2;
+  const offY = dragging.offY ?? dragging.px.h / 2;
   const relX = pos.x - ir.left - offX;
-  const relY = pos.y - ir.top  - offY;
-  const zona = getZonaAt(relY + dragging.px.h/2);
+  const relY = pos.y - ir.top - offY;
+  const zona = getZonaAt(relY + dragging.px.h / 2);
 
-  // Tolak: zona salah
+  // Validasi kecocokan zona item
   if (!zona || zona !== dragging.zonaSaran) {
-    const te = zona ? document.getElementById('zona-'+ZONA_KEY[zona]) : null;
-    if (te) { te.classList.add('do-shake'); setTimeout(()=>te.classList.remove('do-shake'),350); }
+    const te = zona ? document.getElementById('zona-' + ZONA_KEY[zona]) : null;
+    if (te) { te.classList.add('do-shake'); setTimeout(() => te.classList.remove('do-shake'), 350); }
     if (!dragging.isNew) dragging.placed.el?.classList.remove('dp');
-    dragging=null; return;
+    dragging = null; 
+    return;
   }
 
-  // Tolak: item lebih tinggi dari zona (overflow vertikal)
+  // Validasi tinggi item terhadap kapasitas tinggi zona
   if (dragging.px.h > ZONA_H[zona]) {
-    const te = document.getElementById('zona-'+ZONA_KEY[zona]);
-    if (te) { te.classList.add('do-shake'); setTimeout(()=>te.classList.remove('do-shake'),350); }
+    const te = document.getElementById('zona-' + ZONA_KEY[zona]);
+    if (te) { te.classList.add('do-shake'); setTimeout(() => te.classList.remove('do-shake'), 350); }
     if (!dragging.isNew) dragging.placed.el?.classList.remove('dp');
     showToast('Item terlalu tinggi untuk zona ini — coba rotate 🔄 agar tiduran');
-    dragging=null; return;
+    dragging = null; 
+    return;
   }
 
-  // Tolak: item lebih lebar dari tas
+  // Validasi lebar item terhadap lebar tas keseluruhan
   if (dragging.px.w > BAG_W) {
-    const te = document.getElementById('zona-'+ZONA_KEY[zona]);
-    if (te) { te.classList.add('do-shake'); setTimeout(()=>te.classList.remove('do-shake'),350); }
+    const te = document.getElementById('zona-' + ZONA_KEY[zona]);
+    if (te) { te.classList.add('do-shake'); setTimeout(() => te.classList.remove('do-shake'), 350); }
     if (!dragging.isNew) dragging.placed.el?.classList.remove('dp');
     showToast('Item terlalu lebar untuk tas ini');
-    dragging=null; return;
+    dragging = null; 
+    return;
   }
 
   const excl = dragging.isNew ? null : dragging.placed.uid;
   const snap = findSnap(zona, dragging.px, relX, relY, excl);
+  
   if (dragging.isNew) {
-    const uid = 'p_'+Date.now()+Math.random().toString(36).slice(2,5);
-    const p = {uid, itemId:dragging.itemId, namaItem:dragging.namaItem, zona, px:dragging.px, x:snap.x, y:snap.y, rotated:dragging.rotated||false};
+    const uid = 'p_' + Date.now() + Math.random().toString(36).slice(2, 5);
+    const p = {uid, itemId: dragging.itemId, namaItem: dragging.namaItem, zona, px: dragging.px, x: snap.x, y: snap.y, rotated: dragging.rotated || false};
     placed[zona].push(p);
     createPlacedEl(p);
-    window.dispatchEvent(new CustomEvent('item-placed', {detail:{id:dragging.itemId}}));
+    
+    // Kirim event ke Alpine engine untuk mengunci status item ("✓ Sudah")
+    window.dispatchEvent(new CustomEvent('item-placed', {detail: {id: dragging.itemId}}));
   } else {
-    dragging.placed.x = snap.x; dragging.placed.y = snap.y;
+    dragging.placed.x = snap.x; 
+    dragging.placed.y = snap.y;
     if (dragging.placed.el) {
-      dragging.placed.el.style.left = snap.x+'px';
-      dragging.placed.el.style.top  = snap.y+'px';
+      dragging.placed.el.style.left = snap.x + 'px';
+      dragging.placed.el.style.top  = snap.y + 'px';
       dragging.placed.el.classList.remove('dp');
     }
   }
+  
   dragging = null;
   window.dispatchEvent(new CustomEvent('update-stats'));
 }
 
-// Toast notifikasi
 let toastTimer = null;
 function showToast(msg) {
   let toast = document.getElementById('bag-toast');
@@ -745,7 +817,10 @@ document.addEventListener('dragover', e => {
   if (g?.style.display !== 'none') { g.style.left=e.clientX+'px'; g.style.top=e.clientY+'px'; }
 });
 
-// ─── Alpine Store: Buat Tas ───────────────────────────────
+
+// ==========================================
+// 4. ALPINE STORE: BUAT TAS (PWA INTEGRATED)
+// ==========================================
 document.addEventListener('alpine:init', () => {
   Alpine.store('tasBuat', {
     open: false,
@@ -758,42 +833,45 @@ document.addEventListener('alpine:init', () => {
 
     async submit() {
       if (!this.form.nama_tas || !this.form.kategori || !this.form.liter) return;
-      const res = await fetch('/api/tas', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content},
-        body: JSON.stringify(this.form),
-      });
-      const data = await res.json();
-      if (data.success) {
-        this.open = false;
-        this.form = {nama_tas:'', kategori:'dewasa', liter:'', dim_p:'', dim_l:'', dim_t:''};
-        window.dispatchEvent(new CustomEvent('tas-created', {detail:data.tas}));
-      }
-    },
-  });
-});
+      
+      const newTasObj = {
+         id: 'local_' + Date.now(),
+         nama_tas: this.form.nama_tas,
+         kategori: this.form.kategori,
+         liter: parseFloat(this.form.liter),
+         dim_p: parseFloat(this.form.dim_p || 30),
+         dim_l: parseFloat(this.form.dim_l || 20),
+         dim_t: parseFloat(this.form.dim_t || 40),
+      };
 
-// ─── Alpine Komponen Utama ────────────────────────────────
-function tasSiaga() {
-  return {
-    semuaTas:    @json($semuaTas ?? []),
+      this.open = false;
+      this.form = {nama_tas:'', kategori:'dewasa', liter:'', dim_p:'', dim_l:'', dim_t:''};
+      
+      // Kirim event lokal agar ditangkap PWA Engine utama di bawah
+      window.dispatchEvent(new CustomEvent('tas-local-created', {detail: newTasObj}));
+    }
+  });
+
+  // ==========================================
+  // 5. ALPINE COMPONENT UTAMA (SINGLE ENGINE PWA - FIXED OFFLINE DRAG)
+  // ==========================================
+  Alpine.data('tasSiaga', () => ({
+    semuaTas: @json($semuaTas ?? []),
     activeTasId: {{ $activeTas?->id ?? 'null' }},
+    activeTas: null,
     rekomendasi: [],
-    search:      '',
-    dimP: '{{ $activeTas?->dim_p ?? "" }}',
-    dimL: '{{ $activeTas?->dim_l ?? "" }}',
-    dimT: '{{ $activeTas?->dim_t ?? "" }}',
-    usedIds:    [],
-    rotatedIds: [], // id item yang sedang dalam orientasi rotated
-    bagCm:    {p:0, t:0, zh:0},
-    pxPerCm:  3,
+    search: '',
+    dimP: '', dimL: '', dimT: '',
+    usedIds: [],
+    rotatedIds: [], 
+    bagCm: {p:0, t:0, zh:0},
+    pxPerCm: 3,
     zonaList: [
       {key:'sangat_penting', label:'Sangat penting', short:'a', color:'#C0392B', pct:0},
       {key:'penting',        label:'Penting',         short:'b', color:'#E67E22', pct:0},
       {key:'cukup_penting',  label:'Cukup penting',   short:'c', color:'#27AE60', pct:0},
     ],
 
-    get activeTas() { return this.semuaTas.find(t=>t.id===this.activeTasId) ?? null; },
     get filteredRekomendasi() {
       if (!this.search) return this.rekomendasi;
       return this.rekomendasi.filter(i=>i.nama_item.toLowerCase().includes(this.search.toLowerCase()));
@@ -804,15 +882,28 @@ function tasSiaga() {
     },
 
     async init() {
+      // 1. Ambil data cadangan LocalStorage termasuk rekomendasi (Offline priority)
+      const localData = localStorage.getItem('tas_siaga_offline_data');
+      if (localData) {
+        const parsed = JSON.parse(localData);
+        this.semuaTas = parsed.semuaTas || [];
+        this.activeTasId = parsed.activeTasId || null;
+        this.rekomendasi = parsed.rekomendasi || []; // Amankan data item saat offline refresh
+      }
+
       await this.$nextTick();
       this.initCardDelegation();
-      if (this.activeTasId) {
-        await this.loadRekomendasi();
-        this.calcScale();
+      await this.syncActiveTas();
+
+      // 2. Jika online, ambil update termutakhir dari Server MySQL
+      if (navigator.onLine) {
+        await this.loadDataFromServer();
       }
-      window.addEventListener('tas-created', async e => {
-        this.semuaTas.push(e.detail);
-        await this.setAktif(e.detail.id);
+
+      // 3. EVENT LISTENERS BINDING
+      window.addEventListener('tas-local-created', async e => {
+         this.semuaTas.push(e.detail);
+         await this.setAktif(e.detail.id);
       });
       window.addEventListener('item-placed', e => {
         if (!this.usedIds.includes(e.detail.id)) this.usedIds.push(e.detail.id);
@@ -823,19 +914,62 @@ function tasSiaga() {
         this.recalcStats();
       });
       window.addEventListener('update-stats', () => this.recalcStats());
+      window.addEventListener('online', () => {
+        console.log('Kembali online! Menyinkronkan data lokal ke awan MySQL...');
+        this.syncToServer();
+      });
     },
 
-    // Hitung skala dari dimensi nyata (p dan t dari input user)
+    async loadDataFromServer() {
+      try {
+        let response = await fetch('/api/tas-siaga');
+        if (response.ok) {
+          let data = await response.json();
+          if(data.semuaTas && data.semuaTas.length > 0) {
+             this.semuaTas = data.semuaTas;
+             if(!this.activeTasId) this.activeTasId = data.semuaTas[0].id;
+          }
+          await this.loadRekomendasi(); // Ambil item segar dari server jika online
+          this.saveToLocal();
+          this.syncActiveTas();
+        }
+      } catch (err) {
+        console.log('Server MySQL unreachable. Berjalan penuh dengan data lokal.');
+      }
+    },
+
+    async setAktif(id) {
+      this.activeTasId = id;
+      await this.syncActiveTas();
+      this.saveToLocal();
+    },
+
+    async syncActiveTas() {
+      this.activeTas = this.semuaTas.find(t => t.id === this.activeTasId) || null;
+      if (this.activeTas) {
+        this.dimP = String(this.activeTas.dim_p ?? '');
+        this.dimL = String(this.activeTas.dim_l ?? '');
+        this.dimT = String(this.activeTas.dim_t ?? '');
+        
+        // Hanya fetch ke API jika online, jika offline biarkan memakai data localStorage dari init()
+        if (navigator.onLine) {
+          await this.loadRekomendasi();
+        }
+        
+        this.calcScale();
+      }
+    },
+
     calcScale() {
-      const p  = parseFloat(this.dimP) || 30;  // lebar tas (panjang)
-      const t  = parseFloat(this.dimT) || 40;  // tinggi tas
-      const zh = Math.round(t / 3);            // tinggi per zona (cm)
+      const p   = parseFloat(this.dimP) || 30;
+      const t   = parseFloat(this.dimT) || 40;
+      const zh  = Math.round(t / 3);
       const scaleW = BAG_W / p;
       const scaleH = 72 / zh;
       PX_PER_CM    = Math.min(scaleW, scaleH);
       this.pxPerCm = Math.round(PX_PER_CM * 10) / 10;
       this.bagCm   = {p, t, zh};
-      // Reset isi tas
+      
       placed = {sangat_penting:[], penting:[], cukup_penting:[]};
       this.usedIds = [];
       document.getElementById('inner-area')?.querySelectorAll('.placed').forEach(el=>el.remove());
@@ -850,6 +984,45 @@ function tasSiaga() {
       });
     },
 
+    saveToLocal() {
+      // Ikut sertakan array rekomendasi ke dalam storage agar aman saat offline refresh
+      const dataToSave = { 
+        semuaTas: this.semuaTas, 
+        activeTasId: this.activeTasId,
+        rekomendasi: this.rekomendasi 
+      };
+      localStorage.setItem('tas_siaga_offline_data', JSON.stringify(dataToSave));
+      if (navigator.onLine) { this.syncToServer(); }
+    },
+
+    async syncToServer() {
+      try {
+        await fetch('/api/tas-siaga/sync', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+          },
+          body: JSON.stringify({ semuaTas: this.semuaTas, activeTasId: this.activeTasId })
+        });
+      } catch (error) {
+        console.log('Gagal terhubung ke MySQL cloud, perubahan ditampung secara lokal.');
+      }
+    },
+
+    async loadRekomendasi() {
+      if (!this.activeTas) return;
+      try {
+         const res = await fetch(`/api/tas/rekomendasi/${this.activeTas.kategori}`);
+         if(res.ok) {
+            this.rekomendasi = await res.json();
+            this.saveToLocal(); // Perbarui backup local setelah sukses fetch data baru
+         }
+      } catch(e) {
+         console.log("Gagal memuat rekomendasi baru dari server.");
+      }
+    },
+
     toggleRotate(itemId) {
       if (this.rotatedIds.includes(itemId)) {
         this.rotatedIds = this.rotatedIds.filter(x => x !== itemId);
@@ -858,17 +1031,11 @@ function tasSiaga() {
       }
     },
 
-    isRotated(itemId) {
-      return this.rotatedIds.includes(itemId);
-    },
-
-    // Preview kotak kecil di card — menunjukkan orientasi item
     getPreviewStyle(item) {
       const cm = ITEM_CM[item.nama_item] || DEFAULT_CM;
       const rotated = this.rotatedIds.includes(item.id);
       const rawW = rotated ? cm.h : cm.w;
       const rawH = rotated ? cm.w : cm.h;
-      // Scale ke dalam kotak 40×40px
       const maxDim = 40;
       const scale = Math.min(maxDim/rawW, maxDim/rawH);
       const pw = Math.round(rawW * scale);
@@ -878,7 +1045,6 @@ function tasSiaga() {
       return `width:${pw}px;height:${ph}px;background:${color};opacity:0.25;border:1.5px solid ${color}`;
     },
 
-    // Tampilkan ukuran cm di bawah nama item
     getDimHint(item) {
       const cm = ITEM_CM[item.nama_item] || DEFAULT_CM;
       const rotated = this.rotatedIds.includes(item.id);
@@ -888,90 +1054,73 @@ function tasSiaga() {
     },
 
     initCardDelegation() {
-      const grid = document.getElementById('item-grid-blade');
-      if (!grid || grid._delegated) return;
-      grid._delegated = true;
-      const handler = (e) => {
-        const card = e.target.closest('[data-item-id]');
-        // Jangan trigger drag jika klik tombol rotate
-        if (e.target.closest('button')) return;
-        if (!card || card.classList.contains('used')) return;
-        const id      = parseInt(card.dataset.itemId);
-        const item    = this.rekomendasi.find(r => r.id === id);
-        if (!item) return;
-        const rotated = this.rotatedIds.includes(id);
-        startDragCard(e, item.id, item.nama_item, item.zona_saran, rotated);
-      };
-      grid.addEventListener('mousedown', handler);
-      grid.addEventListener('touchstart', handler, {passive:false});
-    },
-
-    async setAktif(id) {
-      const res = await fetch(`/api/tas/${id}/aktif`, {
-        method:'POST',
-        headers:{'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content},
-      });
-      if ((await res.json()).success) {
-        this.activeTasId = id;
-        const tas = this.activeTas;
-        this.dimP = String(tas?.dim_p ?? '');
-        this.dimL = String(tas?.dim_l ?? '');
-        this.dimT = String(tas?.dim_t ?? '');
-        await this.loadRekomendasi();
-        this.calcScale();
-      }
-    },
-
-    async loadRekomendasi() {
-      if (!this.activeTas) return;
-      const res = await fetch(`/api/tas/rekomendasi/${this.activeTas.kategori}`);
-      this.rekomendasi = await res.json();
-    },
+  const grid = document.getElementById('item-grid-blade');
+  if (!grid || grid._delegated) return;
+  grid._delegated = true;
+  
+  const handler = (e) => {
+    if (e.type === 'mousedown' && e.button !== 0) return;
+    
+    const card = e.target.closest('[data-item-id]');
+    if (e.target.closest('button')) return; 
+    if (!card || card.classList.contains('used')) return;
+    
+    // Paksa browser mobile untuk memprioritaskan drag daripada scrolling halaman
+    if (e.cancelable) {
+      e.preventDefault();
+    }
+    
+    const id      = parseInt(card.dataset.itemId);
+    
+    // 💡 SOLUSI: Mengubah === menjadi == agar tipe data String dan Number tetap cocok
+    const item    = this.rekomendasi.find(r => r.id == id);
+    if (!item) return;
+    
+    const rotated = this.rotatedIds.includes(id);
+    
+    startDragCard(e, item.id, item.nama_item, item.zona_saran, rotated);
+  };
+  
+  // Gunakan passive: false agar perintah preventDefault() di atas dipatuhi oleh Google Chrome Mobile
+  grid.addEventListener('mousedown', handler);
+  grid.addEventListener('touchstart', handler, { passive: false });
+},
 
     async hapusTas(id) {
       if (!confirm('Hapus tas ini?')) return;
-      const res = await fetch(`/api/tas/${id}`, {
-        method:'DELETE',
-        headers:{'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content},
-      });
-      if ((await res.json()).success) {
-        this.semuaTas = this.semuaTas.filter(t=>t.id!==id);
-        if (this.activeTasId === id) {
-          this.activeTasId = this.semuaTas[0]?.id ?? null;
-          if (this.activeTasId) await this.setAktif(this.activeTasId);
-          else { placed={sangat_penting:[],penting:[],cukup_penting:[]}; this.recalcStats(); }
-        }
+      this.semuaTas = this.semuaTas.filter(t=>t.id!==id);
+      if (this.activeTasId === id) {
+        this.activeTasId = this.semuaTas[0]?.id ?? null;
       }
+      this.syncActiveTas();
+      this.saveToLocal();
     },
 
     async updateDimensi() {
       if (!this.activeTas) return;
-      const liter = this.literHitung;
-      // Update di semuaTas lokal
-      const tas = this.semuaTas.find(t=>t.id===this.activeTasId);
-      if (tas) { tas.dim_p=parseFloat(this.dimP); tas.dim_l=parseFloat(this.dimL); tas.dim_t=parseFloat(this.dimT); tas.liter=liter; }
-      await fetch(`/api/tas/${this.activeTas.id}`, {
-        method:'PATCH',
-        headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content},
-        body: JSON.stringify({dim_p:this.dimP, dim_l:this.dimL, dim_t:this.dimT, liter}),
-      });
+      this.literHitung = (this.dimP * this.dimL * this.dimT) / 1000;
+      this.activeTas.dim_p = parseFloat(this.dimP);
+      this.activeTas.dim_l = parseFloat(this.dimL);
+      this.activeTas.dim_t = parseFloat(this.dimT);
+      this.activeTas.liter = Math.round(this.literHitung * 10) / 10;
+      
       this.calcScale();
+      this.saveToLocal();
     },
 
     async updateKategori(kat) {
       if (!this.activeTas) return;
       this.activeTas.kategori = kat;
-      await fetch(`/api/tas/${this.activeTas.id}`, {
-        method:'PATCH',
-        headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content},
-        body: JSON.stringify({kategori:kat}),
-      });
-      await this.loadRekomendasi();
+      if (navigator.onLine) {
+        await this.loadRekomendasi();
+      }
+      this.saveToLocal();
     },
 
     sortZona(zona) { sortZona(zona); this.recalcStats(); },
-    sortAll()      { ['sangat_penting','penting','cukup_penting'].forEach(z=>sortZona(z)); this.recalcStats(); },
-  };
-}
+    sortAll()      { ['sangat_penting','penting','cukup_penting'].forEach(z=>sortZona(z)); this.recalcStats(); }
+  }));
+
+});
 </script>
 @endpush

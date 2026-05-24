@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\TasSiaga;
 use App\Models\TasItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TasSiagaController extends Controller
 {
@@ -138,5 +139,79 @@ class TasSiagaController extends Controller
             $this->rekomendasi[$kategori] ?? []
         );
         return response()->json($items);
+    }
+
+    // ─── FITUR BARU: PWA HYBRID OFFLINE-TO-ONLINE SYNC ────────────────
+
+    /**
+     * Mengambil semua data tas beserta itemnya untuk di-load ke Alpine.js
+     */
+    public function getData(Request $request)
+    {
+        $sessionId = $request->session()->getId();
+        
+        $semuaTas = TasSiaga::with('items')
+            ->where('session_id', $sessionId)
+            ->latest()
+            ->get();
+
+        return response()->json(['semuaTas' => $semuaTas]);
+    }
+
+    /**
+     * Menyinkronkan data snapshot lokal dari LocalStorage browser ke dalam database MySQL
+     */
+    public function syncData(Request $request)
+    {
+        $semuaTasData = $request->input('semuaTas', []);
+        $sessionId = $request->session()->getId();
+
+        DB::transaction(function () use ($semuaTasData, $sessionId) {
+            // 1. Ekstrak semua ID tas asli dari payload data frontend (baikan data lokal ber-ID string/milidetik disaring)
+            $incomingIds = collect($semuaTasData)->pluck('id')->filter(function($id) {
+                return is_numeric($id) && $id < 2000000000; // Pisahkan ID database dengan timestamp Date.now() lokal
+            })->toArray();
+
+            // 2. Bersihkan tas di database yang sudah dihapus oleh user saat offline
+            TasSiaga::where('session_id', $sessionId)
+                ->whereNotIn('id', $incomingIds)
+                ->delete();
+
+            foreach ($semuaTasData as $tasData) {
+                // Periksa apakah ID buatan lokal atau warisan dari database
+                $isLocalId = (!isset($tasData['id']) || $tasData['id'] >= 2000000000);
+
+                // 3. Simpan atau perbarui entitas Tas Siaga
+                $tas = TasSiaga::updateOrCreate(
+                    [
+                        'id' => $isLocalId ? null : $tasData['id'], 
+                        'session_id' => $sessionId
+                    ],
+                    [
+                        'nama_tas' => $tasData['nama_tas'],
+                        'kategori' => $tasData['kategori'],
+                        'liter'    => $tasData['liter'],
+                        'dim_p'    => $tasData['dim_p'] ?? null,
+                        'dim_l'    => $tasData['dim_l'] ?? null,
+                        'dim_t'    => $tasData['dim_t'] ?? null,
+                    ]
+                );
+
+                // 4. Reset item di dalam tas ini lalu tulis ulang isi snapshot terbarunya
+                $tas->items()->delete();
+                if (!empty($tasData['items'])) {
+                    foreach ($tasData['items'] as $item) {
+                        $tas->items()->create([
+                            'nama_item' => $item['nama_item'],
+                            'zona'      => $item['zona'],
+                            'jumlah'    => $item['jumlah'] ?? 1,
+                            'satuan'    => $item['satuan'] ?? 'pcs',
+                        ]);
+                    }
+                }
+            }
+        });
+
+        return response()->json(['success' => true, 'message' => 'Sinkronisasi berhasil!']);
     }
 }

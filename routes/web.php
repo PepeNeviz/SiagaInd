@@ -11,9 +11,14 @@ Route::get('/sebelum',  [TasSiagaController::class, 'index'])->name('sebelum');
 Route::get('/saat',     fn() => view('saat.index'))->name('saat');
 Route::get('/sesudah',  [SupplyController::class, 'index'])->name('sesudah');
 
+// ─── PWA & Hybrid Sync API ───────────────────────────────
+// Ditambahkan di sini agar Alpine.js bisa fetch data sinkronisasi offline-to-online
+Route::get('/api/tas-siaga', [TasSiagaController::class, 'getData']);
+Route::post('/api/tas-siaga/sync', [TasSiagaController::class, 'syncData']);
+
 // ─── Tas Siaga API ───────────────────────────────────────
 Route::prefix('api/tas')->name('tas.')->group(function () {
-    Route::post('/',                    [TasSiagaController::class, 'store'])->name('store');
+    Route::post('/',                     [TasSiagaController::class, 'store'])->name('store');
     Route::post('/{tas}/aktif',         [TasSiagaController::class, 'setActive'])->name('aktif');
     Route::delete('/{tas}',             [TasSiagaController::class, 'destroy'])->name('destroy');
     Route::get('/rekomendasi/{kategori}',[TasSiagaController::class, 'rekomendasi'])->name('rekomendasi');
