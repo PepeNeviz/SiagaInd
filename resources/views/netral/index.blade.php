@@ -1,115 +1,161 @@
 @extends('layouts.app')
-
 @section('title', 'SiagaInd — Siap Sebelum Terjadi')
 
 @push('styles')
 <style>
+    /* ══════ HERO ══════ */
     .hero-bg {
         background:
-        linear-gradient(
-            rgba(16,24,32,0.65),
-            rgba(16,24,32,0.78)
-        ),
-        url('/images/Nav_bg.jpg');
-
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-
-    position: relative;
-    overflow: hidden;
+            linear-gradient(rgba(16,24,32,0.6), rgba(16,24,32,0.75)),
+            url('/images/Nav_bg.jpg') center/cover no-repeat;
+        position: relative; overflow: hidden;
     }
-
     .hero-bg::after {
         content: '';
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(ellipse at 70% 50%, rgba(230,126,34,0.12) 0%, transparent 65%),
-                    radial-gradient(ellipse at 20% 80%, rgba(192,57,43,0.10) 0%, transparent 55%);
+        position: absolute; inset: 0;
+        background:
+            radial-gradient(ellipse at 70% 50%, rgba(90,130,126,0.18) 0%, transparent 65%),
+            radial-gradient(ellipse at 20% 80%, rgba(185,212,170,0.10) 0%, transparent 55%);
+        pointer-events: none;
     }
 
-    /* Quick access cards */
+    /* ══════ PHASE CARDS ══════ */
     .phase-card {
-        position: relative;
-        overflow: hidden;
-        cursor: pointer;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative; overflow: hidden; cursor: pointer;
+        transition: transform var(--t-med), box-shadow var(--t-med);
+        display: block; text-decoration: none;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--r-lg); padding: 24px;
     }
-    .phase-card:hover { transform: translateY(-6px); }
-    .phase-card .bar {
-        position: absolute;
-        bottom: 0; left: 0; right: 0;
-        height: 4px;
-        transition: height 0.3s ease;
-    }
+    .phase-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+    .phase-card .bar { position: absolute; bottom: 0; left: 0; right: 0; height: 4px; transition: height var(--t-fast); }
     .phase-card:hover .bar { height: 6px; }
 
-    /* Tutorial grid item */
+    /* ══════ TUTORIAL ══════ */
     .tutorial-item {
         cursor: pointer;
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        transition: transform var(--t-fast), box-shadow var(--t-fast);
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--r-lg); padding: 20px; text-align: center;
     }
-    .tutorial-item:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+    .tutorial-item:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .tutorial-item:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* ══════ INFO / CRAFTING ══════ */
+    .info-main-card {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--r-xl); padding: 24px;
+        box-shadow: var(--shadow-sm); cursor: pointer;
+        transition: transform var(--t-med), box-shadow var(--t-med);
+    }
+    .info-main-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .info-main-card.no-hover { cursor: default; }
+    .info-main-card.no-hover:hover { transform: none; box-shadow: var(--shadow-sm); }
+
+    .preview-box { background: var(--color-surface-2); border-radius: var(--r-lg); padding: 18px; }
+    .preview-image {
+        width: 100%; height: 220px; object-fit: cover; border-radius: var(--r-md);
+        background: var(--c-sage-lt); display: flex; align-items: center; justify-content: center;
+    }
+    .item-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; }
+    .item-small {
+        position: relative;
+        background: var(--color-surface-2);
+        border: 1px solid var(--color-border);
+        border-radius: var(--r-lg); padding: 14px;
+        transition: all var(--t-fast); cursor: pointer;
+    }
+    .item-small:hover { transform: translateY(-3px); border-color: var(--color-border-md); }
+    .item-small-image {
+        width: 100%; height: 110px; object-fit: cover; border-radius: var(--r-md);
+        background: var(--c-sage-lt); display: flex; align-items: center; justify-content: center;
     }
 
-    /* Section divider */
-    .divider {
-        width: 48px; height: 4px;
-        background: #E67E22;
-        border-radius: 99px;
-        margin-bottom: 1rem;
+    .accent-bar { width: 44px; height: 4px; border-radius: var(--r-pill); background: var(--c-teal); margin-bottom: 14px; }
+
+    .tag { display: inline-block; padding: 3px 10px; border-radius: var(--r-pill); font-size: 10px; font-weight: 700; letter-spacing: 0.06em; margin-top: 6px; }
+    .tag-available { background: var(--c-sage-lt); color: var(--c-teal-dk); }
+    .tag-soon { background: var(--color-surface-2); color: var(--color-text-muted); }
+
+    .darurat-card {
+        display: flex; align-items: center; gap: 12px;
+        background: var(--color-surface); border: 1px solid var(--color-border);
+        border-radius: var(--r-lg); padding: 16px; text-decoration: none;
+        transition: all var(--t-fast); box-shadow: var(--shadow-sm);
+    }
+    .darurat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+
+    /* ══════ MODAL FIXES (AMANKAN ALPINE.JS & UKURAN BOKS) ══════ */
+    
+    /* Overlay dikembalikan ke setelan standar tanpa memaksa display grid/flex */
+    .modal-overlay {
+        position: fixed !important;
+        inset: 0 !important;
+        background-color: rgba(16, 24, 32, 0.6) !important;
+        z-index: 50 !important;
+        padding: 20px !important;
     }
 
-    /* Crafting tag */
-    .tag {
-        display: inline-block;
-        padding: 2px 10px;
-        border-radius: 99px;
-        font-size: 0.7rem;
-        font-weight: 600;
-        letter-spacing: 0.03em;
+    /* Setelan ukuran modal utama agar lebar dan tingginya pas satu layar */
+    .modal-box {
+        position: relative;
+        z-index: 51;  
+        width: 100% !important; 
+        max-width: 860px !important; 
+        
+        /* Kunci tinggi agar pas monitor PC dan tidak geser saat ganti step */
+        height: 95vh !important; 
+        max-height: 95vh !important;
+        
+        /* Membagi ruang header, body, dan footer di dalam modal */
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important; 
+        
+        background: var(--color-surface);
+        border: 1px solid var(--color-border-md);
+        border-radius: var(--r-xl);
+        box-shadow: var(--shadow-lg);
+        transform: none !important; 
+        margin: 0 auto !important;
     }
+
+    .modal-box.modal-box-lg { 
+        max-width: 860px !important; 
+    }
+
 </style>
 @endpush
 
 @section('content')
 
-{{-- ═══════════════════════════════════════════
-    HERO
-════════════════════════════════════════════ --}}
+{{-- ══════ HERO ══════ --}}
 <section class="hero-bg min-h-[88vh] flex items-center" id="hero">
     <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-24 grid md:grid-cols-2 gap-12 items-center">
-
-        {{-- Teks --}}
         <div id="hero-text">
-            <span class="inline-block px-3 py-1 bg-siaga/20 text-siaga text-xs font-bold rounded-full uppercase tracking-widest mb-6">
+            <span class="inline-block px-3 py-1 text-xs font-bold rounded-full uppercase tracking-widest mb-6"
+                  style="background: rgba(90,130,126,0.25); color: var(--c-cream);">
                 Platform Kesiapsiagaan Bencana
             </span>
             <h1 class="font-head text-5xl sm:text-6xl font-extrabold text-white leading-[1.1] mb-6">
                 Siap<br/>
-                <span class="text-siaga">Sebelum</span><br/>
+                <span style="color: var(--c-cream);">Sebelum</span><br/>
                 Terjadi.
             </h1>
-            <p class="text-white/60 text-lg leading-relaxed mb-8 max-w-md">
+            <p class="text-lg leading-relaxed mb-8 max-w-md" style="color: rgba(255,255,255,0.6);">
                 SiagaInd membekali kamu dengan pengetahuan, keterampilan survival, dan panduan tindakan cepat — untuk semua fase bencana.
             </p>
             <div class="flex flex-wrap gap-3">
-                <a href="{{ route('sebelum') }}"
-                   class="px-6 py-3 bg-siaga hover:bg-siaga/90 text-white font-semibold rounded-full transition-all duration-200 text-sm">
-                    Mulai Persiapan
-                </a>
-                <a href="{{ route('saat') }}"
-                   class="px-6 py-3 bg-danger hover:bg-danger-dk text-white font-semibold rounded-full transition-all duration-200 text-sm">
-                    🚨 Mode Darurat
-                </a>
+                <a href="{{ route('sebelum') }}" class="btn btn-primary">Mulai Persiapan</a>
+                <a href="{{ route('netral') }}#darurat" class="btn btn-danger">🚨 Mode Darurat</a>
             </div>
         </div>
-
-        {{-- Ilustrasi / kompas placeholder --}}
         <div class="flex justify-center" id="hero-img">
-            <div class="img-ph w-72 h-72 sm:w-80 sm:h-80">
+            <div class="w-72 h-72 sm:w-80 sm:h-80 flex flex-col items-center justify-center gap-2"
+                 style="background: rgba(185,212,170,0.1); border: 2px dashed rgba(185,212,170,0.3); border-radius: var(--r-xl); color: rgba(255,255,255,0.3); font-size:13px;">
                 <svg class="w-16 h-16 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                           d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6-10l6-3m0 13l5.447 2.724A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 9m0 4V9"/>
@@ -118,246 +164,147 @@
             </div>
         </div>
     </div>
-
-    {{-- Scroll hint --}}
-    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-white/30 text-xs" id="scroll-hint">
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-xs" id="scroll-hint"
+         style="color: rgba(255,255,255,0.3);">
         <span>Scroll</span>
-        <div class="w-px h-8 bg-white/20 animate-pulse"></div>
+        <div class="w-px h-8 animate-pulse" style="background: rgba(255,255,255,0.2);"></div>
     </div>
 </section>
 
-{{-- ═══════════════════════════════════════════
-    3 PHASE QUICK ACCESS
-════════════════════════════════════════════ --}}
+{{-- ══════ 3 PHASE ══════ --}}
 <section class="max-w-6xl mx-auto px-4 sm:px-6 py-16">
     <div class="text-center mb-10 reveal">
-        <div class="divider mx-auto"></div>
-        <h2 class="font-head text-3xl font-bold text-navy">Tiga Fase Kesiapsiagaan</h2>
-        <p class="text-gray-500 mt-2">Pilih fase sesuai kondisimu sekarang</p>
+        <div class="accent-bar mx-auto"></div>
+        <h2 class="font-head text-3xl font-bold" style="color: var(--color-text-primary);">Tiga Fase Kesiapsiagaan</h2>
+        <p class="mt-2" style="color: var(--color-text-muted);">Pilih fase sesuai kondisimu sekarang</p>
     </div>
-
     <div class="grid md:grid-cols-3 gap-6">
-        {{-- Sebelum --}}
-        <a href="{{ route('sebelum') }}" class="phase-card bg-white rounded-2xl p-6 shadow-sm reveal block no-underline">
-            <div class="w-12 h-12 rounded-xl bg-siaga/10 flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-siaga" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+        <a href="{{ route('sebelum') }}" class="phase-card reveal">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background: rgba(90,130,126,0.12);">
+                <svg class="w-6 h-6" style="color: var(--c-teal);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                 </svg>
             </div>
-            <h3 class="font-head font-bold text-navy text-xl mb-2">Sebelum</h3>
-            <p class="text-gray-500 text-sm leading-relaxed">Siapkan tas siaga, cek lingkungan, dan latih respons sebelum bencana datang.</p>
-            <div class="bar bg-siaga"></div>
+            <h3 class="font-head font-bold text-xl mb-2" style="color: var(--color-text-primary);">Sebelum</h3>
+            <p class="text-sm leading-relaxed" style="color: var(--color-text-secondary);">Siapkan tas siaga, cek lingkungan, dan latih respons sebelum bencana datang.</p>
+            <div class="bar" style="background: var(--c-teal);"></div>
         </a>
-
-        {{-- Saat --}}
-        <a href="{{ route('saat') }}" class="phase-card bg-white rounded-2xl p-6 shadow-sm reveal block no-underline" style="animation-delay:0.1s">
-            <div class="w-12 h-12 rounded-xl bg-danger/10 flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-danger" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        <a href="{{ route('saat') }}" class="phase-card reveal" style="animation-delay:0.1s">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background: rgba(192,57,43,0.1);">
+                <svg class="w-6 h-6" style="color: var(--color-danger);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                 </svg>
             </div>
-            <h3 class="font-head font-bold text-navy text-xl mb-2">Saat</h3>
-            <p class="text-gray-500 text-sm leading-relaxed">Panduan tindakan cepat berbasis decision tree. Tap — dan kamu tahu apa yang harus dilakukan.</p>
-            <div class="bar bg-danger"></div>
+            <h3 class="font-head font-bold text-xl mb-2" style="color: var(--color-text-primary);">Saat</h3>
+            <p class="text-sm leading-relaxed" style="color: var(--color-text-secondary);">Panduan tindakan cepat berbasis decision tree. Tap — dan kamu tahu apa yang harus dilakukan.</p>
+            <div class="bar" style="background: var(--color-danger);"></div>
         </a>
-
-        {{-- Sesudah --}}
-        <a href="{{ route('sesudah') }}" class="phase-card bg-white rounded-2xl p-6 shadow-sm reveal block no-underline" style="animation-delay:0.2s">
-            <div class="w-12 h-12 rounded-xl bg-safe/10 flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-safe" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+        <a href="{{ route('sesudah') }}" class="phase-card reveal" style="animation-delay:0.2s">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background: rgba(39,174,96,0.1);">
+                <svg class="w-6 h-6" style="color: #27AE60;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                 </svg>
             </div>
-            <h3 class="font-head font-bold text-navy text-xl mb-2">Sesudah</h3>
-            <p class="text-gray-500 text-sm leading-relaxed">Panduan pemulihan, penanganan luka, dan pengecekan supply pasca bencana.</p>
-            <div class="bar bg-safe"></div>
+            <h3 class="font-head font-bold text-xl mb-2" style="color: var(--color-text-primary);">Sesudah</h3>
+            <p class="text-sm leading-relaxed" style="color: var(--color-text-secondary);">Panduan pemulihan, penanganan luka, dan pengecekan supply pasca bencana.</p>
+            <div class="bar" style="background: #27AE60;"></div>
         </a>
     </div>
 </section>
 
-{{-- ═══════════════════════════════════════════
-    TUTORIAL BENCANA
-════════════════════════════════════════════ --}}
-<section class="bg-white py-16">
+{{-- ══════ TUTORIAL BENCANA ══════ --}}
+<section style="background: var(--color-surface);" class="py-16">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="mb-10 reveal">
-            <div class="divider"></div>
-            <h2 class="font-head text-3xl font-bold text-navy">Tutorial Bencana</h2>
-            <p class="text-gray-500 mt-2">Klik untuk melihat panduan lengkap sebelum, saat, dan sesudah bencana</p>
+            <div class="accent-bar"></div>
+            <h2 class="font-head text-3xl font-bold" style="color: var(--color-text-primary);">Tutorial Bencana</h2>
+            <p class="mt-2" style="color: var(--color-text-muted);">Klik untuk melihat panduan lengkap sebelum, saat, dan sesudah bencana</p>
         </div>
-
-        {{-- Grid bencana --}}
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4" id="tutorial-grid">
-
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             @php
             $bencana = [
-                ['nama' => 'Gempa Bumi',     'icon' => '🌍', 'tersedia' => true],
-                ['nama' => 'Tsunami',         'icon' => '🌊', 'tersedia' => false],
-                ['nama' => 'Banjir',          'icon' => '💧', 'tersedia' => false],
-                ['nama' => 'Gunung Meletus',  'icon' => '🌋', 'tersedia' => false],
-                ['nama' => 'Tanah Longsor',   'icon' => '⛰️',  'tersedia' => false],
-                ['nama' => 'Kebakaran',       'icon' => '🔥', 'tersedia' => false],
-                ['nama' => 'Angin Puting',    'icon' => '🌪️', 'tersedia' => false],
-                ['nama' => 'Kekeringan',      'icon' => '☀️',  'tersedia' => false],
+                ['nama'=>'Gempa Bumi','icon'=>'🌍','ada'=>true],
+                ['nama'=>'Tsunami','icon'=>'🌊','ada'=>false],
+                ['nama'=>'Banjir','icon'=>'💧','ada'=>false],
+                ['nama'=>'Gunung Meletus','icon'=>'🌋','ada'=>false],
+                ['nama'=>'Tanah Longsor','icon'=>'⛰️','ada'=>false],
+                ['nama'=>'Kebakaran','icon'=>'🔥','ada'=>false],
+                ['nama'=>'Angin Puting','icon'=>'🌪️','ada'=>false],
+                ['nama'=>'Kekeringan','icon'=>'☀️','ada'=>false],
             ];
             @endphp
-
             @foreach($bencana as $b)
             <button
-                class="tutorial-item bg-cream rounded-2xl p-5 text-center shadow-sm border border-transparent hover:border-siaga/30 relative"
-                @if($b['tersedia'])
-                    @click="$dispatch('open-tutorial', { bencana: '{{ $b['nama'] }}' })"
-                @else
-                    disabled
-                @endif
-                title="{{ $b['tersedia'] ? 'Lihat tutorial ' . $b['nama'] : 'Segera hadir' }}"
+                class="tutorial-item reveal"
+                @if($b['ada']) @click="$dispatch('open-tutorial', { bencana: '{{ $b['nama'] }}' })" @else disabled @endif
             >
                 <div class="text-4xl mb-3">{{ $b['icon'] }}</div>
-                <p class="font-head font-semibold text-navy text-sm">{{ $b['nama'] }}</p>
-                @if(!$b['tersedia'])
-                    <span class="tag bg-gray-100 text-gray-400 mt-2">Segera</span>
-                @else
-                    <span class="tag bg-siaga/10 text-siaga mt-2">Tersedia</span>
-                @endif
+                <p class="font-head font-semibold text-sm" style="color: var(--color-text-primary);">{{ $b['nama'] }}</p>
+                <span class="tag {{ $b['ada'] ? 'tag-available' : 'tag-soon' }}">{{ $b['ada'] ? 'Tersedia' : 'Segera' }}</span>
             </button>
             @endforeach
         </div>
     </div>
 </section>
 
-{{-- ═══════════════════════════════════════════
-    INFORMASI & CRAFTING — SURVIVE
-════════════════════════════════════════════ --}}
+{{-- ══════ INFORMASI & CRAFTING SURVIVAL ══════ --}}
 <section class="max-w-6xl mx-auto px-4 sm:px-6 py-16">
     <div class="mb-10 reveal">
-        <div class="divider"></div>
-        <h2 class="font-head text-3xl font-bold text-navy">Informasi & Crafting <span class="text-siaga">Survive</span></h2>
-        <p class="text-gray-500 mt-2">Keterampilan bertahan hidup yang bisa kamu pelajari dan praktikkan</p>
+        <div class="accent-bar"></div>
+        <h2 class="font-head text-3xl font-bold" style="color: var(--color-text-primary);">Informasi & Crafting Survival</h2>
+        <p class="mt-2" style="color: var(--color-text-muted);">Klik card untuk melihat detail dan cara membuat</p>
     </div>
-
-    <div class="grid md:grid-cols-2 gap-6">
-
-        {{-- Informasi (1 bahan) --}}
-        <div class="reveal">
-            <h3 class="font-head font-semibold text-navy mb-4 flex items-center gap-2">
-                <span class="w-6 h-6 bg-siaga/10 rounded-full flex items-center justify-center text-xs text-siaga font-bold">1</span>
-                Informasi Cepat
-                <span class="tag bg-siaga/10 text-siaga">1 bahan</span>
-            </h3>
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3" id="info-survive-grid">
-                @php
-                $infoItems = [
-                    ['nama' => 'Membuat Simpul', 'icon' => '🪢', 'bahan' => 'Hanya tali'],
-                    ['nama' => 'Buka Kaleng', 'icon' => '🥫', 'bahan' => 'Hanya kaleng'],
-                    ['nama' => 'Arah Mata Angin', 'icon' => '🧭', 'bahan' => 'Tanpa alat'],
-                    ['nama' => 'Sinyal Darurat', 'icon' => '🔦', 'bahan' => 'Hanya senter'],
-                    ['nama' => 'Berlindung', 'icon' => '🌿', 'bahan' => 'Bahan alam'],
-                ];
-                @endphp
-                @foreach($infoItems as $item)
-                <button class="tutorial-item bg-white rounded-xl p-4 text-center shadow-sm border border-transparent hover:border-siaga/30"
-                        @click="$dispatch('open-info', { nama: '{{ $item['nama'] }}', tipe: 'survive' })">
-                    <div class="text-3xl mb-2">{{ $item['icon'] }}</div>
-                    <p class="font-semibold text-navy text-xs leading-tight">{{ $item['nama'] }}</p>
-                    <p class="text-gray-400 text-xs mt-1">{{ $item['bahan'] }}</p>
-                </button>
-                @endforeach
+    <div @click="$dispatch('open-crafting', { item: 'Filter Air' })" class="info-main-card reveal">
+        <div class="grid md:grid-cols-[400px_1fr] gap-5 items-center">
+            <div class="preview-box">
+                <div class="preview-image text-8xl">🧴</div>
+                <div class="mt-4 flex items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-xl font-bold" style="color: var(--color-text-primary);">Filter Air</h3>
+                        <p class="text-sm mt-1" style="color: var(--color-text-muted);">Crafting survival dasar</p>
+                    </div>
+                    <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-white text-lg font-bold flex-shrink-0"
+                         style="background: var(--c-teal);">→</div>
+                </div>
             </div>
-        </div>
-
-        {{-- Crafting (lebih dari 1 bahan) --}}
-        <div class="reveal">
-            <h3 class="font-head font-semibold text-navy mb-4 flex items-center gap-2">
-                <span class="w-6 h-6 bg-navy/10 rounded-full flex items-center justify-center text-xs text-navy font-bold">+</span>
-                Crafting Darurat
-                <span class="tag bg-navy/10 text-navy">multi bahan</span>
-            </h3>
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3" id="crafting-survive-grid">
-                @php
-                $craftItems = [
-                    ['nama' => 'Filter Air', 'icon' => '💧', 'bahan' => 'Batu · Pasir · Arang'],
-                    ['nama' => 'Lentera Darurat', 'icon' => '🕯️', 'bahan' => 'Minyak · Kain · Kaleng'],
-                    ['nama' => 'Tandu Darurat', 'icon' => '🪵', 'bahan' => 'Bambu · Kain'],
-                    ['nama' => 'Pelampung', 'icon' => '🛟', 'bahan' => 'Botol · Tali'],
-                    ['nama' => 'Kompor Darurat', 'icon' => '🔥', 'bahan' => 'Kaleng · Arang'],
-                ];
-                @endphp
-                @foreach($craftItems as $item)
-                <button class="tutorial-item bg-white rounded-xl p-4 text-center shadow-sm border border-transparent hover:border-navy/30"
-                        @click="$dispatch('open-crafting', { nama: '{{ $item['nama'] }}', tipe: 'survive' })">
-                    <div class="text-3xl mb-2">{{ $item['icon'] }}</div>
-                    <p class="font-semibold text-navy text-xs leading-tight">{{ $item['nama'] }}</p>
-                    <p class="text-gray-400 text-xs mt-1">{{ $item['bahan'] }}</p>
-                </button>
-                @endforeach
+            <div>
+                <p class="text-xs font-bold uppercase tracking-wider mb-4" style="color: var(--color-text-muted);">Material</p>
+                <div class="item-grid">
+                    @foreach([['🧴','Botol'],['🔥','Arang'],['🪨','Batu'],['💧','Air']] as $m)
+                    <div class="item-small" style="cursor:default;">
+                        <div class="item-small-image text-4xl">{{ $m[0] }}</div>
+                        <p class="mt-3 text-sm font-bold text-center" style="color: var(--color-text-primary);">{{ $m[1] }}</p>
+                    </div>
+                    @endforeach
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-{{-- ═══════════════════════════════════════════
-    INFORMASI & CRAFTING — CAREGIVER
-════════════════════════════════════════════ --}}
-<section class="bg-white py-16">
+{{-- ══════ CAREGIVER ══════ --}}
+<section style="background: var(--color-surface);" class="py-16">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="mb-10 reveal">
-            <div class="divider" style="background:#27AE60"></div>
-            <h2 class="font-head text-3xl font-bold text-navy">Informasi & Crafting <span class="text-safe">Caregiver</span></h2>
-            <p class="text-gray-500 mt-2">Penanganan medis darurat dan pembuatan alat kesehatan improvisasi</p>
+            <div class="accent-bar" style="background: #27AE60;"></div>
+            <h2 class="font-head text-3xl font-bold" style="color: var(--color-text-primary);">
+                Crafting <span style="color: #27AE60;">Caregiver</span>
+            </h2>
         </div>
-
-        <div class="grid md:grid-cols-2 gap-6">
-
-            {{-- Informasi caregiver --}}
-            <div class="reveal">
-                <h3 class="font-head font-semibold text-navy mb-4 flex items-center gap-2">
-                    <span class="w-6 h-6 bg-safe/10 rounded-full flex items-center justify-center text-xs text-safe font-bold">ℹ</span>
-                    Panduan Medis Darurat
-                </h3>
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    @php
-                    $careInfo = [
-                        ['nama' => 'CPR Dasar', 'icon' => '❤️'],
-                        ['nama' => 'Balut Luka', 'icon' => '🩹'],
-                        ['nama' => 'Penurunan Kesadaran', 'icon' => '🧠'],
-                        ['nama' => 'Patah Tulang', 'icon' => '🦴'],
-                        ['nama' => 'Luka Bakar', 'icon' => '🔥'],
-                    ];
-                    @endphp
-                    @foreach($careInfo as $item)
-                    <button class="tutorial-item bg-cream rounded-xl p-4 text-center shadow-sm border border-transparent hover:border-safe/30"
-                            @click="$dispatch('open-info', { nama: '{{ $item['nama'] }}', tipe: 'caregiver' })">
-                        <div class="text-3xl mb-2">{{ $item['icon'] }}</div>
-                        <p class="font-semibold text-navy text-xs leading-tight">{{ $item['nama'] }}</p>
+        <div class="info-main-card no-hover reveal">
+            <div class="grid md:grid-cols-[260px_1fr] gap-6">
+                <div class="preview-box">
+                    <div class="preview-image text-7xl">🩹</div>
+                    <button class="mt-4 w-full h-11 rounded-full font-semibold text-sm"
+                            style="background: var(--color-surface); border: 1px solid var(--color-border); color: var(--color-text-primary);">
+                        Kain Segitiga
                     </button>
-                    @endforeach
                 </div>
-            </div>
-
-            {{-- Crafting caregiver --}}
-            <div class="reveal">
-                <h3 class="font-head font-semibold text-navy mb-4 flex items-center gap-2">
-                    <span class="w-6 h-6 bg-safe/10 rounded-full flex items-center justify-center text-xs text-safe font-bold">+</span>
-                    Crafting Alat Medis
-                </h3>
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    @php
-                    $careCraft = [
-                        ['nama' => 'Kain Segitiga', 'icon' => '📐', 'bahan' => 'Kain · Peniti'],
-                        ['nama' => 'Kasa Steril', 'icon' => '🩻', 'bahan' => 'Kain · Alkohol'],
-                        ['nama' => 'Masker Darurat', 'icon' => '😷', 'bahan' => 'Kain · Tali'],
-                        ['nama' => 'Bidai Tulang', 'icon' => '🪵', 'bahan' => 'Kayu · Kain'],
-                    ];
-                    @endphp
-                    @foreach($careCraft as $item)
-                    <button class="tutorial-item bg-cream rounded-xl p-4 text-center shadow-sm border border-transparent hover:border-safe/30"
-                            @click="$dispatch('open-crafting', { nama: '{{ $item['nama'] }}', tipe: 'caregiver' })">
-                        <div class="text-3xl mb-2">{{ $item['icon'] }}</div>
-                        <p class="font-semibold text-navy text-xs leading-tight">{{ $item['nama'] }}</p>
-                        <p class="text-gray-400 text-xs mt-1">{{ $item['bahan'] }}</p>
+                <div class="item-grid">
+                    @foreach([['🩹','Kain Segitiga'],['❤️','CPR'],['🩹','Perban'],['💊','Obat Darurat']] as $c)
+                    <button @click="$dispatch('open-info', { type: 'Caregiver', item: '{{ $c[1] }}' })" class="item-small">
+                        <div class="item-small-image text-4xl">{{ $c[0] }}</div>
+                        <p class="mt-3 text-sm font-bold text-center" style="color: var(--color-text-primary);">{{ $c[1] }}</p>
                     </button>
                     @endforeach
                 </div>
@@ -366,344 +313,349 @@
     </div>
 </section>
 
-{{-- ═══════════════════════════════════════════
-    NOMOR DARURAT
-════════════════════════════════════════════ --}}
+{{-- ══════ NOMOR DARURAT ══════ --}}
 <section class="max-w-6xl mx-auto px-4 sm:px-6 py-16" id="darurat">
     <div class="mb-8 reveal">
-        <div class="divider" style="background:#C0392B"></div>
-        <h2 class="font-head text-3xl font-bold text-navy">Nomor Darurat</h2>
-        <p class="text-gray-500 mt-2">Hubungi segera jika membutuhkan bantuan</p>
+        <div class="accent-bar" style="background: var(--color-danger);"></div>
+        <h2 class="font-head text-3xl font-bold" style="color: var(--color-text-primary);">Nomor Darurat</h2>
+        <p class="mt-2" style="color: var(--color-text-muted);">Hubungi segera jika membutuhkan bantuan</p>
     </div>
-
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         @php
         $darurat = [
-            ['nama' => 'Polisi',        'no' => '110',   'warna' => 'bg-navy',   'icon' => '👮'],
-            ['nama' => 'Ambulans',      'no' => '118',   'warna' => 'bg-danger', 'icon' => '🚑'],
-            ['nama' => 'Pemadam',       'no' => '113',   'warna' => 'bg-siaga',  'icon' => '🚒'],
-            ['nama' => 'BNPB',          'no' => '117',   'warna' => 'bg-safe',   'icon' => '🆘'],
-            ['nama' => 'SAR',           'no' => '115',   'warna' => 'bg-navy',   'icon' => '⛑️'],
-            ['nama' => 'PLN',           'no' => '123',   'warna' => 'bg-warn',   'icon' => '⚡'],
-            ['nama' => 'Pos Indonesia', 'no' => '161',   'warna' => 'bg-gray-600','icon' => '📮'],
-            ['nama' => 'PDAM',          'no' => '119',   'warna' => 'bg-sky-600','icon' => '💧'],
+            ['Polisi','110','👮','#2C3E50'],['Ambulans','118','🚑','#C0392B'],
+            ['Pemadam','113','🚒','#E67E22'],['BNPB','117','🆘','#27AE60'],
+            ['SAR','115','⛑️','#2C3E50'],['PLN','123','⚡','#F39C12'],
+            ['Pos Indonesia','161','📮','#7F8C8D'],['PDAM','119','💧','#2980B9'],
         ];
         @endphp
-
         @foreach($darurat as $d)
-        <a href="tel:{{ $d['no'] }}"
-            class="reveal flex items-center gap-3 bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-1 group">
-            <div class="w-12 h-12 {{ $d['warna'] }} rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
-                {{ $d['icon'] }}
-            </div>
+        <a href="tel:{{ $d[1] }}" class="darurat-card reveal">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
+                 style="background: {{ $d[3] }}1a;">{{ $d[2] }}</div>
             <div>
-                <p class="font-head font-bold text-navy text-sm">{{ $d['nama'] }}</p>
-                <p class="text-2xl font-extrabold font-head text-danger group-hover:text-siaga transition-colors">{{ $d['no'] }}</p>
+                <p class="font-head font-bold text-sm" style="color: var(--color-text-primary);">{{ $d[0] }}</p>
+                <p class="text-2xl font-extrabold font-head" style="color: var(--color-danger);">{{ $d[1] }}</p>
             </div>
         </a>
         @endforeach
     </div>
 </section>
 
-{{-- ═══════════════════════════════════════════
-    MODAL TUTORIAL BENCANA (FIXED HEIGHT & NEW LAYOUT)
-════════════════════════════════════════════ --}}
+@endsection
 
+
+{{-- ══════════════════════════════════════════════════
+     MODAL PORTAL
+══════════════════════════════════════════════════ --}}
+@push('modals')
+
+{{-- Modal: Tutorial Bencana --}}
 <div
     x-data="tutorialModal()"
     x-show="open"
-    x-transition.opacity
+    x-transition:enter="transition ease-out duration-200"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
+    x-transition:leave="transition ease-in duration-150"
+    x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0"
     x-cloak
-
     @open-tutorial.window="openModal($event.detail.bencana)"
-    @keydown.escape.window="closeModal()"
-    @click.self="closeModal()"
-
-    x-effect="
-    if(open){
-        document.body.classList.add('overflow-hidden');
-        document.querySelector('nav')?.classList.add('pointer-events-none', '!z-0');
-    } else {
-        document.body.classList.remove('overflow-hidden');
-        document.querySelector('nav')?.classList.remove('pointer-events-none', '!z-0');
-    }
-    "
-
-    class="modal-superfront p-4 bg-black/70 backdrop-blur-md"
-    :class="open ? '' : '!hidden'"
+    class="modal-overlay"
 >
-
-    {{-- WRAPPER UTAMA --}}
-
-    <div
-    @click.stop
-    class="relative w-full max-w-3xl bg-white rounded-[28px] shadow-[0_25px_80px_rgba(0,0,0,0.35)] flex flex-col h-[620px] overflow-hidden"
-    >
-
-        {{-- CLOSE BUTTON --}}
-        <button
-            @click="closeModal()"
-            class="absolute top-4 right-4 z-50 w-10 h-10 rounded-full bg-white shadow-md border border-gray-200 flex items-center justify-center hover:scale-105 transition-all duration-200"
-        >
-            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
-        </button>
-
-        {{-- HEADER --}}
-        <div class="px-6 pt-5 pb-4 border-b border-gray-100 pr-14 shrink-0">
-            <div class="flex flex-wrap items-center gap-2 mb-2">
-                <div class="px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-[10px] font-semibold capitalize">
-                    <span x-text="bencana"></span>
-                </div>
+    <div class="modal-backdrop" @click="closeModal()"></div>
+    <div class="modal-box modal-box-lg flex flex-col justify-between" @click.stop>
+        
+        <div class="modal-header border-b border-slate-100 flex items-center justify-between px-6 py-4 bg-white rounded-t-2xl relative">
+            <div class="modal-title flex items-center gap-2 text-slate-800 font-bold text-lg">
+                <i class="fa-solid fa-graduation-cap text-teal-600"></i>
+                <span x-text="bencana"></span>
             </div>
-
-                <template x-if="fase !== 'saat'">
-                    <span>
-                        Tutorial <span class="capitalize" x-text="fase"></span> Bencana
-                    </span>
-                </template>
-            </h2>
+            <button @click="closeModal()" class="modal-close text-slate-400 hover:text-rose-600 text-lg transition-colors">✕</button>
         </div>
 
-        {{-- TAB NAVIGASI --}}
-        <div class="grid grid-cols-3 border-b border-gray-100 shrink-0">
-            <button
-                @click="fase='sebelum'; currentStep=0"
-                :class="fase==='sebelum' ? 'border-b-2 border-siaga text-siaga bg-siaga/5' : 'text-gray-400 hover:bg-gray-50'"
-                class="h-12 text-sm font-semibold transition-all duration-200"
-            >
-                Sebelum
-            </button>
-            <button
-                @click="fase='saat'; currentStep=0"
-                :class="fase==='saat' ? 'border-b-2 border-danger text-danger bg-danger/5' : 'text-gray-400 hover:bg-gray-50'"
-                class="h-12 text-sm font-semibold transition-all duration-200"
-            >
-                Saat
-            </button>
-            <button
-                @click="fase='sesudah'; currentStep=0"
-                :class="fase==='sesudah' ? 'border-b-2 border-safe text-safe bg-safe/5' : 'text-gray-400 hover:bg-gray-50'"
-                class="h-12 text-sm font-semibold transition-all duration-200"
-            >
-                Sesudah
-            </button>
+        <div class="grid grid-cols-3 border-b border-slate-200 bg-slate-50">
+            <button @click="fase='sebelum'; currentStep=0" class="h-12 text-xs font-bold transition-colors uppercase tracking-wider"
+                    :style="fase==='sebelum' ? 'background:var(--c-teal);color:white' : 'color:var(--color-text-muted)'">Sebelum</button>
+            <button @click="fase='saat'; currentStep=0" class="h-12 text-xs font-bold transition-colors uppercase tracking-wider"
+                    :style="fase==='saat' ? 'background:var(--color-danger);color:white' : 'color:var(--color-text-muted)'">Saat</button>
+            <button @click="fase='sesudah'; currentStep=0" class="h-12 text-xs font-bold transition-colors uppercase tracking-wider"
+                    :style="fase==='sesudah' ? 'background:#27AE60;color:white' : 'color:var(--color-text-muted)'">Sesudah</button>
         </div>
 
-        {{-- AREA CONTENT --}}
-        <div class="flex-1 overflow-y-auto p-5">
-
-            {{-- ═════════════════════════════
-                KHUSUS SAAT
-            ═════════════════════════════ --}}
+        <div class="flex-1 overflow-y-auto px-6 pt-2 pb-4 flex flex-col justify-start">
+            
+            {{-- KONDISI 1: JIKA FASE "SAAT" (KUIS / DECISION TREE INTERAKTIF) --}}
             <template x-if="fase === 'saat'">
-                <div class="h-full flex flex-col justify-between">
-                    
-                    {{-- HEADER PERTANYAAN --}}
-                    <div class="flex items-center justify-between gap-4 mb-4">
-                        <button @click="prevStep()" class="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center shrink-0 transition">
-                            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                <div class="w-full flex flex-col items-center flex-1 py-0"> <div class="flex items-center justify-center gap-6 mb-2 w-full select-none">
+                        <button @click="prevStep()" class="w-9 h-9 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-800 transition-all">
+                            <i class="fa-solid fa-chevron-left text-sm"></i>
                         </button>
-                        
-                        <div class="text-center">
-                            <h3 class="font-head text-base sm:text-lg font-bold text-navy" x-text="currentQuestion() || 'Dimana Posisi Anda?'"></h3>
-                        </div>
-
-                        <button @click="nextStep()" class="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center shrink-0 transition">
-                            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        <h3 class="text-base font-bold text-slate-800 tracking-tight text-center max-w-[550px] w-full min-h-[32px] flex items-center justify-center" x-text="currentQuestion()"></h3>
+                        <button @click="nextStep()" class="w-9 h-9 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-800 transition-all">
+                            <i class="fa-solid fa-chevron-right text-sm"></i>
                         </button>
                     </div>
 
-                    {{-- DUA KARTU PILIHAN KONDISI (Grid 2 Kolom) --}}
-                    <div class="grid grid-cols-2 gap-4 my-auto">
+                    {{-- Card interaktif diperbesar dengan max-w-2xl --}}
+                    <div class="grid grid-cols-2 gap-6 w-full max-w-2xl mx-auto mb-0.5">
                         
-                        <div class="group border border-gray-200 hover:border-danger/40 rounded-2xl p-3 bg-gray-50/50 flex flex-col items-center text-center transition-all duration-300 shadow-sm">
-                            <span class="px-3 py-1 bg-gray-200 text-gray-700 font-bold text-xs rounded-full mb-3 group-hover:bg-danger group-hover:text-white transition-colors">
-                                Luar Ruangan
-                            </span>
-                            <div class="w-full h-[260px] rounded-2xl bg-gray-200 mb-3 overflow-hidden">
-                                <img src="/images/tutorial-gempa.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all">
+                        <button @click="lokasi = 'dalam'" 
+                                :class="lokasi === 'dalam' ? 'border-sky-500 bg-sky-50/30 ring-2 ring-sky-500/20' : 'border-slate-200 bg-white hover:bg-slate-50'"
+                                class="relative rounded-xl border p-6 flex flex-col items-center text-center transition-all duration-200 group min-h-[340px]"> <div class="absolute top-4 right-4 flex items-center gap-1">
+                                <span class="text-[10px] font-bold text-slate-400 group-hover:text-slate-600">Dalam ruangan</span>
+                                <span :class="lokasi === 'dalam' ? 'bg-sky-500' : 'bg-slate-200'" class="w-2 h-2 rounded-full inline-block"></span>
                             </div>
-                            <p class="font-bold text-xs sm:text-sm text-navy leading-tight">Jauhi Benda Rawan & Tiang</p>
-                        </div>
+                            
+                            <div class="w-full h-56 rounded-lg overflow-hidden mt-6 mb-4 shadow-sm border border-slate-100">
+                                <img src="/images/tutorial-gempa.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Dalam Ruangan">
+                            </div>
+                            <span class="text-base font-extrabold text-slate-700 tracking-wide mt-auto">Lindungi Kepala</span> </button>
 
-                        <div class="group border border-gray-200 hover:border-danger/40 rounded-2xl p-3 bg-gray-50/50 flex flex-col items-center text-center transition-all duration-300 shadow-sm">
-                            <span class="px-3 py-1 bg-gray-200 text-gray-700 font-bold text-xs rounded-full mb-3 group-hover:bg-danger group-hover:text-white transition-colors">
-                                Dalam Ruangan
-                            </span>
-                            <div class="w-full h-[260px] rounded-2xl bg-gray-200 mb-3 overflow-hidden">
-                                <img src="/images/tutorial-gempa.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all">
+                        <button @click="lokasi = 'luar'" 
+                                :class="lokasi === 'luar' ? 'border-teal-500 bg-teal-50/30 ring-2 ring-teal-500/20' : 'border-slate-200 bg-white hover:bg-slate-50'"
+                                class="relative rounded-xl border p-6 flex flex-col items-center text-center transition-all duration-200 group min-h-[340px]"> <div class="absolute top-4 right-4 flex items-center gap-1">
+                                <span class="text-[10px] font-bold text-slate-400 group-hover:text-slate-600">Luar ruangan</span>
+                                <span :class="lokasi === 'luar' ? 'bg-teal-500' : 'bg-slate-200'" class="w-2 h-2 rounded-full inline-block"></span>
                             </div>
-                            <p class="font-bold text-xs sm:text-sm text-navy leading-tight">Lindungi Kepala di Bawah Meja</p>
-                        </div>
+                            
+                            <div class="w-full h-56 rounded-lg overflow-hidden mt-6 mb-4 shadow-sm border border-slate-100">
+                                <img src="/images/tutorial-gempa.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Luar Ruangan">
+                            </div>
+                            <span class="text-base font-extrabold text-slate-700 tracking-wide mt-auto">Jauhi Benda Rawan</span> </button>
 
                     </div>
 
-                    {{-- BOTTOM AREA: FAST ACCESS BUTTONS & DONE --}}
-                    
-
-                        {{-- Fast Access Step Number di Paling Bawah --}}
-                        <div class="flex items-center justify-center gap-1.5 overflow-x-auto py-1">
-                            <template x-for="(item,index) in getSteps()" :key="index">
-                                <button
-                                    @click="currentStep=index"
-                                    :class="currentStep===index ? 'bg-danger text-white shadow-md' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'"
-                                    class="w-7 h-7 rounded-lg text-[11px] font-extrabold transition-all flex items-center justify-center shrink-0"
-                                >
-                                    <template x-if="index === 0">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                                    </template>
-                                    <template x-if="index !== 0">
-                                        <span x-text="index+1"></span>
-                                    </template>
-                                </button>
-                            </template>
-                        </div>
+                    <div class="w-full max-w-2xl bg-slate-50 rounded-xl p-4 border border-slate-100 text-center">
+                        <p class="text-xs font-medium text-slate-600 leading-relaxed" x-text="currentDescription()"></p>
                     </div>
 
                 </div>
             </template>
 
-            {{-- ═════════════════════════════
-                SEBELUM & SESUDAH 
-            ═════════════════════════════ --}}
+            {{-- KONDISI 2: JIKA FASE SEBELUM / SESUDAH (LIST LANGKAH BIASA) --}}
             <template x-if="fase !== 'saat'">
-                <div class="space-y-5">
-                    <template x-for="(step, i) in getSteps()" :key="i">
-                        <div class="flex gap-3.5 items-start">
-                            {{-- NUMBER BADGE --}}
-                            <div
-                                class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold text-white shadow-sm"
-                                :class="fase === 'sebelum' ? 'bg-siaga' : 'bg-safe'"
-                                x-text="i + 1"
-                            ></div>
-
-                            {{-- CONTENT STEP --}}
-                            <div class="flex-1">
-                              <div class="rounded-xl overflow-hidden h-44 bg-gray-100 mb-3 border border-gray-100 shadow-sm">
-                                    <img src="/images/tutorial-gempa.jpg" alt="Fase Image" class="w-full h-full object-cover">
+                <div class="w-full flex-1 overflow-y-auto px-6 py-2">
+                    
+                    {{-- Jarak antar card sedang (gap-3) --}}
+                    <div class="flex flex-col gap-3 w-full max-w-2xl mx-auto">
+                        
+                        {{-- LOOPING DATA LANGKAH --}}
+                        <template x-for="(langkah, index) in getSteps()" :key="index">
+                            {{-- Padding disetel ke p-4 agar ruang di dalam card pas --}}
+                            <div class="bg-white border border-slate-100 rounded-xl p-4 flex items-start gap-4 shadow-sm hover:shadow-md transition-all duration-200 w-full min-h-[120px]">
+                                
+                                {{-- 1. BOX GAMBAR KOTAK (Ukuran Sedang: w-28 h-28) --}}
+                                <div class="w-24 h-24 rounded-xl overflow-hidden border border-slate-100 bg-slate-50 shrink-0 relative">
+                                    <img src="/images/tutorial-gempa.jpg" class="w-full h-full object-cover" alt="Panduan">
+                                    
+                                    {{-- Badge nomor urut --}}
+                                    <div class="absolute top-2 left-2 w-5.5 h-5.5 bg-slate-900/80 text-white rounded flex items-center justify-center text-[10px] font-black backdrop-blur-sm">
+                                        <span x-text="index + 1"></span>
+                                    </div>
                                 </div>
-                                <p class="text-gray-700 leading-relaxed text-xs sm:text-sm" x-text="step"></p>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-            </template>
 
+                                {{-- 2. KONTEN TEKS (Judul & Deskripsi) --}}
+                                <div class="flex-1 text-left flex flex-col justify-start pt-1">
+                                    {{-- Judul sedikit dinaikkan ke text-sm/base --}}
+                                    <h4 class="text-sm sm:text-base font-extrabold text-slate-800 tracking-tight mb-1">
+                                        <span x-text="index === 0 ? 'Identifikasi Bahaya' : (index === 1 ? 'Persiapan Logistik' : 'Simulasi Rutin')"></span>
+                                    </h4>
+                                    
+                                    {{-- Deskripsi text-xs/sm yang proporsional --}}
+                                    <p class="text-xs sm:text-sm font-medium text-slate-500 leading-relaxed" x-text="langkah"></p>
+                                </div>
+
+                            </div>
+                        </template>
+
+                    </div>
+                </div>
+
+            </template>
+        </div>
+
+
+        {{-- FOOTER 1: Khusus muncul saat fase 'saat' --}}
+        <div x-show="fase === 'saat'" class="border-t border-slate-200 px-6 py-4 bg-slate-50 rounded-b-2xl flex flex-col items-center justify-center">
+            <div class="flex items-center justify-center gap-2 flex-wrap">
+                <template x-for="(item, index) in getSteps()" :key="index">
+                    <button @click="currentStep = index" 
+                            :class="currentStep === index ? 'bg-slate-800 text-white scale-105 shadow-sm' : 'bg-slate-200 text-slate-500 hover:bg-slate-300'"
+                            class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black transition-all duration-150">
+                        <span x-show="index === 0" class="flex items-center justify-center gap-0.5 text-[10px]">
+                            <i class="fa-solid fa-house-chimney text-[9px]"></i><span x-text="index+1"></span>
+                        </span>
+                        <span x-show="index !== 0" x-text="index+1"></span>
+                    </button>
+                </template>
+            </div>
+        </div>
+        
+        {{-- FOOTER 2: Dikasih x-show agar HANYA muncul saat BUKAN fase 'saat' (Sebelum & Sesudah) --}}
+        <div x-show="fase !== 'saat'" class="border-t border-slate-100 px-6 py-3 bg-slate-50/50 rounded-b-2xl flex items-center justify-center">
+            <div class="flex items-center justify-center gap-2 flex-wrap">
+                {{-- Looping angka berdasarkan jumlah langkah yang ada --}}
+                <template x-for="(item, index) in getSteps()" :key="index">
+                    <button @click="currentStep = index" 
+                            :class="currentStep === index ? 'bg-slate-800 text-white scale-105 shadow-sm' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'"
+                            class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black transition-all duration-150">
+                        <span x-text="index + 1"></span>
+                    </button>
+                </template>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{{-- Modal: Info / Caregiver --}}
+<div
+    x-data="infoModal()"
+    x-show="open"
+    x-transition:enter="transition ease-out duration-200"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
+    x-transition:leave="transition ease-in duration-150"
+    x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0"
+    x-cloak
+    @open-info.window="openModal($event.detail)"
+    class="modal-overlay"
+>
+    <div class="modal-backdrop" @click="closeModal()"></div>
+    <div class="modal-box flex flex-col justify-between" @click.stop>
+        <div class="modal-header border-b border-slate-100 px-6 py-4 bg-white rounded-t-2xl flex justify-between items-center">
+            <div>
+                <p class="text-[10px] uppercase tracking-widest font-black text-slate-400" x-text="type"></p>
+                <h2 class="modal-title mt-0.5 text-lg font-bold text-slate-800" x-text="item"></h2>
+            </div>
+            <button @click="closeModal()" class="modal-close text-slate-400 hover:text-rose-600">✕</button>
+        </div>
+        <div class="modal-body flex-1 p-6 overflow-y-auto flex flex-col justify-center">
+            <div class="w-full h-44 rounded-2xl flex items-center justify-center text-6xl mb-4 bg-slate-50 border border-slate-100">🧰</div>
+            <p class="text-sm leading-relaxed text-slate-600 text-center max-w-md mx-auto" x-text="description"></p>
+        </div>
+        <div class="p-4 bg-slate-50 border-t border-slate-100 rounded-b-2xl text-center">
+            <button @click="closeModal()" class="px-6 h-9 rounded-xl text-white font-bold text-xs bg-slate-800 hover:bg-slate-900 transition-colors">Tutup Panduan</button>
         </div>
     </div>
 </div>
 
-@endsection
+{{-- Modal: Crafting --}}
+<div
+    x-data="craftingModal()"
+    x-show="open"
+    x-transition:enter="transition ease-out duration-200"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
+    x-transition:leave="transition ease-in duration-150"
+    x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0"
+    x-cloak
+    @open-crafting.window="openModal($event.detail)"
+    class="modal-overlay"
+>
+    <div class="modal-backdrop" @click="closeModal()"></div>
+    <div class="modal-box modal-box-lg flex flex-col justify-between" @click.stop>
+        <div class="modal-header border-b border-slate-100 px-6 py-4 bg-white rounded-t-2xl flex justify-between items-center">
+            <div>
+                <p class="text-[10px] uppercase tracking-widest font-black text-slate-400">Crafting Survival</p>
+                <h2 class="modal-title mt-0.5 text-lg font-bold text-slate-800" x-text="item"></h2>
+            </div>
+            <button @click="closeModal()" class="modal-close text-slate-400 hover:text-rose-600">✕</button>
+        </div>
+        <div class="modal-body flex-1 p-6 overflow-y-auto">
+            <div class="grid md:grid-cols-[1fr_260px] gap-6 items-start">
+                <div>
+                    <div class="w-full h-48 rounded-2xl flex items-center justify-center text-7xl bg-slate-50 border border-slate-100">🧴</div>
+                    <div class="mt-4">
+                        <h3 class="text-base font-bold mb-1 text-slate-800">Filter Air</h3>
+                        <p class="text-xs leading-relaxed text-slate-500">Filter air darurat untuk menyaring partikel kasar saat sumber air bersih tidak tersedia.</p>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <div class="rounded-xl p-3 bg-slate-50 border border-slate-100">
+                        <p class="text-[10px] font-black uppercase tracking-wider mb-3 text-slate-400">Bahan</p>
+                        <div class="space-y-2">
+                            @foreach([['🧴','Botol Bekas','Wadah utama'],['🪨','Batu & Pasir','Penyaring awal'],['🔥','Arang','Penyaring karbon'],['🧶','Kain Kasa','Lapisan atas']] as $b)
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-lg flex items-center justify-center text-lg bg-white border border-slate-200">{{ $b[0] }}</div>
+                                <div>
+                                    <p class="font-bold text-xs text-slate-800">{{ $b[1] }}</p>
+                                    <p class="text-[10px] text-slate-400">{{ $b[2] }}</p>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="rounded-xl p-3 bg-emerald-50 border border-emerald-100">
+                        <p class="font-bold text-xs text-emerald-800 mb-1">⚠️ Tips Penting</p>
+                        <p class="text-[11px] leading-relaxed text-emerald-700">Tetap rebus air minimal 1 menit setelah penyaringan untuk memastikan keamanan.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="p-4 bg-slate-50 border-t border-slate-100 rounded-b-2xl text-right">
+            <button @click="closeModal()" class="px-5 h-9 rounded-xl text-white font-bold text-xs bg-slate-800 hover:bg-slate-900 transition-colors">Selesai Menyimak</button>
+        </div>
+    </div>
+</div>
+
+@endpush
 
 @push('scripts')
 <script>
-    // GSAP Hero entrance
-    gsap.from('#hero-text > *', {
-        opacity: 0,
-        y: 40,
-        stagger: 0.15,
-        duration: 0.9,
-        ease: 'power3.out',
-        delay: 0.2,
-    });
-    gsap.from('#hero-img', {
-        opacity: 0,
-        scale: 0.9,
-        duration: 1,
-        ease: 'power3.out',
-        delay: 0.4,
-    });
-    gsap.from('#scroll-hint', {
-        opacity: 0,
-        y: 10,
-        duration: 1,
-        delay: 1.2,
-        ease: 'power2.out',
-    });
+    gsap.from('#hero-text > *', { opacity: 0, y: 40, stagger: 0.15, duration: 0.9, ease: 'power3.out', delay: 0.2 });
+    gsap.from('#hero-img',      { opacity: 0, scale: 0.9, duration: 1, ease: 'power3.out', delay: 0.4 });
+    gsap.from('#scroll-hint',   { opacity: 0, y: 10, duration: 1, delay: 1.2, ease: 'power2.out' });
 
-    // Alpine component tutorial modal
     function tutorialModal() {
-    return {
-        open: false,
-        bencana: '',
-        fase: 'saat',
-        currentStep: 0,
-
-        openModal(nama) {
-            this.bencana = nama;
-            this.fase = 'saat';
-            this.currentStep = 0;
-            this.open = true;
-
-            document.body.classList.add('overflow-hidden');
-        },
-
-        closeModal() {
-            this.open = false;
-
-            document.body.classList.remove('overflow-hidden');
-        },
-
-        steps: {
-            'Gempa Bumi': {
-
-                sebelum: [
-                    'Identifikasi benda yang rawan jatuh dan amankan.',
-                    'Siapkan tas siaga dan dokumen penting.',
-                    'Latih simulasi evakuasi keluarga.'
-                ],
-
-                saat: [
-                    {
-                        question: 'Apa yang harus dilakukan saat guncangan pertama terasa?',
-                        description: 'Segera jatuhkan badan ke lantai agar tidak kehilangan keseimbangan akibat getaran.'
-                    },
-
-                    {
-                        question: 'Dimana tempat paling aman saat gempa berlangsung?',
-                        description: 'Berlindung di bawah meja kokoh atau lindungi kepala menggunakan tangan dan jauhi kaca.'
-                    },
-
-                    {
-                        question: 'Apa yang harus dilakukan setelah guncangan berhenti?',
-                        description: 'Keluar menuju area terbuka dengan tenang dan hindari bangunan, tiang, atau kabel listrik.'
-                    }
-                ],
-
-                sesudah: [
-                    'Periksa kondisi diri dan keluarga.',
-                    'Waspada gempa susulan.',
-                    'Ikuti informasi resmi dari BMKG dan BNPB.'
-                ]
-            }
-        },
-
-        getSteps() {
-            return this.steps[this.bencana]?.[this.fase] ?? [];
-        },
-
-        currentQuestion() {
-            return this.getSteps()[this.currentStep]?.question ?? '';
-        },
-
-        currentDescription() {
-            return this.getSteps()[this.currentStep]?.description ?? '';
-        },
-
-        nextStep() {
-            if (this.currentStep < this.getSteps().length - 1) {
-                this.currentStep++;
-            }
-        },
-
-        prevStep() {
-            if (this.currentStep > 0) {
-                this.currentStep--;
-            }
+        return {
+            open: false, bencana: '', fase: 'saat', currentStep: 0, lokasi: 'dalam',
+            openModal(nama) { this.bencana = nama; this.fase = 'saat'; this.currentStep = 0; this.lokasi = 'dalam'; this.open = true; document.body.classList.add('modal-open'); },
+            closeModal()    { this.open = false; document.body.classList.remove('modal-open'); },
+            steps: {
+                'Gempa Bumi': {
+                    ambang: ['Identifikasi benda yang rawan jatuh dan amankan.','Siapkan tas siaga dan dokumen penting.','Latih simulasi evakuasi keluarga.'],
+                    sebelum: ['Identifikasi benda yang rawan jatuh dan amankan.','Siapkan tas siaga dan dokumen penting.','Latih simulasi evakuasi keluarga.'],
+                    saat: [
+                        { question: 'Apa yang harus dilakukan saat guncangan pertama terasa?', description: 'Segera jatuhkan badan ke lantai agar tidak kehilangan keseimbangan akibat getaran.' },
+                        { question: 'Dimana tempat paling aman saat gempa berlangsung?', description: 'Berlindung di bawah meja kokoh atau lindungi kepala dan jauhi kaca.' },
+                        { question: 'Apa yang harus dilakukan setelah guncangan berhenti?', description: 'Keluar menuju area terbuka dengan tenang, hindari bangunan dan kabel listrik.' }
+                    ],
+                    sesudah: ['Periksa kondisi diri dan keluarga.','Waspada gempa susulan.','Ikuti informasi resmi dari BMKG dan BNPB.']
+                }
+            },
+            getSteps()          { return this.steps[this.bencana]?.[this.fase] ?? []; },
+            currentQuestion()   { return this.getSteps()[this.currentStep]?.question ?? ''; },
+            currentDescription(){ return this.getSteps()[this.currentStep]?.description ?? ''; },
+            nextStep() { if (this.currentStep < this.getSteps().length - 1) this.currentStep++; },
+            prevStep() { if (this.currentStep > 0) this.currentStep--; }
         }
     }
-}
+
+    function infoModal() {
+        const desc = {
+            'Kain Segitiga': 'Digunakan untuk menopang tangan cedera atau sebagai perban darurat di lapangan.',
+            'CPR': 'Teknik pertolongan pertama untuk membantu pernapasan dan sirkulasi darah saat darurat.',
+            'Perban': 'Digunakan menutup luka agar tidak terinfeksi dan membantu menghentikan pendarahan.',
+            'Obat Darurat': 'Persediaan medis dasar termasuk antiseptik, penghilang nyeri, dan obat demam.'
+        };
+        return {
+            open: false, type: '', item: '', description: '',
+            openModal(data) { this.open = true; this.type = data.type; this.item = data.item; this.description = desc[data.item] || 'Informasi belum tersedia.'; document.body.classList.add('modal-open'); },
+            closeModal()    { this.open = false; document.body.classList.remove('modal-open'); }
+        }
+    }
+
+    function craftingModal() {
+        return {
+            open: false, item: '',
+            openModal(data) { this.item = data.item; this.open = true; document.body.classList.add('modal-open'); },
+            closeModal()    { this.open = false; document.body.classList.remove('modal-open'); }
+        }
+    }
 </script>
 @endpush
