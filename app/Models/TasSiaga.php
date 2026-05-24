@@ -11,14 +11,19 @@ class TasSiaga extends Model
 
     protected $fillable = [
         'session_id',
-        // 'user_id', // uncomment saat ada login
         'nama_tas',
         'kategori',
         'liter',
+        'dim_p',  // panjang (cm)
+        'dim_l',  // lebar (cm)
+        'dim_t',  // tinggi (cm)
     ];
 
     protected $casts = [
         'liter' => 'float',
+        'dim_p' => 'float',
+        'dim_l' => 'float',
+        'dim_t' => 'float',
     ];
 
     public function items(): HasMany
@@ -26,14 +31,18 @@ class TasSiaga extends Model
         return $this->hasMany(TasItem::class, 'tas_id');
     }
 
-    public function itemsByZona(string $zona)
+    /**
+     * Hitung liter dari dimensi jika belum diset
+     */
+    public function getLiterAttribute($value): float
     {
-        return $this->items()->where('zona', $zona)->get();
+        if ($value) return (float) $value;
+        if ($this->dim_p && $this->dim_l && $this->dim_t) {
+            return round($this->dim_p * $this->dim_l * $this->dim_t / 1000, 1);
+        }
+        return 0;
     }
 
-    /**
-     * Cek apakah tas punya item tertentu (untuk supply check di Sesudah)
-     */
     public function hasSupply(string $keyword): bool
     {
         return $this->items()
