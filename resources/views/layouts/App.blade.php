@@ -21,7 +21,7 @@
             DESIGN TOKENS — ubah di sini saja
         ══════════════════════════════════════════════════ */
         :root {
-            /* Palette: colorhunt.co/palette/5a827e84ae92b9d4aafaffca */
+            /* Palette: Netral & Sebelum : colorhunt.co/palette/5a827e84ae92b9d4aafaffca */
             --c-teal:       #5A827E;
             --c-teal-light: #84AE92;
             --c-sage:       #B9D4AA;
@@ -32,6 +32,18 @@
             --c-teal-xdk:   #273d3b;
             --c-sage-lt:    #d4e6c9;
             --c-cream-dk:   #e8edae;
+
+            /* Palette: Saat */
+            --c-dark-red:   #7D0A0A;
+            --c-red:        #BF3131;
+            --c-beige:      #EAD196;
+            --c-light:      #EEEEEE;
+
+            /* Turunan */
+            --c-dark-red-dk:#580707;
+            --c-red-light:  #d85a5a;
+            --c-beige-dk:   #d6bc7d;
+            --c-light-dk:   #dcdcdc;
 
             /* Semantik */
             --color-bg:           #f4f8f0;
@@ -118,9 +130,9 @@
             position: relative;
             border-radius: var(--r-pill);
             transition: all 0.5s ease;
-            background: rgba(255, 255, 255, 0.15) !important;
-            border: 1px solid rgba(255, 255, 255, 0.25) !important;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.02) !important;
+            background: var(--c-sage-lt) !important;
+            border: 1px solid var(--c-sage) !important;
+            box-shadow: 0 8px 32px rgba(90, 130, 126, 0.1) !important;
         }
 
         /* Pseudo-element blur agar tidak merusak stacking context modal */
@@ -128,29 +140,29 @@
             content: '';
             position: absolute; inset: 0;
             border-radius: inherit;
-            backdrop-filter: blur(20px) saturate(120%);
-            -webkit-backdrop-filter: blur(20px) saturate(120%);
+            backdrop-filter: blur(8px) saturate(120%);
+            -webkit-backdrop-filter: blur(8px) saturate(120%);
             z-index: 0;
             pointer-events: none;
         }
 
         .nav-bar-inner > * { position: relative; z-index: 1; }
 
-        /* Nav pills transparan terang */
+        /* Nav pills dengan dark text untuk kontras di bg sage-lt */
         .nav-pill {
             padding: 10px 20px;
             border-radius: var(--r-pill);
             font-size: 14px;
             font-weight: 600;
             font-family: 'Sora', sans-serif;
-            color: rgba(255, 255, 255, 0.9) !important;
+            color: var(--c-teal-dk) !important;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             transition: all var(--t-fast);
         }
-        .nav-pill:hover { background: rgba(255, 255, 255, 0.18); color: var(--c-cream) !important; }
-        .nav-pill.active-nav { background: var(--c-cream) !important; color: var(--c-teal-xdk) !important; }
+        .nav-pill:hover { background: rgba(90, 130, 126, 0.15); color: var(--c-teal) !important; }
+        .nav-pill.active-nav { background: var(--c-teal) !important; color: white !important; }
 
         .mobile-nav {
             height: 48px; border-radius: var(--r-md);
@@ -339,7 +351,7 @@
 
                 {{-- Desktop menu --}}
                 <div class="hidden lg:flex items-center gap-1">
-                    <a href="{{ route('netral') }}"   class="nav-pill {{ request()->routeIs('netral')   ? 'active-nav' : '' }}">Beranda</a>
+                    <a href="{{ route('netral') }}"   class="nav-pill {{ request()->routeIs('netral')   ? 'active-nav' : '' }}">Netral</a>
                     <a href="{{ route('sebelum') }}"  class="nav-pill {{ request()->routeIs('sebelum')  ? 'active-nav' : '' }}">Sebelum</a>
                     <a href="{{ route('saat') }}"     class="nav-pill {{ request()->routeIs('saat*')    ? 'active-nav' : '' }}">Saat</a>
                     <a href="{{ route('sesudah') }}"  class="nav-pill {{ request()->routeIs('sesudah*') ? 'active-nav' : '' }}">Sesudah</a>
@@ -347,14 +359,8 @@
 
                 {{-- Right CTA --}}
                 <div class="hidden lg:flex items-center gap-3">
-                    <button class="w-11 h-11 rounded-full flex items-center justify-center transition-all hover:scale-105"
-                            style="background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3);">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: white;">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                    </button>
                     
-                    <a href="{{ route('netral') }}#darurat" class="btn btn-primary" style="height:44px; font-size:13px; background: var(--c-teal-dk);">
+                    <a href="{{ route('netral') }}#darurat" class="btn btn-primary" style="height:44px; font-size:13px; background: var(--c-teal);">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M5.07 19h13.86c1.54 0 2.5-1.67 1.73-3L13.73 4c-.77-1.33-2.69-1.33-3.46 0L3.34 16c-.77 1.33.19 3 1.73 3z"/>
                         </svg>
@@ -382,7 +388,7 @@
             <a href="{{ route('sebelum') }}" class="mobile-nav">Sebelum</a>
             <a href="{{ route('saat') }}"     class="mobile-nav">Saat</a>
             <a href="{{ route('sesudah') }}" class="mobile-nav">Sesudah</a>
-            <a href="{{ route('saat') }}" class="btn btn-primary mt-2" style="height:48px; border-radius: var(--r-lg); justify-content: center; background: var(--c-teal-dk);">
+            <a href="{{ route('saat') }}" class="btn btn-primary mt-2" style="height:48px; border-radius: var(--r-lg); justify-content: center; background: var(--c-teal);">
                 Mode Darurat
             </a>
         </div>

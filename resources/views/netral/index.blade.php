@@ -247,68 +247,94 @@
     </div>
 </section>
 
-{{-- ══════ INFORMASI & CRAFTING SURVIVAL ══════ --}}
+{{-- ══════ SECTION 1: INFORMASI SURVIVAL (1 BARANG) ══════ --}}
 <section class="max-w-6xl mx-auto px-4 sm:px-6 py-16">
     <div class="mb-10 reveal">
-        <div class="accent-bar"></div>
-        <h2 class="font-head text-3xl font-bold" style="color: var(--color-text-primary);">Informasi & Crafting Survival</h2>
-        <p class="mt-2" style="color: var(--color-text-muted);">Klik card untuk melihat detail dan cara membuat</p>
+        <div class="accent-bar" style="background: var(--c-teal, #008080);"></div>
+        <h2 class="font-head text-3xl font-bold" style="color: var(--color-text-primary);">Informasi & Survive</h2>
+        <p class="mt-2" style="color: var(--color-text-muted);">Panduan satu langkah untuk bertahan hidup (Hanya butuh 1 barang)</p>
     </div>
-    <div @click="$dispatch('open-crafting', { item: 'Filter Air' })" class="info-main-card reveal">
-        <div class="grid md:grid-cols-[400px_1fr] gap-5 items-center">
-            <div class="preview-box">
-                <div class="preview-image text-8xl">🧴</div>
-                <div class="mt-4 flex items-center justify-between gap-4">
-                    <div>
-                        <h3 class="text-xl font-bold" style="color: var(--color-text-primary);">Filter Air</h3>
-                        <p class="text-sm mt-1" style="color: var(--color-text-muted);">Crafting survival dasar</p>
-                    </div>
-                    <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-white text-lg font-bold flex-shrink-0"
-                         style="background: var(--c-teal);">→</div>
-                </div>
+
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
+        @foreach([
+            ['🪢', 'Simpul Kilat', 'Panduan membuat simpul kuat darurat secara cepat hanya menggunakan seutas tali.'],
+            ['🥫', 'Membuka Kaleng', 'Teknik membuka makanan kaleng darurat tanpa menggunakan alat pembuka khusus.'],
+            ['🧭', 'Arah Mata Angin', 'Cara menentukan arah mata angin menggunakan metode navigasi alamiah.'],
+            ['☀️', 'Baca Jam Matahari', 'Estimasi penunjuk waktu darurat dengan memanfaatkan bayangan dari sinar matahari.']
+        ] as $info)
+        <div @click="$dispatch('open-info', { type: 'Survive', item: '{{ $info[1] }}' })" 
+             class="info-main-card reveal cursor-pointer p-5 rounded-2xl border" 
+             style="background: var(--color-surface); border-color: var(--color-border);">
+            <div class="preview-box h-48 rounded-xl flex items-center justify-center text-6xl mb-4 bg-opacity-5" style="background: var(--color-text-muted);">
+                {{ $info[0] }}
             </div>
-            <div>
-                <p class="text-xs font-bold uppercase tracking-wider mb-4" style="color: var(--color-text-muted);">Material</p>
-                <div class="item-grid">
-                    @foreach([['🧴','Botol'],['🔥','Arang'],['🪨','Batu'],['💧','Air']] as $m)
-                    <div class="item-small" style="cursor:default;">
-                        <div class="item-small-image text-4xl">{{ $m[0] }}</div>
-                        <p class="mt-3 text-sm font-bold text-center" style="color: var(--color-text-primary);">{{ $m[1] }}</p>
-                    </div>
-                    @endforeach
+            <h3 class="text-xl font-bold mt-2" style="color: var(--color-text-primary);">{{ $info[1] }}</h3>
+            <p class="text-sm mt-1 leading-relaxed" style="color: var(--color-text-muted);">{{ $info[2] }}</p>
+        </div>
+        @endforeach
+    </div>
+</section>
+
+{{-- ══════ SECTION 2: CRAFTING SURVIVAL (LIST ITEM) ══════ --}}
+<section style="background: var(--color-surface);" class="py-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="mb-10 reveal">
+            <div class="accent-bar" style="background: var(--c-teal, #008080);"></div>
+            <h2 class="font-head text-3xl font-bold" style="color: var(--color-text-primary);">Crafting Survival</h2>
+            <p class="mt-2" style="color: var(--color-text-muted);">Informasi pembuatan alat (Bahan lebih dari 1)</p>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            @foreach([
+                ['🧴', 'Filter Air', 'air-bersih'],
+                ['🪝', 'Jerat Sederhana', 'jerat-makanan'],
+                ['🔥', 'Korek Darurat', 'korek-api'],
+                ['🧭', 'Kompas Sederha', 'kompas']
+            ] as $craft)
+            <button 
+                @click="$dispatch('open-crafting', { type: 'Survival', item: '{{ $craft[1] }}', icon: '{{ $craft[0] }}' })"
+                class="info-main-card reveal p-5 rounded-2xl border cursor-pointer transition-all hover:shadow-md hover:-translate-y-1"
+                style="background: var(--color-surface); border-color: var(--color-border);">
+                <div class="preview-box h-40 rounded-xl flex items-center justify-center text-5xl mb-4" style="background: rgba(var(--color-text-muted-rgb, 128,128,128), 0.1);">
+                    {{ $craft[0] }}
                 </div>
-            </div>
+                <h3 class="text-sm font-bold" style="color: var(--color-text-primary);">{{ $craft[1] }}</h3>
+                <p class="text-xs mt-1" style="color: var(--color-text-muted);">Tap untuk detail crafting</p>
+            </button>
+            @endforeach
         </div>
     </div>
 </section>
 
-{{-- ══════ CAREGIVER ══════ --}}
-<section style="background: var(--color-surface);" class="py-16">
+{{-- ══════ SECTION 3: CRAFTING CAREGIVER (LIST ITEM) ══════ --}}
+<section class="py-16">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="mb-10 reveal">
             <div class="accent-bar" style="background: #27AE60;"></div>
             <h2 class="font-head text-3xl font-bold" style="color: var(--color-text-primary);">
                 Crafting <span style="color: #27AE60;">Caregiver</span>
             </h2>
+            <p class="mt-2" style="color: var(--color-text-muted);">Panduan medis darurat & pembuatan alat kesehatan improvisasi</p>
         </div>
-        <div class="info-main-card no-hover reveal">
-            <div class="grid md:grid-cols-[260px_1fr] gap-6">
-                <div class="preview-box">
-                    <div class="preview-image text-7xl">🩹</div>
-                    <button class="mt-4 w-full h-11 rounded-full font-semibold text-sm"
-                            style="background: var(--color-surface); border: 1px solid var(--color-border); color: var(--color-text-primary);">
-                        Kain Segitiga
-                    </button>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            @foreach([
+                ['🩹', 'Kain Segitiga', 'kain-segitiga'],
+                ['🧪', 'Cairan P3K', 'cairan-p3k'],
+                ['🩺', 'Perban Darurat', 'perban-darurat'],
+                ['💊', 'Kit Obat Medis', 'kit-obat']
+            ] as $care)
+            <button 
+                @click="$dispatch('open-crafting', { type: 'Caregiver', item: '{{ $care[1] }}', icon: '{{ $care[0] }}' })"
+                class="info-main-card reveal p-5 rounded-2xl border cursor-pointer transition-all hover:shadow-md hover:-translate-y-1"
+                style="background: var(--color-surface); border-color: var(--color-border);">
+                <div class="preview-box h-40 rounded-xl flex items-center justify-center text-5xl mb-4" style="background: rgba(var(--color-text-muted-rgb, 128,128,128), 0.1);">
+                    {{ $care[0] }}
                 </div>
-                <div class="item-grid">
-                    @foreach([['🩹','Kain Segitiga'],['❤️','CPR'],['🩹','Perban'],['💊','Obat Darurat']] as $c)
-                    <button @click="$dispatch('open-info', { type: 'Caregiver', item: '{{ $c[1] }}' })" class="item-small">
-                        <div class="item-small-image text-4xl">{{ $c[0] }}</div>
-                        <p class="mt-3 text-sm font-bold text-center" style="color: var(--color-text-primary);">{{ $c[1] }}</p>
-                    </button>
-                    @endforeach
-                </div>
-            </div>
+                <h3 class="text-sm font-bold" style="color: var(--color-text-primary);">{{ $care[1] }}</h3>
+                <p class="text-xs mt-1" style="color: var(--color-text-muted);">Tap untuk detail crafting</p>
+            </button>
+            @endforeach
         </div>
     </div>
 </section>
@@ -561,40 +587,45 @@
     <div class="modal-box modal-box-lg flex flex-col justify-between" @click.stop>
         <div class="modal-header border-b border-slate-100 px-6 py-4 bg-white rounded-t-2xl flex justify-between items-center">
             <div>
-                <p class="text-[10px] uppercase tracking-widest font-black text-slate-400">Crafting Survival</p>
+                <p class="text-[10px] uppercase tracking-widest font-black" :style="type==='Survival'?'color:var(--c-teal)':'color:#27AE60'" x-text="'Crafting ' + type"></p>
                 <h2 class="modal-title mt-0.5 text-lg font-bold text-slate-800" x-text="item"></h2>
             </div>
             <button @click="closeModal()" class="modal-close text-slate-400 hover:text-rose-600">✕</button>
         </div>
         <div class="modal-body flex-1 p-6 overflow-y-auto">
-            <div class="grid md:grid-cols-[1fr_260px] gap-6 items-start">
-                <div>
-                    <div class="w-full h-48 rounded-2xl flex items-center justify-center text-7xl bg-slate-50 border border-slate-100">🧴</div>
-                    <div class="mt-4">
-                        <h3 class="text-base font-bold mb-1 text-slate-800">Filter Air</h3>
-                        <p class="text-xs leading-relaxed text-slate-500">Filter air darurat untuk menyaring partikel kasar saat sumber air bersih tidak tersedia.</p>
+            <div class="grid md:grid-cols-[300px_1px_1fr] gap-6 items-stretch">
+                
+                {{-- Kolom Kiri: Icon Besar --}}
+                <div class="flex flex-col justify-between items-center p-6 rounded-2xl relative" style="background: rgba(var(--color-text-muted-rgb, 128,128,128), 0.1); min-height: 280px;">
+                    <div class="my-auto text-7xl select-none" x-text="icon"></div>
+                    <div class="w-full text-center">
+                        <span class="inline-block bg-white text-gray-900 px-6 py-2 rounded-full font-bold text-sm tracking-wide shadow-sm" x-text="item">
+                        </span>
                     </div>
                 </div>
-                <div class="space-y-3">
-                    <div class="rounded-xl p-3 bg-slate-50 border border-slate-100">
-                        <p class="text-[10px] font-black uppercase tracking-wider mb-3 text-slate-400">Bahan</p>
-                        <div class="space-y-2">
-                            @foreach([['🧴','Botol Bekas','Wadah utama'],['🪨','Batu & Pasir','Penyaring awal'],['🔥','Arang','Penyaring karbon'],['🧶','Kain Kasa','Lapisan atas']] as $b)
-                            <div class="flex items-center gap-2.5">
-                                <div class="w-8 h-8 rounded-lg flex items-center justify-center text-lg bg-white border border-slate-200">{{ $b[0] }}</div>
-                                <div>
-                                    <p class="font-bold text-xs text-slate-800">{{ $b[1] }}</p>
-                                    <p class="text-[10px] text-slate-400">{{ $b[2] }}</p>
-                                </div>
+
+                {{-- Divider --}}
+                <div class="hidden md:block w-[1px] bg-gray-300 my-4 opacity-60"></div>
+
+                {{-- Kolom Kanan: Bahan Grid --}}
+                <div class="p-5 rounded-2xl flex flex-col justify-center" style="background: rgba(var(--color-text-muted-rgb, 128,128,128), 0.05);">
+                    <div class="grid grid-cols-2 gap-4">
+                        <template x-for="(material, idx) in materials" :key="idx">
+                            <div class="bg-white rounded-xl p-5 flex flex-col items-center justify-center relative shadow-sm border border-gray-100 min-h-[110px]">
+                                <template x-if="material.swappable">
+                                    <button @click.stop="$dispatch('swap-material', { target: material.name })" 
+                                            class="absolute top-2 right-2 w-7 h-7 bg-gray-100 hover:bg-gray-200 rounded-md flex items-center justify-center text-gray-500 hover:text-gray-800 transition shadow-xs text-sm"
+                                            title="Pilih bahan alternatif">
+                                        ⇅
+                                    </button>
+                                </template>
+                                <div class="text-4xl mb-2 select-none" x-text="material.icon"></div>
+                                <p class="text-xs font-bold text-center text-gray-700" x-text="material.name"></p>
                             </div>
-                            @endforeach
-                        </div>
-                    </div>
-                    <div class="rounded-xl p-3 bg-emerald-50 border border-emerald-100">
-                        <p class="font-bold text-xs text-emerald-800 mb-1">⚠️ Tips Penting</p>
-                        <p class="text-[11px] leading-relaxed text-emerald-700">Tetap rebus air minimal 1 menit setelah penyaringan untuk memastikan keamanan.</p>
+                        </template>
                     </div>
                 </div>
+
             </div>
         </div>
         <div class="p-4 bg-slate-50 border-t border-slate-100 rounded-b-2xl text-right">
@@ -651,10 +682,108 @@
     }
 
     function craftingModal() {
+        const craftingData = {
+            'Survival': {
+                'Filter Air': {
+                    icon: '🧴',
+                    materials: [
+                        {icon: '🧴', name: 'Botol Plastik', swappable: true},
+                        {icon: '🔥', name: 'Arang Aktif', swappable: true},
+                        {icon: '🪨', name: 'Kerikil / Batu', swappable: false},
+                        {icon: '🌾', name: 'Pasir Bersih', swappable: true}
+                    ]
+                },
+                'Jerat Sederhana': {
+                    icon: '🪝',
+                    materials: [
+                        {icon: '🪢', name: 'Tali/Benang', swappable: true},
+                        {icon: '🌿', name: 'Ranting', swappable: false},
+                        {icon: '🔧', name: 'Batu Tajam', swappable: true},
+                        {icon: '🪵', name: 'Kayu Konstruksi', swappable: false}
+                    ]
+                },
+                'Korek Darurat': {
+                    icon: '🔥',
+                    materials: [
+                        {icon: '🪵', name: 'Kayu Kering', swappable: false},
+                        {icon: '🪨', name: 'Batu Kersik', swappable: true},
+                        {icon: '🍃', name: 'Daun/Rumput', swappable: true},
+                        {icon: '💨', name: 'Udara Kering', swappable: false}
+                    ]
+                },
+                'Kompas Sederha': {
+                    icon: '🧭',
+                    materials: [
+                        {icon: '⚡', name: 'Magnet/Logam', swappable: false},
+                        {icon: '🪡', name: 'Jarum Logam', swappable: true},
+                        {icon: '💧', name: 'Air/Minyak', swappable: true},
+                        {icon: '🍃', name: 'Daun Apung', swappable: true}
+                    ]
+                }
+            },
+            'Caregiver': {
+                'Kain Segitiga': {
+                    icon: '🩹',
+                    materials: [
+                        {icon: '🧣', name: 'Kain Slayer', swappable: true},
+                        {icon: '✂️', name: 'Gunting Steril', swappable: false},
+                        {icon: '🧷', name: 'Peniti', swappable: true},
+                        {icon: '🧼', name: 'Antiseptik', swappable: false}
+                    ]
+                },
+                'Cairan P3K': {
+                    icon: '🧪',
+                    materials: [
+                        {icon: '🧴', name: 'Botol Steril', swappable: true},
+                        {icon: '💧', name: 'Air Matang', swappable: false},
+                        {icon: '🧂', name: 'Garam/Antiseptik', swappable: true},
+                        {icon: '🧹', name: 'Pengaduk', swappable: true}
+                    ]
+                },
+                'Perban Darurat': {
+                    icon: '🩺',
+                    materials: [
+                        {icon: '🧻', name: 'Kain Steril', swappable: true},
+                        {icon: '🧵', name: 'Benang/Tali', swappable: true},
+                        {icon: '🧼', name: 'Antiseptik', swappable: false},
+                        {icon: '✂️', name: 'Gunting', swappable: true}
+                    ]
+                },
+                'Kit Obat Medis': {
+                    icon: '💊',
+                    materials: [
+                        {icon: '💊', name: 'Obat Darurat', swappable: false},
+                        {icon: '🩹', name: 'Plester Luka', swappable: true},
+                        {icon: '🧴', name: 'Cairan Pembersih', swappable: true},
+                        {icon: '🧷', name: 'Pengikat', swappable: true}
+                    ]
+                }
+            }
+        };
+
         return {
-            open: false, item: '',
-            openModal(data) { this.item = data.item; this.open = true; document.body.classList.add('modal-open'); },
-            closeModal()    { this.open = false; document.body.classList.remove('modal-open'); }
+            open: false,
+            type: '',
+            item: '',
+            icon: '',
+            materials: [],
+            openModal(data) {
+                this.type = data.type;
+                this.item = data.item;
+                this.icon = data.icon;
+                
+                const itemData = craftingData[data.type]?.[data.item];
+                if (itemData) {
+                    this.materials = itemData.materials;
+                }
+                
+                this.open = true;
+                document.body.classList.add('modal-open');
+            },
+            closeModal() {
+                this.open = false;
+                document.body.classList.remove('modal-open');
+            }
         }
     }
 </script>

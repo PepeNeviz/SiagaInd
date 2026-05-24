@@ -7,14 +7,25 @@
 <style>
 
     /* ====================================================
-        SAAT PAGE — RUSTY LAKE STYLE
+        SAAT PAGE — RED & BEIGE PALETTE
     ==================================================== */
+    :root {
+        --c-dark-red:   #7D0A0A;
+        --c-red:        #BF3131;
+        --c-beige:      #EAD196;
+        --c-light:      #EEEEEE;
+        
+        --c-dark-red-dk: #580707;
+        --c-red-light:   #d85a5a;
+        --c-beige-dk:    #d6bc7d;
+        --c-light-dk:    #dcdcdc;
+    }
 
     .saat-bg{
         background:
             radial-gradient(circle at top left, rgba(191,49,49,.14), transparent 28%),
             radial-gradient(circle at bottom right, rgba(125,10,10,.18), transparent 35%),
-            linear-gradient(135deg,#1B1B1B 0%, #242424 100%);
+            linear-gradient(135deg, #f5f1eb 0%, #fffbf5 100%);
         position:relative;
         overflow:hidden;
     }
@@ -24,17 +35,17 @@
         position:absolute;
         inset:0;
         background-image:
-            linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+            linear-gradient(rgba(125,10,10,.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(125,10,10,.04) 1px, transparent 1px);
         background-size:40px 40px;
         opacity:.5;
     }
 
     .rust-card{
-        background:#EEEEEE;
-        border:1px solid rgba(0,0,0,.06);
+        background: var(--c-light);
+        border: 1px solid rgba(191,49,49,.12);
         box-shadow:
-            0 12px 40px rgba(0,0,0,.07),
+            0 12px 40px rgba(125,10,10,.08),
             inset 0 1px 0 rgba(255,255,255,.7);
     }
 
@@ -47,7 +58,7 @@
 
     .tutorial-card:hover{
         transform:translateY(-6px);
-        box-shadow:0 18px 50px rgba(125,10,10,.14);
+        box-shadow:0 18px 50px rgba(191,49,49,.16);
     }
 
     .tutorial-card::after{
@@ -60,12 +71,12 @@
     }
 
     .visual-box{
-        background:#D9D9D9;
+        background: var(--c-beige);
         border-radius:20px;
     }
 
     .phase-badge{
-        background:#BF3131;
+        background: var(--c-red);
         color:white;
     }
 
@@ -75,19 +86,19 @@
     }
 
     .popup-panel{
-        background:#F2F2F2;
+        background: var(--c-light);
         border-radius:32px;
         overflow:hidden;
     }
 
     .question-option{
-        border:1px solid rgba(0,0,0,.08);
+        border: 1px solid rgba(191,49,49,.12);
         transition:.2s ease;
         background:white;
     }
 
     .question-option:hover{
-        border-color:#BF3131;
+        border-color: var(--c-red);
         transform:translateY(-4px);
     }
 
@@ -95,7 +106,7 @@
         width:38px;
         height:38px;
         border-radius:10px;
-        background:#D9D9D9;
+        background: var(--c-beige);
         display:flex;
         align-items:center;
         justify-content:center;
@@ -106,7 +117,7 @@
     }
 
     .step-btn.active{
-        background:#BF3131;
+        background: var(--c-red);
         color:white;
     }
 
@@ -114,7 +125,7 @@
         width:44px;
         height:44px;
         border-radius:14px;
-        background:#DADADA;
+        background: var(--c-beige);
         display:flex;
         align-items:center;
         justify-content:center;
@@ -123,80 +134,46 @@
     }
 
     .nav-arrow:hover{
-        background:#BF3131;
+        background: var(--c-red);
         color:white;
     }
 
     .done-btn{
-        background:#BF3131;
+        background: var(--c-red);
         color:white;
         transition:.2s ease;
     }
 
     .done-btn:hover{
-        background:#7D0A0A;
+        background: var(--c-dark-red);
     }
 
     .injury-btn{
         transition:.2s ease;
         background:white;
-        border:1px solid rgba(0,0,0,.06);
+        border: 1px solid rgba(191,49,49,.12);
     }
 
     .injury-btn:hover{
         transform:translateY(-4px);
-        border-color:#BF3131;
+        border-color: var(--c-red);
     }
 
 </style>
 
 <div
     x-data="saatPage()"
-    class="bg-[#EEEEEE] min-h-screen"
->
-
-    {{-- HERO --}}
-    <section class="saat-bg min-h-[45vh] flex items-center">
-
-        <div class="relative z-10 max-w-6xl mx-auto px-5 py-24 w-full">
-
-            <div class="max-w-3xl">
-
-                <div class="phase-badge inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold mb-7">
-                    <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
-                    MODE DARURAT
-                </div>
-
-                <h1 class="font-head text-5xl md:text-7xl font-black text-white leading-[1.05]">
-                    Bertindak<br>
-                    <span class="text-[#EAD196]">Secepat Mungkin.</span>
-                </h1>
-
-                <p class="text-white/65 text-lg max-w-xl mt-7 leading-relaxed">
-                    Pilih bencana, jawab situasi secara cepat, dan ikuti decision tree
-                    hingga mencapai kondisi aman.
-                </p>
-
-            </div>
-
-        </div>
-
-    </section>
 
     {{-- TUTORIAL --}}
     <section class="py-24">
 
         <div class="max-w-6xl mx-auto px-5">
 
-            <div class="text-center mb-16">
+            <div class="text-center mb-12 mt-14">
 
-                <h2 class="font-head text-5xl font-black text-[#111]">
+                <h2 class="font-head text-5xl font-black" style="color: var(--c-dark-red)">
                     Tutorial
                 </h2>
-
-                <p class="text-[#8D8D8D] text-2xl mt-2">
-                    Sebelum Bencana
-                </p>
 
             </div>
 
@@ -224,7 +201,7 @@
                                         x-text="item.name"
                                     ></h3>
 
-                                    <div class="w-8 h-8 rounded-full bg-[#BF3131] text-white flex items-center justify-center">
+                                    <div class="w-8 h-8 rounded-full text-white flex items-center justify-center" style="background: var(--c-red)">
                                         →
                                     </div>
 
@@ -238,7 +215,7 @@
                                 <div class="flex gap-2 flex-wrap">
 
                                     <template x-for="tag in item.tags">
-                                        <span class="px-3 py-1 rounded-full bg-[#BF3131]/10 text-[#BF3131] text-xs font-bold">
+                                        <span class="px-3 py-1 rounded-full text-xs font-bold" style="background: rgba(191,49,49,.12); color: var(--c-red)">
                                             <span x-text="tag"></span>
                                         </span>
                                     </template>
@@ -369,7 +346,7 @@
                 </div>
 
                 {{-- RIGHT --}}
-                <div class="bg-[#E7E7E7] p-8 flex items-center">
+                <div class="p-8 flex items-center" style="background: var(--c-beige)">
 
                     <div class="w-full">
 
