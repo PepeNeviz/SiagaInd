@@ -4,119 +4,162 @@
 
 @push('styles')
 <style>
+/* BAGIAN TAS - WARNA BARU */
 #bag-wrap{position:relative;width:260px;user-select:none}
 #bag-svg{width:260px;display:block}
 #inner-area{position:absolute;top:108px;left:46px;width:168px;height:218px;overflow:hidden}
 .zona{position:absolute;left:0;width:168px;transition:background .15s,box-shadow .15s}
-#zona-a{top:0;height:72px;background:rgba(192,57,43,.04);border-bottom:1px dashed rgba(192,57,43,.25)}
-#zona-b{top:72px;height:72px;background:rgba(230,126,34,.04);border-bottom:1px dashed rgba(230,126,34,.25)}
-#zona-c{top:144px;height:74px;background:rgba(39,174,96,.04)}
-.zona.drag-v{background:rgba(39,174,96,.18)!important;box-shadow:inset 0 0 0 2px #27AE60}
-.zona.drag-iv{background:rgba(192,57,43,.13)!important;box-shadow:inset 0 0 0 2px #C0392B}
+/* Menggunakan palette baru untuk zona */
+#zona-a{top:0;height:72px;background:rgba(90,130,126,.08);border-bottom:1px dashed rgba(90,130,126,.3)}
+#zona-b{top:72px;height:72px;background:rgba(132,174,146,.08);border-bottom:1px dashed rgba(132,174,146,.3)}
+#zona-c{top:144px;height:74px;background:rgba(185,212,170,.08)}
+
+.zona.drag-v{background:rgba(185,212,170,.3)!important;box-shadow:inset 0 0 0 2px #84AE92}
+.zona.drag-iv{background:rgba(90,130,126,.2)!important;box-shadow:inset 0 0 0 2px #5A827E}
+
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
 .do-shake{animation:shake .3s ease}
 .placed{position:absolute;cursor:grab;border-radius:3px;transition:opacity .15s}
 .placed:active{cursor:grabbing}
 .placed.dp{opacity:.3}
-.ghost-box{position:absolute;pointer-events:none;border:2px dashed #27AE60;border-radius:4px;background:rgba(39,174,96,.12);z-index:40;display:none}
-.ghost-box.bad{border-color:#C0392B;background:rgba(192,57,43,.1)}
-.tas-tab{white-space:nowrap;transition:all .2s}
-.tas-tab.active{background:#2C3E50;color:#fff;border-color:#2C3E50}
+.ghost-box{position:absolute;pointer-events:none;border:2px dashed #5A827E;border-radius:4px;background:rgba(90,130,126,.15);z-index:40;display:none}
+.ghost-box.bad{border-color:#5A827E;background:rgba(90,130,126,.1)}
+
+.tas-tab{white-space:nowrap;transition:all .2s;border:1px solid #B9D4AA}
+.tas-tab.active{background:#5A827E;color:#fff;border-color:#5A827E}
 .slim-scroll::-webkit-scrollbar{height:0}
 
-.icard {
-  border: .5px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 8px 6px 6px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  cursor: grab;
-  background: #fff;
-  transition: opacity .2s;
-  
-  /* KUNCI PERBAIKAN MOBILE DRAG: */
-  touch-action: none !important; 
-  user-select: none !important;
-  -webkit-user-select: none;
+/* GRID & KARTU EDUKASI - PALETTE BARU */
+#content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; }
+.info-card { 
+    background: #FFFFFF; 
+    border-radius: 20px; 
+    padding: 20px; 
+    border: 2px solid #84AE92; 
+    box-shadow: 0 4px 15px rgba(90, 130, 126, 0.1);
 }
+.img-box { width: 100%; height: 140px; background: #B9D4AA; border-radius: 12px; margin-bottom: 15px; }
+.card-title { color: #5A827E; font-weight: 800; }
+.card-desc { color: #5A827E; opacity: 0.8; }
 
-.icard:active{cursor:grabbing}
-
-.icard.used {
-  opacity: .32;
-  cursor: default;
-  pointer-events: auto; /* Pastikan bernilai auto agar delegeted click JS tetap mendeteksi kartu */
+/* TOMBOL - PALETTE BARU */
+.category-btn { 
+    background: #B9D4AA; 
+    color: #5A827E; 
+    padding: 12px 24px; 
+    border-radius: 16px; 
+    border: none; 
+    cursor: pointer; 
+    font-weight: 700;
 }
+.category-btn.active { background: #5A827E; color: white; }
 
+.step-btn { 
+    width: 52px; height: 52px; border-radius: 18px; 
+    background: white; border: 2px solid #B9D4AA; 
+    color: #5A827E; font-weight: 800; transition: .25s;
+}
+.step-btn.active { background: #5A827E; color: white; border-color: #5A827E; }
+
+/* LAIN-LAIN */
+.icard { border: .5px solid #84AE92; border-radius: 12px; padding: 8px 6px 6px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: grab; background: #fff; transition: opacity .2s; touch-action: none !important; user-select: none !important; }
 .zdot{width:6px;height:6px;border-radius:50%}
-.da{background:#C0392B}.db{background:#E67E22}.dc{background:#27AE60}
-.zona-bar{height:5px;border-radius:3px;background:#e5e7eb;overflow:hidden;flex:1;margin:0 8px}
-.zona-bar-fill{height:100%;border-radius:3px;transition:width .3s}
+.da{background:#5A827E}.db{background:#84AE92}.dc{background:#B9D4AA}
+.zona-bar{height:5px;border-radius:3px;background:#FAFFCA;overflow:hidden;flex:1;margin:0 8px}
+.zona-bar-fill{height:100%;border-radius:3px;transition:width .3s;background:#5A827E}
 
-#drag-ghost {
-  position: fixed;
-  pointer-events: none;
-  z-index: 99999;
-  display: none;
-  left: 0;
-  top: 0;
-}
-
-.dim-input{width:64px;padding:4px 8px;border:1px solid #e5e7eb;border-radius:8px;font-size:12px;text-align:center;outline:none}
-.dim-input:focus{border-color:#2C3E50}
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.animate-fade-in {
-    animation: fadeIn 0.4s ease forwards;
-}
+[x-cloak]{display:none !important}
+body.modal-open{overflow:hidden}
 </style>
 @endpush
 
 @section('content')
 <div x-data="tasSiaga" class="max-w-5xl mx-auto px-4 sm:px-6 py-10">
 
-  {{-- HEADER BENCANA --}}
-  <div class="max-w-5xl w-full flex flex-col gap-12 my-10">
-      <div class="flex flex-wrap justify-center gap-4" id="category-buttons">
-          <button data-category="gempa" class="category-btn bg-gray-800 text-white font-medium py-3 px-6 rounded-xl transition duration-200">Gempa Bumi</button>
-          <button data-category="banjir" class="category-btn bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-3 px-6 rounded-xl transition duration-200">Banjir</button>
-          <button data-category="longsor" class="category-btn bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-3 px-6 rounded-xl transition duration-200">Longsor</button>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="content-grid"></div>
-  </div>
 
-  <hr class="border-gray-200 my-10">
+    
+    {{-- SECTION INFORMASI BENCANA --}}
+<div class="max-w-5xl mx-auto px-4 py-10" id="bencana-section">
+    
+    <div class="max-w-6xl mx-auto px-4 py-10">
 
-  {{-- HEADER TAS --}}
-  <div class="mb-6">
-    <span class="inline-block px-3 py-1 bg-orange-100 text-orange-600 text-xs font-bold rounded-full uppercase tracking-widest mb-3">Sebelum Bencana</span>
-    <h1 class="font-head text-4xl font-extrabold text-navy">Tas Siaga</h1>
-    <p class="text-gray-500 mt-1 text-sm">Susun perlengkapan darurat sesuai prioritas akses.</p>
-  </div>
-
-  {{-- TABS SELEKTOR TAS --}}
-  <div class="flex items-center gap-2 mb-6">
-    <div class="flex gap-2 overflow-x-auto slim-scroll flex-1 pb-1">
-      <template x-for="tas in semuaTas" :key="tas.id">
-        <button @click="setAktif(tas.id)"
-                :class="{'active': activeTasId === tas.id}"
-                class="tas-tab px-4 py-2 rounded-full text-sm font-semibold border border-gray-200 text-gray-600 hover:border-navy hover:text-navy flex items-center gap-2">
-          <span x-text="tas.nama_tas"></span>
-          <span class="text-xs opacity-50" x-text="tas.liter + 'L'"></span>
-          <span @click.stop="hapusTas(tas.id)" class="w-4 h-4 rounded-full bg-gray-200 hover:bg-red-100 hover:text-red-500 flex items-center justify-center text-xs transition-colors">✕</span>
-        </button>
-      </template>
+    <div class="max-w-6xl mx-auto px-4 py-10">
+    {{-- FILTER KATEGORI --}}
+    <div id="category-container" class="flex justify-center gap-3 mb-10">
+        <button data-category="gempa" class="category-btn disaster-btn active">Gempa Bumi</button>
+        <button data-category="banjir" class="category-btn disaster-btn">Banjir</button>
+        <button data-category="longsor" class="category-btn disaster-btn">Longsor</button>
     </div>
-    <button @click="$store.tasBuat.open = true"
-            class="flex-shrink-0 px-4 py-2 bg-navy text-white text-sm font-semibold rounded-full hover:opacity-90 flex items-center gap-2">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-      Tas Baru
-    </button>
+
+    {{-- KONTEN EDUKASI (HANYA INI YANG DIUBAH JS) --}}
+    <div id="content-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+
+    {{-- NAVIGASI STEP --}}
+    <div id="step-container" class="flex justify-center gap-3 mt-8">
+        <button class="step-btn active" data-page="0">1</button>
+        <button class="step-btn" data-page="1">2</button>
+    </div>
+</div>
+
+
+  {{-- =========================================
+      HEADER TAS
+  ========================================== --}}
+  <div class="mb-6">
+    <span class="inline-block px-3 py-1 bg-orange-100 text-orange-600 text-xs font-bold rounded-full uppercase tracking-widest mb-3">
+      Sebelum Bencana
+    </span>
+
+    <h1 class="font-head text-4xl font-extrabold text-navy">
+      Tas Siaga
+    </h1>
+
+    <p class="text-gray-500 mt-1 text-sm">
+      Susun perlengkapan darurat sesuai prioritas akses.
+    </p>
   </div>
+
+
+  {{-- ===================================================
+     PASTE INI: ganti blok TABS SELEKTOR TAS
+     (dari "TABS SELEKTOR TAS" sampai tutup div-nya)
+=================================================== --}}
+
+{{-- TABS SELEKTOR TAS --}}
+<div class="flex items-center gap-2 mb-6">
+  <div class="flex gap-2 overflow-x-auto slim-scroll flex-1 pb-1">
+    <template x-for="tas in semuaTas" :key="tas.id">
+      <button @click="setAktif(tas.id)"
+              class="tas-tab px-4 py-2 rounded-full text-sm font-semibold border flex items-center gap-2 transition-all"
+              :class="activeTasId === tas.id
+                ? 'bg-[#2C3E50] text-white border-[#2C3E50]'
+                : 'bg-white text-gray-700 border-gray-200 hover:border-[#2C3E50] hover:text-[#2C3E50]'">
+        <span x-text="tas.nama_tas"></span>
+        <span class="text-xs opacity-60" x-text="tas.liter + 'L'"></span>
+        <span @click.stop="hapusTas(tas.id)"
+              class="w-4 h-4 rounded-full flex items-center justify-center text-xs transition-colors"
+              :class="activeTasId === tas.id
+                ? 'bg-white/20 hover:bg-white/40 text-white'
+                : 'bg-gray-200 hover:bg-red-100 hover:text-red-500 text-gray-500'">
+          ✕
+        </span>
+      </button>
+    </template>
+  </div>
+
+  {{-- Tombol Tas Baru --}}
+  <button @click="$store.tasBuat.open = true"
+          class="flex-shrink-0 px-4 py-2 text-sm font-semibold rounded-full flex items-center gap-2 transition-colors"
+          style="background: #2C3E50; color: white;">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+    </svg>
+    Tas Baru
+  </button>
+</div>
+
+{{-- PASTE INI: ganti blok tombol kategori di dalam workspace
+     (di dalam template x-if="activeTas", bagian Kategori) --}}
 
   {{-- WORKSPACE UTAMA --}}
   <template x-if="activeTas">
@@ -125,18 +168,20 @@
       {{-- KOLOM KIRI: VISUALISASI TAS --}}
       <div class="space-y-4">
         {{-- Kategori Umur --}}
-        <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-2">
-          <p class="font-head font-semibold text-navy text-sm">Kategori</p>
-          <div class="grid grid-cols-4 gap-1.5">
-            <template x-for="kat in ['anak','remaja','dewasa','lansia']" :key="kat">
-              <button @click="updateKategori(kat)"
-                      :class="activeTas.kategori===kat?'bg-navy text-white border-navy':'bg-white text-gray-600 border-gray-200 hover:border-navy'"
-                      class="px-2 py-2 border rounded-xl text-xs font-semibold capitalize transition-colors">
-                <span x-text="kat==='anak'?'Anak':kat.charAt(0).toUpperCase()+kat.slice(1)"></span>
-              </button>
-            </template>
-          </div>
-        </div>
+<div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-2">
+  <p class="font-head font-semibold text-navy text-sm">Kategori</p>
+  <div class="grid grid-cols-4 gap-1.5">
+    <template x-for="kat in ['anak','remaja','dewasa','lansia']" :key="kat">
+      <button @click="updateKategori(kat)"
+              class="px-2 py-2 border rounded-xl text-xs font-semibold capitalize transition-colors"
+              :class="activeTas.kategori===kat
+                ? 'bg-[#2C3E50] text-white border-[#2C3E50]'
+                : 'bg-white text-gray-700 border-gray-200 hover:border-[#2C3E50] hover:text-[#2C3E50]'">
+        <span x-text="kat==='anak'?'Anak':kat.charAt(0).toUpperCase()+kat.slice(1)"></span>
+      </button>
+    </template>
+  </div>
+</div>
 
         {{-- Dimensi Input --}}
         <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-3">
@@ -241,6 +286,7 @@
 
         <div class="grid grid-cols-3 sm:grid-cols-4 gap-3" id="item-grid-blade">
   <template x-for="item in filteredRekomendasi" :key="item.id">
+    
     <div :data-item-id="item.id"
          :data-rotated="rotatedIds.includes(item.id) ? '1' : '0'"
          :class="{'used': usedIds.includes(item.id)}"
@@ -266,6 +312,7 @@
       <span class="zdot" :class="item.zona_saran==='sangat_penting'?'da':item.zona_saran==='penting'?'db':'dc'"></span>
       <span x-show="usedIds.includes(item.id)" class="text-xs text-gray-400">✓ Sudah</span>
     </div>
+
   </template>
 </div>
 
@@ -273,6 +320,11 @@
           🔴 Sangat penting &nbsp;·&nbsp; 🟠 Penting &nbsp;·&nbsp; 🟢 Cukup penting<br>
           Item hanya masuk zona yang sesuai · 🔄 untuk rotate · ukuran menyesuaikan dimensi tas
         </p>
+
+        <button @click="saveManual()" 
+        class="w-full sm:w-auto px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-xl shadow-md flex items-center justify-center gap-2 transition-all duration-200 transform active:scale-95">
+  💾 Simpan Perubahan Tas
+</button>
 
         <a href="{{ route('sesudah') }}" class="flex items-center justify-between bg-green-50 border border-green-200 rounded-2xl px-5 py-4 hover:bg-green-100 transition-colors group">
           <div>
@@ -299,176 +351,410 @@
 <div id="drag-ghost"></div>
 
 {{-- MODAL BUAT TAS --}}
-<div x-data x-show="$store.tasBuat.open"
-     x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-     @keydown.escape.window="$store.tasBuat.open=false"
-     class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" style="display:none">
-  <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl p-6" @click.stop
-       x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
-    <div class="flex items-center justify-between mb-5">
-      <h3 class="font-head font-bold text-navy text-xl">Buat Tas Baru</h3>
-      <button @click="$store.tasBuat.open=false" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center">
-        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-      </button>
+<template x-teleport="body">
+
+<div
+    x-show="$store.tasBuat.open"
+
+    x-effect="
+        document.body.classList.toggle(
+            'modal-open',
+            $store.tasBuat.open
+        )
+    "
+
+    x-transition:enter="transition ease-out duration-200"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
+
+    @keydown.escape.window="$store.tasBuat.open=false"
+
+    class="modal-superfront"
+    style="display:none"
+>
+
+    {{-- BACKDROP --}}
+    <div
+        class="modal-backdrop"
+        @click="$store.tasBuat.open=false">
     </div>
-    <form @submit.prevent="$store.tasBuat.submit()">
-      <div class="space-y-4">
-        <div>
-          <label class="block text-sm font-semibold text-navy mb-1">Nama Tas</label>
-          <input type="text" x-model="$store.tasBuat.form.nama_tas" placeholder="Contoh: Tas Keluarga"
-                 class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-navy" required/>
+
+    {{-- BOX --}}
+    <div
+        class="modal-box relative px-6 pt-8 pb-6"
+        @click.stop
+
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0 scale-95"
+        x-transition:enter-end="opacity-100 scale-100"
+    >
+
+        {{-- HEADER --}}
+        <div class="flex items-start justify-between mb-6">
+
+            <h3 class="font-head font-bold text-navy text-3xl">
+                Buat Tas Baru
+            </h3>
+
+            {{-- CLOSE BUTTON --}}
+            <button
+                type="button"
+                @click="$store.tasBuat.open=false"
+
+                class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors flex-shrink-0"
+            >
+                <svg
+                    class="w-5 h-5 text-gray-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12"
+                    />
+                </svg>
+            </button>
+
         </div>
-        <div>
-          <label class="block text-sm font-semibold text-navy mb-2">Kategori</label>
-          <div class="grid grid-cols-2 gap-2">
-            <template x-for="kat in ['anak','remaja','dewasa','lansia']" :key="kat">
-              <button type="button" @click="$store.tasBuat.form.kategori=kat"
-                      :class="$store.tasBuat.form.kategori===kat?'bg-navy text-white border-navy':'bg-white text-gray-600 border-gray-200 hover:border-navy'"
-                      class="px-4 py-2.5 border rounded-xl text-sm font-semibold capitalize transition-colors">
-                <span x-text="kat==='anak'?'Anak-anak':kat.charAt(0).toUpperCase()+kat.slice(1)"></span>
-              </button>
-            </template>
-          </div>
-        </div>
-        <div>
-          <label class="block text-sm font-semibold text-navy mb-1">Dimensi Tas <span class="text-gray-400 font-normal text-xs">(cm)</span></label>
-          <div class="flex items-center gap-2">
-            <div class="flex-1">
-              <p class="text-xs text-gray-400 text-center mb-1">Panjang</p>
-              <input type="number" x-model="$store.tasBuat.form.dim_p" @input="$store.tasBuat.hitungLiter()" placeholder="cm" min="1" max="200" step="0.5" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm text-center focus:outline-none focus:border-navy"/>
+
+        <form @submit.prevent="$store.tasBuat.submit()">
+
+            <div class="space-y-5">
+
+                {{-- Nama Tas --}}
+                <div>
+                    <label class="block text-sm font-semibold text-navy mb-2">
+                        Nama Tas
+                    </label>
+
+                    <input
+                        type="text"
+                        x-model="$store.tasBuat.form.nama_tas"
+
+                        placeholder="Contoh: Tas Keluarga"
+
+                        class="w-full px-4 py-3 border border-gray-200 rounded-2xl text-sm text-gray-800 focus:outline-none focus:border-navy"
+
+                        required
+                    />
+                </div>
+
+                {{-- Kategori --}}
+                <div>
+
+                    <label class="block text-sm font-semibold text-navy mb-2">
+                        Kategori
+                    </label>
+
+                    <div class="grid grid-cols-2 gap-2">
+
+                        <template x-for="kat in ['anak','remaja','dewasa','lansia']" :key="kat">
+
+                            <button
+                                type="button"
+
+                                @click="$store.tasBuat.form.kategori=kat"
+
+                                :class="$store.tasBuat.form.kategori===kat
+                                    ? 'bg-[#2C3E50] text-white border-[#2C3E50]'
+                                    : 'bg-white text-gray-700 border-gray-200 hover:border-[#2C3E50] hover:text-[#2C3E50]'"
+
+                                class="px-4 py-3 border rounded-2xl text-sm font-semibold capitalize transition-colors"
+                            >
+
+                                <span
+                                    x-text="kat==='anak'
+                                    ? 'Anak-Anak'
+                                    : kat.charAt(0).toUpperCase()+kat.slice(1)"
+                                ></span>
+
+                            </button>
+
+                        </template>
+
+                    </div>
+
+                </div>
+
+                {{-- Dimensi --}}
+                <div>
+
+                    <label class="block text-sm font-semibold text-navy mb-1">
+                        Dimensi Tas
+                        <span class="text-gray-400 font-normal text-xs">
+                            (cm) — opsional jika isi liter langsung
+                        </span>
+                    </label>
+
+                    <div class="flex items-center gap-2">
+
+                        {{-- P --}}
+                        <div class="flex-1">
+
+                            <p class="text-xs text-gray-500 text-center mb-1">
+                                Panjang
+                            </p>
+
+                            <input
+                                type="number"
+
+                                x-model="$store.tasBuat.form.dim_p"
+
+                                @input="$store.tasBuat.hitungLiter()"
+
+                                placeholder="cm"
+                                min="1"
+                                max="200"
+                                step="0.5"
+
+                                class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm text-center text-gray-800 focus:outline-none focus:border-navy"
+                            />
+
+                        </div>
+
+                        <span class="text-gray-400 mt-4 font-medium">×</span>
+
+                        {{-- L --}}
+                        <div class="flex-1">
+
+                            <p class="text-xs text-gray-500 text-center mb-1">
+                                Lebar
+                            </p>
+
+                            <input
+                                type="number"
+
+                                x-model="$store.tasBuat.form.dim_l"
+
+                                @input="$store.tasBuat.hitungLiter()"
+
+                                placeholder="cm"
+                                min="1"
+                                max="200"
+                                step="0.5"
+
+                                class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm text-center text-gray-800 focus:outline-none focus:border-navy"
+                            />
+
+                        </div>
+
+                        <span class="text-gray-400 mt-4 font-medium">×</span>
+
+                        {{-- T --}}
+                        <div class="flex-1">
+
+                            <p class="text-xs text-gray-500 text-center mb-1">
+                                Tinggi
+                            </p>
+
+                            <input
+                                type="number"
+
+                                x-model="$store.tasBuat.form.dim_t"
+
+                                @input="$store.tasBuat.hitungLiter()"
+
+                                placeholder="cm"
+                                min="1"
+                                max="200"
+                                step="0.5"
+
+                                class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm text-center text-gray-800 focus:outline-none focus:border-navy"
+                            />
+
+                        </div>
+
+                    </div>
+
+                    {{-- PREVIEW LITER --}}
+                    <div
+                        x-show="
+                            $store.tasBuat.form.dim_p &&
+                            $store.tasBuat.form.dim_l &&
+                            $store.tasBuat.form.dim_t
+                        "
+
+                        class="mt-2 rounded-xl px-3 py-2 flex items-center justify-between"
+
+                        style="background: rgba(44,62,80,0.06);"
+                    >
+
+                        <span class="text-xs text-gray-600">
+                            Kapasitas dari dimensi:
+                        </span>
+
+                        <span
+                            class="font-head font-bold text-navy text-sm"
+                            x-text="$store.tasBuat.form.liter + ' Liter'"
+                        ></span>
+
+                    </div>
+
+                    {{-- INPUT LITER LANGSUNG --}}
+                    <div class="mt-3">
+
+                        <p class="text-xs text-gray-500 mb-1">
+                            Atau input liter langsung:
+                            <span class="text-gray-400">
+                                (dimensi dihitung otomatis)
+                            </span>
+                        </p>
+
+                        <input
+                            type="number"
+
+                            x-model="$store.tasBuat.form.liter"
+
+                            @input="
+                                if($store.tasBuat.form.liter){
+                                    $store.tasBuat.form.dim_p = ''
+                                    $store.tasBuat.form.dim_l = ''
+                                    $store.tasBuat.form.dim_t = ''
+                                }
+                            "
+
+                            placeholder="Contoh: 50"
+
+                            min="1"
+                            max="500"
+                            step="0.1"
+
+                            class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm text-gray-800 focus:outline-none focus:border-navy"
+                        />
+
+                    </div>
+
+                </div>
+
             </div>
-            <span class="text-gray-300 mt-4">×</span>
-            <div class="flex-1">
-              <p class="text-xs text-gray-400 text-center mb-1">Lebar</p>
-              <input type="number" x-model="$store.tasBuat.form.dim_l" @input="$store.tasBuat.hitungLiter()" placeholder="cm" min="1" max="200" step="0.5" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm text-center focus:outline-none focus:border-navy"/>
+
+            {{-- ACTION --}}
+            <div class="flex gap-3 mt-6">
+
+                <button
+                    type="button"
+
+                    @click="$store.tasBuat.open=false"
+
+                    class="flex-1 py-3 border border-gray-200 text-gray-700 text-sm font-semibold rounded-2xl hover:bg-gray-50 transition-colors"
+                >
+                    Batal
+                </button>
+
+                <button
+                    type="submit"
+
+                    class="flex-1 py-3 text-sm font-semibold rounded-2xl transition-colors"
+
+                    style="background: #2C3E50; color: white;"
+                >
+                    Buat Tas
+                </button>
+
             </div>
-            <span class="text-gray-300 mt-4">×</span>
-            <div class="flex-1">
-              <p class="text-xs text-gray-400 text-center mb-1">Tinggi</p>
-              <input type="number" x-model="$store.tasBuat.form.dim_t" @input="$store.tasBuat.hitungLiter()" placeholder="cm" min="1" max="200" step="0.5" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm text-center focus:outline-none focus:border-navy"/>
-            </div>
-          </div>
-          <div x-show="$store.tasBuat.form.liter" class="mt-2 bg-navy/5 rounded-xl px-3 py-2 flex items-center justify-between">
-            <span class="text-xs text-gray-500">Kapasitas:</span>
-            <span class="font-head font-bold text-navy text-sm" x-text="$store.tasBuat.form.liter + ' Liter'"></span>
-          </div>
-          <div class="mt-2">
-            <p class="text-xs text-gray-400 mb-1">Atau input liter langsung:</p>
-            <input type="number" x-model="$store.tasBuat.form.liter" placeholder="Liter" min="1" max="500" step="0.1" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-navy"/>
-          </div>
-        </div>
-      </div>
-      <div class="flex gap-3 mt-5">
-        <button type="button" @click="$store.tasBuat.open=false" class="flex-1 py-2.5 border border-gray-200 text-gray-600 text-sm font-semibold rounded-xl hover:bg-gray-50">Batal</button>
-        <button type="submit" class="flex-1 py-2.5 bg-navy text-white text-sm font-semibold rounded-xl hover:opacity-90">Buat Tas</button>
-      </div>
-    </form>
-  </div>
+
+        </form>
+
+    </div>
+
 </div>
+
+</template>
+
 @endsection
 
 @push('scripts')
 <script>
 // ==========================================
-// 1. SERVICE WORKER PWA CODES
+// 1. SERVICE WORKER PWA
 // ==========================================
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js')
-            .then(reg => console.log('PWA Tas Siaga: Service Worker Berhasil Terdaftar! 😎', reg.scope))
-            .catch(err => console.error('PWA Tas Siaga: Gagal daftar Service Worker 😢', err));
+            .then(reg => console.log('PWA: SW terdaftar', reg.scope))
+            .catch(err => console.error('PWA: SW gagal', err));
     });
 }
 
 // ==========================================
-// 2. DATA EDUKASI BENCANA & BANNER BUKAN ALPINE
+// 2. DATA EDUKASI BENCANA (DIPERBARUI)
 // ==========================================
-const bencanaData = {
+const fullData = {
     gempa: [
-        "Mengenali Gempa Bumi serta memastikan struktur dan lokasi rumah aman dari risiko dan likuefaksi melalui evaluasi serta renovasi bangunan agar lebih tahan terhadap bahaya Gempa Bumi.",
-        "Memahami lokasi pintu, lift, dan tangga darurat untuk mencari tempat aman saat gempabumi serta mempelajari P3K, penggunaan alat pemadam kebakaran, dan mencatat nomor telepon penting untuk keadaan darurat.",
-        "Pastikan perabotan seperti lemari dan kabinet menempel pada dinding agar tidak roboh saat gempabumi lalu simpan bahan mudah terbakar di tempat aman yang tidak mudah pecah serta selalu matikan air gas dan listrik ketika tidak digunakan.",
-        "Letakkan benda-benda berat di bagian bawah dan pastikan benda yang tergantung seperti lampu memiliki kestabilan yang baik agar tidak jatuh saat terjadi Gempa Bumi."
+        {title: "1. Kenali Risiko", desc: "Pastikan rumah aman."}, {title: "2. Amankan Area", desc: "Ikat furnitur."}, {title: "3. Jalur Evakuasi", desc: "Cek titik kumpul."},
+        {title: "4. Simulasi", desc: "Latihan rutin."}, {title: "5. P3K", desc: "Siapkan obat."}, {title: "6. Kontak", desc: "Nomor darurat."}
     ],
     banjir: [
-        "Simpan dokumen-dokumen penting di dalam wadah kedap air dan letakkan di area rumah yang paling tinggi atau aman dari jangkauan air.",
-        "Pantau informasi prakiraan cuaca dan tinggi muka air secara berkala melalui kanal resmi BMKG atau BPBD setempat.",
-        "Matikan jaringan listrik dan cabut seluruh peralatan elektronik dari stopkontak saat air mulai meninggi untuk menghindari risiko kesetrum.",
-        "Siapkan tas siaga bencana yang berisi makanan siap saji, air minum, obat-obatan, dan lampu senter untuk evakuasi mandiri.",
-        "Scan dan simpan salinan digital dokumen penting seperti KTP KK ijazah sertifikat rumah buku tabungan dan surat berharga lainnya ke dalam penyimpanan online atau perangkat cadangan agar tetap aman dan mudah diakses apabila dokumen asli rusak atau hilang akibat banjir."
+        {title: "1. Cek Drainase", desc: "Bersihkan sampah."}, {title: "2. Simpan Dokumen", desc: "Plastik kedap air."}, {title: "3. Pahami Jalur", desc: "Lokasi pengungsian."},
+        {title: "4. Listrik", desc: "Matikan saklar."}, {title: "5. Barang", desc: "Pindah ke tinggi."}, {title: "6. Info", desc: "Pantau cuaca."}
     ],
     longsor: [
-        "Hindari membangun rumah atau infrastruktur di bawah tebing curam atau di area lereng yang tidak memiliki pohon penahan.",
-        "Waspadai munculnya retakan baru di tanah, penurunan tanah mendadak, atau pohon yang tiba-tiba miring setelah hujan lebat.",
-        "Lakukan penghijauan dengan menanam pohon berakar dalam (seperti vetiver atau bambu) untuk memperkuat struktur tanah di area lereng.",
-        "Segera lakukan evakuasi ke zona aman jika terdengar suara gemuruh dari arah perbukitan setelah hujan turun berhari-hari."
+        {title: "1. Cek Retakan", desc: "Waspadai tebing."}, {title: "2. Penghijauan", desc: "Tanam pohon."}, {title: "3. Tanggap Bunyi", desc: "Evakuasi segera."},
+        {title: "4. Saluran", desc: "Jangan gali lereng."}, {title: "5. Area", desc: "Hindari bawah tebing."}, {title: "6. Evakuasi", desc: "Cari tempat aman."}
     ]
 };
 
-const contentGrid = document.getElementById('content-grid');
-const buttons = document.querySelectorAll('.category-btn');
+let currentCat = 'gempa';
+let currentPage = 0;
 
-function renderContent(category) {
-    if(!contentGrid) return;
-    contentGrid.innerHTML = "";
-    const items = bencanaData[category] || [];
-    contentGrid.className = "flex flex-wrap justify-center gap-8 w-full";
-    items.forEach(text => {
-        const cardHtml = `
-            <div class="flex flex-col items-center text-center gap-4 opacity-0 animate-fade-in w-full md:w-[calc(50%-1rem)] max-w-[480px]">
-                <div class="w-full aspect-[4/2.5] bg-gray-300 rounded-2xl shadow-sm"></div>
-                <p class="text-sm text-gray-700 leading-relaxed max-w-[380px]">${text}</p>
-            </div>`;
-        contentGrid.insertAdjacentHTML('beforeend', cardHtml);
-    });
+function renderGrid() {
+    const grid = document.getElementById('content-grid');
+    if (!grid) return;
+    
+    // Potong data jadi 3 per halaman
+    const items = fullData[currentCat].slice(currentPage * 3, (currentPage * 3) + 3);
+    
+    grid.innerHTML = items.map(item => `
+        <div class="info-card">
+            <div class="img-box"></div>
+            <h3 class="font-bold text-lg mb-2">${item.title}</h3>
+            <p class="text-sm text-gray-500">${item.desc}</p>
+        </div>
+    `).join('');
 }
 
-function updateButtonStyles(activeButton) {
-    buttons.forEach(btn => {
-        btn.classList.remove('bg-gray-800', 'text-white');
-        btn.classList.add('bg-gray-300', 'text-gray-800', 'hover:bg-gray-400');
-    });
-    activeButton.classList.remove('bg-gray-300', 'text-gray-800', 'hover:bg-gray-400');
-    activeButton.classList.add('bg-gray-800', 'text-white');
-}
-
-buttons.forEach(button => {
-    button.addEventListener('click', function() {
-        const category = this.getAttribute('data-category');
-        renderContent(category);
-        updateButtonStyles(this);
-    });
+// Event Delegation (Tahan Banting)
+document.getElementById('category-container').addEventListener('click', (e) => {
+    const btn = e.target.closest('.category-btn');
+    if (btn) {
+        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCat = btn.getAttribute('data-category');
+        currentPage = 0;
+        renderGrid();
+    }
 });
-renderContent('gempa');
+
+document.getElementById('step-container').addEventListener('click', (e) => {
+    const btn = e.target.closest('.step-btn');
+    if (btn) {
+        document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentPage = parseInt(btn.getAttribute('data-page'));
+        renderGrid();
+    }
+});
+
+renderGrid(); // Jalankan pertama kali
+
 
 // ==========================================
-// 3. DIMENSI SEBENARNYA & DRAG MECHANISM CONSTANTS
+// 3. DRAG ENGINE CONSTANTS
 // ==========================================
 const ITEM_CM = {
-  'Air Minum':         {w: 7,   h: 23}, 
-  'Senter':            {w: 5,   h: 10}, 
-  'Susu/Formula':      {w: 8,   h: 22}, 
-  'Radio Portabel':    {w: 12,  h: 18}, 
-  'Alat bantu':        {w: 8,   h: 25}, 
-  'P3K':               {w: 20,  h: 5}, 
-  'Masker':            {w: 7,   h: 2}, 
-  'Makanan Kaleng':    {w: 5,   h: 8}, 
-  'Dokumen Penting':   {w: 22,  h: 3}, 
-  'Uang Tunai':        {w: 18,  h: 3}, 
-  'Popok':             {w: 20,  h: 8}, 
-  'Selimut darurat':   {w: 25,  h: 6}, 
-  'Peluit darurat':    {w: 4,   h: 4}, 
-  'Korek api':         {w: 2,   h: 4}, 
-  'Baju ganti':        {w: 25,  h: 6}, 
-  'Tali':              {w: 5,   h: 5}, 
-  'Obat Pribadi':      {w: 10,  h: 8}, 
-  'Power Bank':        {w: 10,  h: 14}, 
-  'Obat Anak':         {w: 8,   h: 8}, 
-  'Mainan kecil':      {w: 10,  h: 10}, 
-  'Obat Rutin':        {w: 8,   h: 8}, 
-  'Kacamata cadangan': {w: 15,  h: 6}
+    'Air Minum': {w:7,h:23}, 'Senter': {w:5,h:10}, 'Susu/Formula': {w:8,h:22},
+    'Radio Portabel': {w:12,h:18}, 'Alat bantu': {w:8,h:25}, 'P3K': {w:20,h:5},
+    'Masker': {w:7,h:2}, 'Makanan Kaleng': {w:5,h:8}, 'Dokumen Penting': {w:22,h:3},
+    'Uang Tunai': {w:18,h:3}, 'Popok': {w:20,h:8}, 'Selimut darurat': {w:25,h:6},
+    'Peluit darurat': {w:4,h:4}, 'Korek api': {w:2,h:4}, 'Baju ganti': {w:25,h:6},
+    'Tali': {w:5,h:5}, 'Obat Pribadi': {w:10,h:8}, 'Power Bank': {w:10,h:14},
+    'Obat Anak': {w:8,h:8}, 'Mainan kecil': {w:10,h:10}, 'Obat Rutin': {w:8,h:8},
+    'Kacamata cadangan': {w:15,h:6}
 };
-const DEFAULT_CM = {w: 10, h: 10};
+const DEFAULT_CM = {w:10, h:10};
 
 const BAG_W    = 168;
 const ZONA_H   = {sangat_penting:72, penting:72, cukup_penting:74};
@@ -476,651 +762,677 @@ const ZONA_TOP = {sangat_penting:0,  penting:72, cukup_penting:144};
 const ZONA_KEY = {sangat_penting:'a', penting:'b', cukup_penting:'c'};
 const ZONA_CLR = {sangat_penting:'#C0392B', penting:'#E67E22', cukup_penting:'#27AE60'};
 
-let placed = {sangat_penting:[], penting:[], cukup_penting:[]};
+let placed   = {sangat_penting:[], penting:[], cukup_penting:[]};
 let dragging = null;
 let PX_PER_CM = 3;
 
-function rectsOverlap(a, b) {
-  return !(a.x+a.w<=b.x || b.x+b.w<=a.x || a.y+a.h<=b.y || b.y+b.h<=a.y);
-}
-
-function findSnap(zona, px, prefX, prefY, excludeUid=null) {
-  const zt = ZONA_TOP[zona], zh = ZONA_H[zona];
-  const others = placed[zona].filter(p => p.uid !== excludeUid);
-  const cX = x => Math.max(0, Math.min(BAG_W - px.w, x));
-  const cY = y => Math.max(zt, Math.min(zt + zh - px.h, y));
-  const cx = cX(prefX), cy = cY(prefY);
-  
-  const c = {x:cx, y:cy, w:px.w, h:px.h};
-  if (!others.some(o => rectsOverlap(c, {x:o.x,y:o.y,w:o.px.w,h:o.px.h})))
-    return {x:cx, y:cy, valid:true};
-    
-  let best=null, bestD=Infinity;
-  for (let dy=-zh; dy<=zh; dy+=2) {
-    for (let dx=-BAG_W; dx<=BAG_W; dx+=2) {
-      const tx=cX(prefX+dx), ty=cY(prefY+dy);
-      const tc={x:tx,y:ty,w:px.w,h:px.h};
-      if (!others.some(o=>rectsOverlap(tc,{x:o.x,y:o.y,w:o.px.w,h:o.px.h}))) {
-        const d=Math.hypot(tx-prefX, ty-prefY);
-        if (d<bestD) { bestD=d; best={x:tx,y:ty}; }
-      }
-    }
-  }
-  return best ? {...best, valid:true} : {x:cx, y:cy, valid:false};
-}
-
-function sortZona(zona) {
-  const items = [...placed[zona]].sort((a,b) => b.px.w!==a.px.w ? b.px.w-a.px.w : b.px.h-a.px.h);
-  const zt = ZONA_TOP[zona];
-  let cx=0, cy=zt, rowH=0;
-  placed[zona] = [];
-  items.forEach(p => {
-    if (cx+p.px.w > BAG_W) { cx=0; cy+=rowH; rowH=0; }
-    if (cy+p.px.h > zt+ZONA_H[zona]) return;
-    p.x=cx; p.y=cy; cx+=p.px.w; rowH=Math.max(rowH,p.px.h);
-    placed[zona].push(p);
-    if (p.el) { p.el.style.left=p.x+'px'; p.el.style.top=p.y+'px'; }
-  });
-}
-
+// ==========================================
+// 4. DRAG HELPER FUNCTIONS
+// ==========================================
 function getPos(e) {
-  // Jika disentuh lewat HP / Simulator Mobile
-  if (e.touches && e.touches.length > 0) {
-    return { x: e.touches[0].clientX, y: e.touches[0].clientY };
-  }
-  if (e.changedTouches && e.changedTouches.length > 0) {
-    return { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY };
-  }
-  // Jika diklik lewat PC / Mouse
-  return { x: e.clientX, y: e.clientY };
+    if (e.touches && e.touches.length > 0)
+        return {x: e.touches[0].clientX, y: e.touches[0].clientY};
+    if (e.changedTouches && e.changedTouches.length > 0)
+        return {x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY};
+    return {x: e.clientX, y: e.clientY};
 }
 
 function getZonaAt(relY) {
-  if (relY>=0   && relY<72)  return 'sangat_penting';
-  if (relY>=72  && relY<144) return 'penting';
-  if (relY>=144 && relY<=218)return 'cukup_penting';
-  return null;
+    if (relY >= 0   && relY < 72)  return 'sangat_penting';
+    if (relY >= 72  && relY < 144) return 'penting';
+    if (relY >= 144 && relY <= 218) return 'cukup_penting';
+    return null;
+}
+
+function rectsOverlap(a, b) {
+    return !(a.x+a.w<=b.x || b.x+b.w<=a.x || a.y+a.h<=b.y || b.y+b.h<=a.y);
+}
+
+function findSnap(zona, px, prefX, prefY, excludeUid=null) {
+    const zt = ZONA_TOP[zona], zh = ZONA_H[zona];
+    const others = placed[zona].filter(p => p.uid !== excludeUid);
+    const cX = x => Math.max(0, Math.min(BAG_W - px.w, x));
+    const cY = y => Math.max(zt, Math.min(zt + zh - px.h, y));
+    const cx = cX(prefX), cy = cY(prefY);
+    const c = {x:cx, y:cy, w:px.w, h:px.h};
+    if (!others.some(o => rectsOverlap(c, {x:o.x,y:o.y,w:o.px.w,h:o.px.h})))
+        return {x:cx, y:cy, valid:true};
+    let best=null, bestD=Infinity;
+    for (let dy=-zh; dy<=zh; dy+=2) {
+        for (let dx=-BAG_W; dx<=BAG_W; dx+=2) {
+            const tx=cX(prefX+dx), ty=cY(prefY+dy);
+            const tc={x:tx,y:ty,w:px.w,h:px.h};
+            if (!others.some(o=>rectsOverlap(tc,{x:o.x,y:o.y,w:o.px.w,h:o.px.h}))) {
+                const d=Math.hypot(tx-prefX, ty-prefY);
+                if (d<bestD) { bestD=d; best={x:tx,y:ty}; }
+            }
+        }
+    }
+    return best ? {...best, valid:true} : {x:cx, y:cy, valid:false};
+}
+
+function sortZona(zona) {
+    const items = [...placed[zona]].sort((a,b) => b.px.w!==a.px.w ? b.px.w-a.px.w : b.px.h-a.px.h);
+    const zt = ZONA_TOP[zona];
+    let cx=0, cy=zt, rowH=0;
+    placed[zona] = [];
+    items.forEach(p => {
+        if (cx+p.px.w > BAG_W) { cx=0; cy+=rowH; rowH=0; }
+        if (cy+p.px.h > zt+ZONA_H[zona]) return;
+        p.x=cx; p.y=cy; cx+=p.px.w; rowH=Math.max(rowH,p.px.h);
+        placed[zona].push(p);
+        if (p.el) { p.el.style.left=p.x+'px'; p.el.style.top=p.y+'px'; }
+    });
 }
 
 function clearHL() {
-  ['zona-a','zona-b','zona-c'].forEach(id => document.getElementById(id)?.classList.remove('drag-v','drag-iv'));
+    ['zona-a','zona-b','zona-c'].forEach(id => document.getElementById(id)?.classList.remove('drag-v','drag-iv'));
 }
 
 function makeSvg(nama, zona, w, h) {
-  const fill = ZONA_CLR[zona] || '#888';
-  const fs = Math.max(6, Math.min(10, Math.round(Math.min(w,h) / 3.5)));
-  const maxChar = Math.floor(w / (fs * 0.62));
-  const label = nama.length > maxChar ? nama.slice(0, maxChar - 1) + '…' : nama;
-
-  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
-    <rect width="${w}" height="${h}" rx="3" fill="${fill}" opacity="0.18" stroke="${fill}" stroke-width="1.5"/>
-    <text x="${w/2}" y="${h/2 + fs*0.38}" text-anchor="middle" font-size="${fs}" fill="${fill}" font-weight="700" font-family="sans-serif">${label}</text>
-  </svg>`;
+    const fill = ZONA_CLR[zona] || '#888';
+    const fs = Math.max(6, Math.min(10, Math.round(Math.min(w,h) / 3.5)));
+    const maxChar = Math.floor(w / (fs * 0.62));
+    const label = nama.length > maxChar ? nama.slice(0, maxChar-1) + '…' : nama;
+    return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
+        <rect width="${w}" height="${h}" rx="3" fill="${fill}" opacity="0.18" stroke="${fill}" stroke-width="1.5"/>
+        <text x="${w/2}" y="${h/2+fs*0.38}" text-anchor="middle" font-size="${fs}" fill="${fill}" font-weight="700" font-family="sans-serif">${label}</text>
+    </svg>`;
 }
 
 function createPlacedEl(p) {
-  const el = document.createElement('div');
-  el.className = 'placed';
-  el.style.cssText = `left:${p.x}px;top:${p.y}px;width:${p.px.w}px;height:${p.px.h}px;z-index:10`;
-  el.innerHTML = makeSvg(p.namaItem, p.zona, p.px.w, p.px.h);
-  el.title = 'Geser bebas · Klik 2× hapus';
-  el.addEventListener('mousedown', e => startDragPlaced(e, p, el));
-  el.addEventListener('touchstart', e => startDragPlaced(e, p, el), {passive:false});
-  el.addEventListener('dblclick', () => removePlaced(p));
-  p.el = el;
-  document.getElementById('inner-area')?.appendChild(el);
-}
-
-function removePlaced(p) {
-  p.el?.remove();
-  placed[p.zona] = placed[p.zona].filter(x => x !== p);
-  window.dispatchEvent(new CustomEvent('item-removed', {detail:{id:p.itemId}}));
-  window.dispatchEvent(new CustomEvent('update-stats'));
+    const el = document.createElement('div');
+    el.className = 'placed-item';
+    el.dataset.itemId = p.itemId;
+    el.style.cssText = `left:${p.x}px;top:${p.y}px;width:${p.px.w}px;height:${p.px.h}px;z-index:10;position:absolute;cursor:move`;
+    el.innerHTML = makeSvg(p.namaItem, p.zona, p.px.w, p.px.h);
+    el.title = 'Geser bebas · Klik 2× hapus';
+    el.addEventListener('mousedown', e => startDragPlaced(e, p, el));
+    el.addEventListener('touchstart', e => startDragPlaced(e, p, el), {passive:false});
+    el.addEventListener('dblclick', e => {
+        e.stopPropagation();
+        el.remove();
+        placed[p.zona] = placed[p.zona].filter(x => x !== p);
+        const card = document.querySelector(`[data-item-id="${p.itemId}"]`);
+        if (card) card.classList.remove('used');
+        window.dispatchEvent(new CustomEvent('item-removed', {detail:{id: p.itemId}}));
+        window.dispatchEvent(new CustomEvent('update-stats'));
+    });
+    document.getElementById('inner-area')?.appendChild(el);
+    p.el = el; // simpan referensi el ke dalam objek p
+    return el;
 }
 
 function startDragCard(e, itemId, namaItem, zonaSaran, rotated=false) {
-  const pos = getPos(e);
-  
-  // Ambil ukuran item dari konstanta ITEM_CM
-  const baseCm = ITEM_CM[namaItem] || DEFAULT_CM;
-  const cm = rotated ? {w: baseCm.h, h: baseCm.w} : baseCm;
-  const px = {
-    w: Math.max(10, Math.round(cm.w * PX_PER_CM)),
-    h: Math.max(8,  Math.round(cm.h * PX_PER_CM)),
-  };
-  
-  dragging = {
-    itemId, 
-    namaItem, 
-    zonaSaran, 
-    px, 
-    isNew: true, 
-    placed: null, 
-    rotated,
-    offX: px.w / 2, 
-    offY: px.h / 2
-  };
-  
-  // Ambil element hantu drag
-  let dg = document.getElementById('drag-ghost');
-  if (!dg) {
-    // Jika element belum ada di HTML, kita buat paksa lewat script
-    dg = document.createElement('div');
-    dg.id = 'drag-ghost';
-    document.body.appendChild(dg);
-  }
-  
-  // Berikan style inline yang super ketat agar tidak tersembunyi
-  dg.innerHTML = makeSvg(namaItem, zonaSaran, px.w, px.h);
-  dg.style.position = 'fixed';
-  dg.style.zIndex = '99999'; // Angka z-index tertinggi agar berada di atas modal/layout manapun
-  dg.style.pointerEvents = 'none'; // Anti klik hantu
-  dg.style.display = 'block';
-  
-  // Jalankan pergeseran pertama
-  dg.style.left = pos.x + 'px';
-  dg.style.top = pos.y + 'px';
-  
-  bindMove();
+    const pos = getPos(e);
+    const baseCm = ITEM_CM[namaItem] || DEFAULT_CM;
+    const cm = rotated ? {w: baseCm.h, h: baseCm.w} : baseCm;
+    const px = {
+        w: Math.max(10, Math.round(cm.w * PX_PER_CM)),
+        h: Math.max(8,  Math.round(cm.h * PX_PER_CM)),
+    };
+    dragging = {itemId, namaItem, zonaSaran, px, isNew:true, placed:null, rotated, offX:px.w/2, offY:px.h/2};
+    let dg = document.getElementById('drag-ghost');
+    if (!dg) { dg = document.createElement('div'); dg.id='drag-ghost'; document.body.appendChild(dg); }
+    dg.innerHTML = makeSvg(namaItem, zonaSaran, px.w, px.h);
+    dg.style.cssText = 'position:fixed;z-index:99999;pointer-events:none;display:block;left:0;top:0';
+    moveGhost(pos.x, pos.y);
+    bindMove();
 }
 
 function startDragPlaced(e, p, el) {
-  e.preventDefault(); e.stopPropagation();
-  const pos = getPos(e);
-  const rect = el.getBoundingClientRect();
-  dragging = {itemId:p.itemId, namaItem:p.namaItem, zonaSaran:p.zona, px:p.px, isNew:false, placed:p, offX:pos.x-rect.left, offY:pos.y-rect.top};
-  const dg = document.getElementById('drag-ghost');
-  dg.innerHTML = makeSvg(p.namaItem, p.zona, p.px.w, p.px.h);
-  dg.style.display = 'block';
-  el.classList.add('dp');
-  moveGhost(pos.x, pos.y);
-  bindMove();
+    e.preventDefault(); e.stopPropagation();
+    const pos = getPos(e);
+    const rect = el.getBoundingClientRect();
+    dragging = {itemId:p.itemId, namaItem:p.namaItem, zonaSaran:p.zona, px:p.px, isNew:false, placed:p, offX:pos.x-rect.left, offY:pos.y-rect.top};
+    const dg = document.getElementById('drag-ghost');
+    dg.innerHTML = makeSvg(p.namaItem, p.zona, p.px.w, p.px.h);
+    dg.style.display = 'block';
+    el.classList.add('dp');
+    moveGhost(pos.x, pos.y);
+    bindMove();
 }
 
 function moveGhost(cx, cy) {
-  const dg = document.getElementById('drag-ghost');
-  if (dg && dragging) {
-    // Kurangi langsung dengan offset agar pas di tengah jempol/jari user
-    const targetX = cx - (dragging.offX || 0);
-    const targetY = cy - (dragging.offY || 0);
-    
-    dg.style.left = '0px';
-    dg.style.top = '0px';
-    dg.style.transform = `translate3d(${targetX}px, ${targetY}px, 0)`;
-  }
+    const dg = document.getElementById('drag-ghost');
+    if (dg && dragging) {
+        dg.style.left  = '0px';
+        dg.style.top   = '0px';
+        dg.style.transform = `translate3d(${cx-(dragging.offX||0)}px,${cy-(dragging.offY||0)}px,0)`;
+    }
 }
 
 function bindMove() {
-  // Listener untuk PC / Mouse
-  document.addEventListener('mousemove', onMove);
-  document.addEventListener('mouseup',   onUp);
-  
-  // Listener untuk HP / Touchscreen (Wajib passive: false agar koordinat realtime didengar)
-  document.addEventListener('touchmove', onMove, { passive: false });
-  document.addEventListener('touchend',  onUp, { passive: false });
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup',   onUp);
+    document.addEventListener('touchmove', onMove, {passive:false});
+    document.addEventListener('touchend',  onUp,   {passive:false});
 }
 
 function unbindMove() {
-  // Lepas semua listener saat item dilepas (drop) agar memori bersih
-  document.removeEventListener('mousemove', onMove);
-  document.removeEventListener('mouseup',   onUp);
-  document.removeEventListener('touchmove', onMove);
-  document.removeEventListener('touchend',  onUp);
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup',   onUp);
+    document.removeEventListener('touchmove', onMove);
+    document.removeEventListener('touchend',  onUp);
 }
 
 function onMove(e) {
-  if (!dragging) return;
-  
-  // PENCEGAHAN KRUSIAL: Sinyalkan ke browser HP bahwa kita sedang memanipulasi element custom
-  if (e.cancelable) {
-    e.preventDefault();
-  }
-  
-  // Ambil koordinat pointer (jari/mouse) saat ini
-  const pos = getPos(e);
-  
-  // Jika karena suatu hal koordinat gagal dibaca (NaN), hentikan script agar tidak merusak layout
-  if (!pos || isNaN(pos.x) || isNaN(pos.y)) return;
-  
-  moveGhost(pos.x, pos.y);
-  
-  const ia = document.getElementById('inner-area');
-  if (!ia) return;
-  
-  const ir = ia.getBoundingClientRect();
-  const offX = dragging.offX ?? dragging.px.w / 2;
-  const offY = dragging.offY ?? dragging.px.h / 2;
-  
-  const relX = pos.x - ir.left - offX;
-  const relY = pos.y - ir.top - offY;
-  
-  const zona = getZonaAt(relY + dragging.px.h / 2);
-  clearHL();
-  
-  const gb = document.getElementById('ghost-box');
-  if (!zona) { 
-    if (gb) gb.style.display = 'none'; 
-    return; 
-  }
-  
-  const valid = zona === dragging.zonaSaran;
-  document.getElementById('zona-' + ZONA_KEY[zona])?.classList.add(valid ? 'drag-v' : 'drag-iv');
-  
-  if (!valid) { 
-    if (gb) gb.style.display = 'none'; 
-    return; 
-  }
-  
-  const excl = dragging.isNew ? null : dragging.placed.uid;
-  const snap = findSnap(zona, dragging.px, relX, relY, excl);
-  const overflowH = dragging.px.h > ZONA_H[zona];
-  
-  if (gb) {
-    gb.style.cssText = `display:block;left:${snap.x}px;top:${snap.y}px;width:${dragging.px.w}px;height:${dragging.px.h}px;z-index:40;`;
-    gb.className = 'ghost-box' + (snap.valid && !overflowH ? '' : ' bad');
-  }
+    if (!dragging) return;
+    if (e.cancelable) e.preventDefault();
+    const pos = getPos(e);
+    if (!pos || isNaN(pos.x) || isNaN(pos.y)) return;
+    moveGhost(pos.x, pos.y);
+    const ia = document.getElementById('inner-area');
+    if (!ia) return;
+    const ir   = ia.getBoundingClientRect();
+    const offX = dragging.offX ?? dragging.px.w/2;
+    const offY = dragging.offY ?? dragging.px.h/2;
+    const relX = pos.x - ir.left - offX;
+    const relY = pos.y - ir.top  - offY;
+    const zona = getZonaAt(relY + dragging.px.h/2);
+    clearHL();
+    const gb = document.getElementById('ghost-box');
+    if (!zona) { if (gb) gb.style.display='none'; return; }
+    const valid = zona === dragging.zonaSaran;
+    document.getElementById('zona-'+ZONA_KEY[zona])?.classList.add(valid ? 'drag-v' : 'drag-iv');
+    if (!valid) { if (gb) gb.style.display='none'; return; }
+    const excl = dragging.isNew ? null : dragging.placed.uid;
+    const snap = findSnap(zona, dragging.px, relX, relY, excl);
+    const overflowH = dragging.px.h > ZONA_H[zona];
+    if (gb) {
+        gb.style.cssText = `display:block;left:${snap.x}px;top:${snap.y}px;width:${dragging.px.w}px;height:${dragging.px.h}px;z-index:40;`;
+        gb.className = 'ghost-box' + (snap.valid && !overflowH ? '' : ' bad');
+    }
 }
 
 function onUp(e) {
-  if (!dragging) return;
-  unbindMove();
-  
-  const dg = document.getElementById('drag-ghost');
-  const gb = document.getElementById('ghost-box');
-  if (dg) dg.style.display = 'none';
-  if (gb) gb.style.display = 'none';
-  clearHL();
-  
-  const pos = getPos(e);
-  const ia = document.getElementById('inner-area');
-  
-  if (!ia) { dragging = null; return; }
-  
-  const ir = ia.getBoundingClientRect();
-  const offX = dragging.offX ?? dragging.px.w / 2;
-  const offY = dragging.offY ?? dragging.px.h / 2;
-  const relX = pos.x - ir.left - offX;
-  const relY = pos.y - ir.top - offY;
-  const zona = getZonaAt(relY + dragging.px.h / 2);
+    if (!dragging) return;
+    unbindMove();
+    const dg = document.getElementById('drag-ghost');
+    const gb = document.getElementById('ghost-box');
+    if (dg) dg.style.display = 'none';
+    if (gb) gb.style.display = 'none';
+    clearHL();
+    const pos  = getPos(e);
+    const ia   = document.getElementById('inner-area');
+    if (!ia) { dragging=null; return; }
+    const ir   = ia.getBoundingClientRect();
+    const offX = dragging.offX ?? dragging.px.w/2;
+    const offY = dragging.offY ?? dragging.px.h/2;
+    const relX = pos.x - ir.left - offX;
+    const relY = pos.y - ir.top  - offY;
+    const zona = getZonaAt(relY + dragging.px.h/2);
 
-  // Validasi kecocokan zona item
-  if (!zona || zona !== dragging.zonaSaran) {
-    const te = zona ? document.getElementById('zona-' + ZONA_KEY[zona]) : null;
-    if (te) { te.classList.add('do-shake'); setTimeout(() => te.classList.remove('do-shake'), 350); }
-    if (!dragging.isNew) dragging.placed.el?.classList.remove('dp');
-    dragging = null; 
-    return;
-  }
-
-  // Validasi tinggi item terhadap kapasitas tinggi zona
-  if (dragging.px.h > ZONA_H[zona]) {
-    const te = document.getElementById('zona-' + ZONA_KEY[zona]);
-    if (te) { te.classList.add('do-shake'); setTimeout(() => te.classList.remove('do-shake'), 350); }
-    if (!dragging.isNew) dragging.placed.el?.classList.remove('dp');
-    showToast('Item terlalu tinggi untuk zona ini — coba rotate 🔄 agar tiduran');
-    dragging = null; 
-    return;
-  }
-
-  // Validasi lebar item terhadap lebar tas keseluruhan
-  if (dragging.px.w > BAG_W) {
-    const te = document.getElementById('zona-' + ZONA_KEY[zona]);
-    if (te) { te.classList.add('do-shake'); setTimeout(() => te.classList.remove('do-shake'), 350); }
-    if (!dragging.isNew) dragging.placed.el?.classList.remove('dp');
-    showToast('Item terlalu lebar untuk tas ini');
-    dragging = null; 
-    return;
-  }
-
-  const excl = dragging.isNew ? null : dragging.placed.uid;
-  const snap = findSnap(zona, dragging.px, relX, relY, excl);
-  
-  if (dragging.isNew) {
-    const uid = 'p_' + Date.now() + Math.random().toString(36).slice(2, 5);
-    const p = {uid, itemId: dragging.itemId, namaItem: dragging.namaItem, zona, px: dragging.px, x: snap.x, y: snap.y, rotated: dragging.rotated || false};
-    placed[zona].push(p);
-    createPlacedEl(p);
-    
-    // Kirim event ke Alpine engine untuk mengunci status item ("✓ Sudah")
-    window.dispatchEvent(new CustomEvent('item-placed', {detail: {id: dragging.itemId}}));
-  } else {
-    dragging.placed.x = snap.x; 
-    dragging.placed.y = snap.y;
-    if (dragging.placed.el) {
-      dragging.placed.el.style.left = snap.x + 'px';
-      dragging.placed.el.style.top  = snap.y + 'px';
-      dragging.placed.el.classList.remove('dp');
+    if (!zona || zona !== dragging.zonaSaran) {
+        const te = zona ? document.getElementById('zona-'+ZONA_KEY[zona]) : null;
+        if (te) { te.classList.add('do-shake'); setTimeout(()=>te.classList.remove('do-shake'),350); }
+        if (!dragging.isNew) dragging.placed.el?.classList.remove('dp');
+        dragging=null; return;
     }
-  }
-  
-  dragging = null;
-  window.dispatchEvent(new CustomEvent('update-stats'));
+    if (dragging.px.h > ZONA_H[zona]) {
+        const te = document.getElementById('zona-'+ZONA_KEY[zona]);
+        if (te) { te.classList.add('do-shake'); setTimeout(()=>te.classList.remove('do-shake'),350); }
+        if (!dragging.isNew) dragging.placed.el?.classList.remove('dp');
+        showToast('Item terlalu tinggi — coba rotate 🔄');
+        dragging=null; return;
+    }
+    if (dragging.px.w > BAG_W) {
+        const te = document.getElementById('zona-'+ZONA_KEY[zona]);
+        if (te) { te.classList.add('do-shake'); setTimeout(()=>te.classList.remove('do-shake'),350); }
+        if (!dragging.isNew) dragging.placed.el?.classList.remove('dp');
+        showToast('Item terlalu lebar untuk tas ini');
+        dragging=null; return;
+    }
+
+    const excl = dragging.isNew ? null : dragging.placed.uid;
+    const snap = findSnap(zona, dragging.px, relX, relY, excl);
+
+    if (dragging.isNew) {
+        const uid = 'p_'+Date.now()+Math.random().toString(36).slice(2,5);
+        const p = {uid, itemId:dragging.itemId, namaItem:dragging.namaItem, zona, px:dragging.px, x:snap.x, y:snap.y, rotated:dragging.rotated||false};
+        placed[zona].push(p);
+        createPlacedEl(p);
+        window.dispatchEvent(new CustomEvent('item-placed', {detail:{id:dragging.itemId, namaItem:dragging.namaItem, zona_saran:zona, x:snap.x, y:snap.y, rotated:dragging.rotated||false}}));
+    } else {
+        dragging.placed.x = snap.x;
+        dragging.placed.y = snap.y;
+        if (dragging.placed.el) {
+            dragging.placed.el.style.left = snap.x+'px';
+            dragging.placed.el.style.top  = snap.y+'px';
+            dragging.placed.el.classList.remove('dp');
+        }
+    }
+    dragging = null;
+    window.dispatchEvent(new CustomEvent('update-stats'));
 }
 
 let toastTimer = null;
 function showToast(msg) {
-  let toast = document.getElementById('bag-toast');
-  if (!toast) {
-    toast = document.createElement('div');
-    toast.id = 'bag-toast';
-    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a252f;color:#fff;padding:8px 18px;border-radius:24px;font-size:13px;z-index:9999;pointer-events:none;transition:opacity .3s;white-space:nowrap';
-    document.body.appendChild(toast);
-  }
-  toast.textContent = msg;
-  toast.style.opacity = '1';
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { toast.style.opacity = '0'; }, 2500);
+    let toast = document.getElementById('bag-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'bag-toast';
+        toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a252f;color:#fff;padding:8px 18px;border-radius:24px;font-size:13px;z-index:9999;pointer-events:none;transition:opacity .3s;white-space:nowrap';
+        document.body.appendChild(toast);
+    }
+    toast.textContent = msg;
+    toast.style.opacity = '1';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>{ toast.style.opacity='0'; }, 2500);
 }
 
-document.addEventListener('dragover', e => {
-  const g = document.getElementById('drag-ghost');
-  if (g?.style.display !== 'none') { g.style.left=e.clientX+'px'; g.style.top=e.clientY+'px'; }
-});
-
-
 // ==========================================
-// 4. ALPINE STORE: BUAT TAS (PWA INTEGRATED)
+// 5. ALPINE STORE BUAT TAS
 // ==========================================
 document.addEventListener('alpine:init', () => {
-  Alpine.store('tasBuat', {
-    open: false,
-    form: {nama_tas:'', kategori:'dewasa', liter:'', dim_p:'', dim_l:'', dim_t:''},
-
-    hitungLiter() {
-      const p=parseFloat(this.form.dim_p), l=parseFloat(this.form.dim_l), t=parseFloat(this.form.dim_t);
-      if (p>0 && l>0 && t>0) this.form.liter = parseFloat((p*l*t/1000).toFixed(1));
-    },
-
-    async submit() {
-      if (!this.form.nama_tas || !this.form.kategori || !this.form.liter) return;
-      
-      const newTasObj = {
-         id: 'local_' + Date.now(),
-         nama_tas: this.form.nama_tas,
-         kategori: this.form.kategori,
-         liter: parseFloat(this.form.liter),
-         dim_p: parseFloat(this.form.dim_p || 30),
-         dim_l: parseFloat(this.form.dim_l || 20),
-         dim_t: parseFloat(this.form.dim_t || 40),
-      };
-
-      this.open = false;
-      this.form = {nama_tas:'', kategori:'dewasa', liter:'', dim_p:'', dim_l:'', dim_t:''};
-      
-      // Kirim event lokal agar ditangkap PWA Engine utama di bawah
-      window.dispatchEvent(new CustomEvent('tas-local-created', {detail: newTasObj}));
-    }
-  });
-
-  // ==========================================
-  // 5. ALPINE COMPONENT UTAMA (SINGLE ENGINE PWA - FIXED OFFLINE DRAG)
-  // ==========================================
-  Alpine.data('tasSiaga', () => ({
-    semuaTas: @json($semuaTas ?? []),
-    activeTasId: {{ $activeTas?->id ?? 'null' }},
-    activeTas: null,
-    rekomendasi: [],
-    search: '',
-    dimP: '', dimL: '', dimT: '',
-    usedIds: [],
-    rotatedIds: [], 
-    bagCm: {p:0, t:0, zh:0},
-    pxPerCm: 3,
-    zonaList: [
-      {key:'sangat_penting', label:'Sangat penting', short:'a', color:'#C0392B', pct:0},
-      {key:'penting',        label:'Penting',         short:'b', color:'#E67E22', pct:0},
-      {key:'cukup_penting',  label:'Cukup penting',   short:'c', color:'#27AE60', pct:0},
-    ],
-
-    get filteredRekomendasi() {
-      if (!this.search) return this.rekomendasi;
-      return this.rekomendasi.filter(i=>i.nama_item.toLowerCase().includes(this.search.toLowerCase()));
-    },
-    get literHitung() {
-      const p=parseFloat(this.dimP), l=parseFloat(this.dimL), t=parseFloat(this.dimT);
-      return (p>0&&l>0&&t>0) ? parseFloat((p*l*t/1000).toFixed(1)) : (this.activeTas?.liter ?? 0);
-    },
-
-    async init() {
-      // 1. Ambil data cadangan LocalStorage termasuk rekomendasi (Offline priority)
-      const localData = localStorage.getItem('tas_siaga_offline_data');
-      if (localData) {
-        const parsed = JSON.parse(localData);
-        this.semuaTas = parsed.semuaTas || [];
-        this.activeTasId = parsed.activeTasId || null;
-        this.rekomendasi = parsed.rekomendasi || []; // Amankan data item saat offline refresh
-      }
-
-      await this.$nextTick();
-      this.initCardDelegation();
-      await this.syncActiveTas();
-
-      // 2. Jika online, ambil update termutakhir dari Server MySQL
-      if (navigator.onLine) {
-        await this.loadDataFromServer();
-      }
-
-      // 3. EVENT LISTENERS BINDING
-      window.addEventListener('tas-local-created', async e => {
-         this.semuaTas.push(e.detail);
-         await this.setAktif(e.detail.id);
-      });
-      window.addEventListener('item-placed', e => {
-        if (!this.usedIds.includes(e.detail.id)) this.usedIds.push(e.detail.id);
-        this.recalcStats();
-      });
-      window.addEventListener('item-removed', e => {
-        this.usedIds = this.usedIds.filter(x=>x!==e.detail.id);
-        this.recalcStats();
-      });
-      window.addEventListener('update-stats', () => this.recalcStats());
-      window.addEventListener('online', () => {
-        console.log('Kembali online! Menyinkronkan data lokal ke awan MySQL...');
-        this.syncToServer();
-      });
-    },
-
-    async loadDataFromServer() {
-      try {
-        let response = await fetch('/api/tas-siaga');
-        if (response.ok) {
-          let data = await response.json();
-          if(data.semuaTas && data.semuaTas.length > 0) {
-             this.semuaTas = data.semuaTas;
-             if(!this.activeTasId) this.activeTasId = data.semuaTas[0].id;
-          }
-          await this.loadRekomendasi(); // Ambil item segar dari server jika online
-          this.saveToLocal();
-          this.syncActiveTas();
+    Alpine.store('tasBuat', {
+        open: false,
+        form: {nama_tas:'', kategori:'dewasa', liter:'', dim_p:'', dim_l:'', dim_t:''},
+        hitungLiter() {
+            const p=parseFloat(this.form.dim_p), l=parseFloat(this.form.dim_l), t=parseFloat(this.form.dim_t);
+            if (p>0&&l>0&&t>0) this.form.liter = parseFloat((p*l*t/1000).toFixed(1));
+        },
+        async submit() {
+            if (!this.form.nama_tas || !this.form.kategori || !this.form.liter) return;
+            const hasDim = this.form.dim_p && this.form.dim_l && this.form.dim_t;
+            const newTasObj = {
+                id: 'local_'+Date.now(),
+                nama_tas: this.form.nama_tas,
+                kategori: this.form.kategori,
+                liter: parseFloat(this.form.liter),
+                // Simpan 0 jika tidak diisi — calcScale() akan reverse-calculate dari liter
+                dim_p: hasDim ? parseFloat(this.form.dim_p) : 0,
+                dim_l: hasDim ? parseFloat(this.form.dim_l) : 0,
+                dim_t: hasDim ? parseFloat(this.form.dim_t) : 0,
+                items: []
+            };
+            this.open = false;
+            this.form = {nama_tas:'', kategori:'dewasa', liter:'', dim_p:'', dim_l:'', dim_t:''};
+            window.dispatchEvent(new CustomEvent('tas-local-created', {detail: newTasObj}));
         }
-      } catch (err) {
-        console.log('Server MySQL unreachable. Berjalan penuh dengan data lokal.');
-      }
-    },
+    });
 
-    async setAktif(id) {
-      this.activeTasId = id;
-      await this.syncActiveTas();
-      this.saveToLocal();
-    },
+    // ==========================================
+    // 6. ALPINE COMPONENT UTAMA — SATU init() SAJA
+    // ==========================================
+    Alpine.data('tasSiaga', () => ({
+        semuaTas:    @json($semuaTas ?? []),
+        activeTasId: {{ $activeTas?->id ?? 'null' }},
+        activeTas:   null,
+        rekomendasi: [],
+        search:      '',
+        dimP:'', dimL:'', dimT:'',
+        usedIds:    [],
+        rotatedIds: [],
+        bagCm:      {p:0, t:0, zh:0},
+        pxPerCm:    3,
+        zonaList: [
+            {key:'sangat_penting', label:'Sangat penting', short:'a', color:'#C0392B', pct:0},
+            {key:'penting',        label:'Penting',         short:'b', color:'#E67E22', pct:0},
+            {key:'cukup_penting',  label:'Cukup penting',   short:'c', color:'#27AE60', pct:0},
+        ],
 
-    async syncActiveTas() {
-      this.activeTas = this.semuaTas.find(t => t.id === this.activeTasId) || null;
-      if (this.activeTas) {
-        this.dimP = String(this.activeTas.dim_p ?? '');
-        this.dimL = String(this.activeTas.dim_l ?? '');
-        this.dimT = String(this.activeTas.dim_t ?? '');
-        
-        // Hanya fetch ke API jika online, jika offline biarkan memakai data localStorage dari init()
-        if (navigator.onLine) {
-          await this.loadRekomendasi();
-        }
-        
-        this.calcScale();
-      }
-    },
+        get filteredRekomendasi() {
+            if (!this.search) return this.rekomendasi;
+            return this.rekomendasi.filter(i => i.nama_item.toLowerCase().includes(this.search.toLowerCase()));
+        },
+        get literHitung() {
+            const p=parseFloat(this.dimP), l=parseFloat(this.dimL), t=parseFloat(this.dimT);
+            return (p>0&&l>0&&t>0) ? parseFloat((p*l*t/1000).toFixed(1)) : (this.activeTas?.liter ?? 0);
+        },
 
-    calcScale() {
-      const p   = parseFloat(this.dimP) || 30;
-      const t   = parseFloat(this.dimT) || 40;
-      const zh  = Math.round(t / 3);
-      const scaleW = BAG_W / p;
-      const scaleH = 72 / zh;
-      PX_PER_CM    = Math.min(scaleW, scaleH);
-      this.pxPerCm = Math.round(PX_PER_CM * 10) / 10;
-      this.bagCm   = {p, t, zh};
-      
-      placed = {sangat_penting:[], penting:[], cukup_penting:[]};
-      this.usedIds = [];
-      document.getElementById('inner-area')?.querySelectorAll('.placed').forEach(el=>el.remove());
-      this.recalcStats();
-    },
+        // ── SATU-SATUNYA init() ──
+        async init() {
+            // 1. Load dari localStorage dulu
+            const raw = localStorage.getItem('tas_siaga_offline_data');
+            if (raw) {
+                try {
+                    const parsed = JSON.parse(raw);
+                    if (parsed.semuaTas?.length)  this.semuaTas    = parsed.semuaTas;
+                    if (parsed.activeTasId)        this.activeTasId = parsed.activeTasId;
+                    if (parsed.rekomendasi?.length) this.rekomendasi = parsed.rekomendasi;
+                } catch(e) { console.warn('LocalStorage parse error', e); }
+            }
 
-    recalcStats() {
-      this.zonaList = this.zonaList.map(z => {
-        const total = BAG_W * ZONA_H[z.key];
-        const used  = placed[z.key].reduce((s,p)=>s+p.px.w*p.px.h, 0);
-        return {...z, pct: Math.min(100, Math.round(used/total*100))};
-      });
-    },
+            await this.$nextTick();
+            await this.syncActiveTas();
 
-    saveToLocal() {
-      // Ikut sertakan array rekomendasi ke dalam storage agar aman saat offline refresh
-      const dataToSave = { 
-        semuaTas: this.semuaTas, 
-        activeTasId: this.activeTasId,
-        rekomendasi: this.rekomendasi 
-      };
-      localStorage.setItem('tas_siaga_offline_data', JSON.stringify(dataToSave));
-      if (navigator.onLine) { this.syncToServer(); }
-    },
+            // 2. Restore item ke kanvas dari data yang tersimpan
+            this.restoreItemsToCanvas();
 
-    async syncToServer() {
-      try {
-        await fetch('/api/tas-siaga/sync', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-          },
-          body: JSON.stringify({ semuaTas: this.semuaTas, activeTasId: this.activeTasId })
-        });
-      } catch (error) {
-        console.log('Gagal terhubung ke MySQL cloud, perubahan ditampung secara lokal.');
-      }
-    },
+            // 3. Init delegation drag kartu
+            this.initCardDelegation();
 
-    async loadRekomendasi() {
-      if (!this.activeTas) return;
-      try {
-         const res = await fetch(`/api/tas/rekomendasi/${this.activeTas.kategori}`);
-         if(res.ok) {
-            this.rekomendasi = await res.json();
-            this.saveToLocal(); // Perbarui backup local setelah sukses fetch data baru
-         }
-      } catch(e) {
-         console.log("Gagal memuat rekomendasi baru dari server.");
-      }
-    },
+            // 4. Event listeners
+            window.addEventListener('tas-local-created', async e => {
+                this.semuaTas.push(e.detail);
+                await this.setAktif(e.detail.id);
+            });
 
-    toggleRotate(itemId) {
-      if (this.rotatedIds.includes(itemId)) {
-        this.rotatedIds = this.rotatedIds.filter(x => x !== itemId);
-      } else {
-        this.rotatedIds.push(itemId);
-      }
-    },
+            window.addEventListener('item-placed', e => {
+                const id = e.detail.id;
+                if (!this.usedIds.includes(id)) this.usedIds.push(id);
 
-    getPreviewStyle(item) {
-      const cm = ITEM_CM[item.nama_item] || DEFAULT_CM;
-      const rotated = this.rotatedIds.includes(item.id);
-      const rawW = rotated ? cm.h : cm.w;
-      const rawH = rotated ? cm.w : cm.h;
-      const maxDim = 40;
-      const scale = Math.min(maxDim/rawW, maxDim/rawH);
-      const pw = Math.round(rawW * scale);
-      const ph = Math.round(rawH * scale);
-      const zona = item.zona_saran;
-      const color = zona==='sangat_penting'?'#C0392B':zona==='penting'?'#E67E22':'#27AE60';
-      return `width:${pw}px;height:${ph}px;background:${color};opacity:0.25;border:1.5px solid ${color}`;
-    },
+                // Update items di activeTas (cegah duplikat)
+                const tas = this.semuaTas.find(t => String(t.id) === String(this.activeTasId));
+                if (tas) {
+                    if (!tas.items) tas.items = [];
+                    const exists = tas.items.some(i => String(i.id_item || i.id) === String(id));
+                    if (!exists) {
+                        tas.items.push({
+                            id_item:   id,
+                            id:        id,
+                            nama_item: e.detail.namaItem || '',
+                            zona_saran:e.detail.zona_saran || '',
+                            x:         e.detail.x || 0,
+                            y:         e.detail.y || 0,
+                            rotated:   e.detail.rotated || false
+                        });
+                    }
+                }
+                this.recalcStats();
+            });
 
-    getDimHint(item) {
-      const cm = ITEM_CM[item.nama_item] || DEFAULT_CM;
-      const rotated = this.rotatedIds.includes(item.id);
-      const w = rotated ? cm.h : cm.w;
-      const h = rotated ? cm.w : cm.h;
-      return `${w}×${h}cm`;
-    },
+            window.addEventListener('item-removed', e => {
+                const id = e.detail.id;
+                this.usedIds = this.usedIds.filter(x => x !== id);
+                const tas = this.semuaTas.find(t => String(t.id) === String(this.activeTasId));
+                if (tas?.items) {
+                    tas.items = tas.items.filter(i => String(i.id_item || i.id) !== String(id));
+                }
+                this.recalcStats();
+            });
 
-    initCardDelegation() {
-  const grid = document.getElementById('item-grid-blade');
-  if (!grid || grid._delegated) return;
-  grid._delegated = true;
-  
-  const handler = (e) => {
-    if (e.type === 'mousedown' && e.button !== 0) return;
-    
-    const card = e.target.closest('[data-item-id]');
-    if (e.target.closest('button')) return; 
-    if (!card || card.classList.contains('used')) return;
-    
-    // Paksa browser mobile untuk memprioritaskan drag daripada scrolling halaman
-    if (e.cancelable) {
-      e.preventDefault();
-    }
-    
-    const id      = parseInt(card.dataset.itemId);
-    
-    // 💡 SOLUSI: Mengubah === menjadi == agar tipe data String dan Number tetap cocok
-    const item    = this.rekomendasi.find(r => r.id == id);
-    if (!item) return;
-    
-    const rotated = this.rotatedIds.includes(id);
-    
-    startDragCard(e, item.id, item.nama_item, item.zona_saran, rotated);
-  };
-  
-  // Gunakan passive: false agar perintah preventDefault() di atas dipatuhi oleh Google Chrome Mobile
-  grid.addEventListener('mousedown', handler);
-  grid.addEventListener('touchstart', handler, { passive: false });
-},
+            window.addEventListener('update-stats', () => this.recalcStats());
+        },
 
-    async hapusTas(id) {
-      if (!confirm('Hapus tas ini?')) return;
-      this.semuaTas = this.semuaTas.filter(t=>t.id!==id);
-      if (this.activeTasId === id) {
-        this.activeTasId = this.semuaTas[0]?.id ?? null;
-      }
-      this.syncActiveTas();
-      this.saveToLocal();
-    },
+        // ── RESTORE: gambar ulang item dari activeTas.items ke kanvas ──
+        restoreItemsToCanvas() {
+            const tas = this.semuaTas.find(t => String(t.id) === String(this.activeTasId));
+            if (!tas?.items?.length) return;
 
-    async updateDimensi() {
-      if (!this.activeTas) return;
-      this.literHitung = (this.dimP * this.dimL * this.dimT) / 1000;
-      this.activeTas.dim_p = parseFloat(this.dimP);
-      this.activeTas.dim_l = parseFloat(this.dimL);
-      this.activeTas.dim_t = parseFloat(this.dimT);
-      this.activeTas.liter = Math.round(this.literHitung * 10) / 10;
-      
-      this.calcScale();
-      this.saveToLocal();
-    },
+            // Bersihkan kanvas dulu
+            document.getElementById('inner-area')?.querySelectorAll('.placed-item').forEach(el => el.remove());
+            placed = {sangat_penting:[], penting:[], cukup_penting:[]};
 
-    async updateKategori(kat) {
-      if (!this.activeTas) return;
-      this.activeTas.kategori = kat;
-      if (navigator.onLine) {
-        await this.loadRekomendasi();
-      }
-      this.saveToLocal();
-    },
+            tas.items.forEach(item => {
+                const id       = item.id_item || item.id;
+                const namaItem = item.nama_item || '';
+                const zona     = item.zona_saran;
+                if (!zona || !ZONA_H[zona]) return;
 
-    sortZona(zona) { sortZona(zona); this.recalcStats(); },
-    sortAll()      { ['sangat_penting','penting','cukup_penting'].forEach(z=>sortZona(z)); this.recalcStats(); }
-  }));
+                const baseCm = ITEM_CM[namaItem] || DEFAULT_CM;
+                const cm     = item.rotated ? {w:baseCm.h, h:baseCm.w} : baseCm;
+                const px     = {
+                    w: Math.max(10, Math.round(cm.w * PX_PER_CM)),
+                    h: Math.max(8,  Math.round(cm.h * PX_PER_CM)),
+                };
+                const x = item.x ?? 0;
+                const y = item.y ?? ZONA_TOP[zona];
 
+                const p = {uid:'r_'+id+'_'+Date.now(), itemId:id, namaItem, zona, px, x, y, rotated:!!item.rotated};
+                placed[zona].push(p);
+                createPlacedEl(p);
+
+                if (!this.usedIds.includes(id)) this.usedIds.push(id);
+            });
+
+            this.recalcStats();
+        },
+
+        // ── SAVE: sync posisi dari kanvas (placed) → semuaTas → localStorage ──
+        syncPlacedToState() {
+            const tas = this.semuaTas.find(t => String(t.id) === String(this.activeTasId));
+            if (!tas) return;
+
+            // Kumpulkan semua item dari kanvas dengan posisi terkini
+            const allPlaced = [
+                ...placed.sangat_penting,
+                ...placed.penting,
+                ...placed.cukup_penting
+            ];
+
+            tas.items = allPlaced.map(p => ({
+                id_item:    p.itemId,
+                id:         p.itemId,
+                nama_item:  p.namaItem,
+                zona_saran: p.zona,
+                x:          p.x,
+                y:          p.y,
+                rotated:    p.rotated || false
+            }));
+        },
+
+        saveToLocal() {
+            // Sync posisi terkini dari kanvas ke state sebelum simpan
+            this.syncPlacedToState();
+
+            const dataToSave = {
+                semuaTas:    this.semuaTas,
+                activeTasId: this.activeTasId,
+                rekomendasi: this.rekomendasi
+            };
+            localStorage.setItem('tas_siaga_offline_data', JSON.stringify(dataToSave));
+            console.log('💾 Tersimpan ke localStorage');
+
+            // Coba sync ke server jika online
+            if (navigator.onLine) this.syncToServer();
+        },
+
+        // ── TOMBOL SIMPAN MANUAL ──
+        saveManual() {
+            this.saveToLocal();
+            showToast('🎉 Tata letak tas berhasil disimpan!');
+        },
+
+        async syncToServer() {
+            try {
+                await fetch('/api/tas-siaga/sync', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                    },
+                    body: JSON.stringify({semuaTas: this.semuaTas, activeTasId: this.activeTasId})
+                });
+            } catch(e) {
+                console.log('Server unreachable, data tersimpan lokal.');
+            }
+        },
+
+        async syncActiveTas() {
+            this.activeTas = this.semuaTas.find(t => String(t.id) === String(this.activeTasId)) || null;
+            if (!this.activeTas && this.semuaTas.length > 0) {
+                this.activeTas    = this.semuaTas[0];
+                this.activeTasId  = this.semuaTas[0].id;
+            }
+            if (this.activeTas) {
+                this.dimP    = String(this.activeTas.dim_p ?? '');
+                this.dimL    = String(this.activeTas.dim_l ?? '');
+                this.dimT    = String(this.activeTas.dim_t ?? '');
+                this.usedIds = (this.activeTas.items || []).map(i => i.id_item || i.id);
+                this.calcScale();
+                if (navigator.onLine) await this.loadRekomendasi();
+            }
+        },
+
+        calcScale() {
+            const rawP = parseFloat(this.dimP);
+            const rawL = parseFloat(this.dimL);
+            const rawT = parseFloat(this.dimT);
+            const hasDim = rawP > 0 && rawL > 0 && rawT > 0;
+
+            let p, l, t;
+
+            if (hasDim) {
+                // Dimensi lengkap — pakai apa adanya
+                p = rawP; l = rawL; t = rawT;
+            } else {
+                // Hanya liter diisi — derive dimensi dengan proporsi standar P:L:T = 1:0.6:1.4
+                // V = P*(0.6P)*(1.4P) = 0.84*P³  →  P = cbrt(liter*1000/0.84)
+                const liter = parseFloat(this.activeTas?.liter) || 30;
+                const volCm3 = liter * 1000;
+                p = Math.round(Math.cbrt(volCm3 / 0.84) * 10) / 10;
+                l = Math.round(p * 0.6 * 10) / 10;
+                t = Math.round(p * 1.4 * 10) / 10;
+                // Sync balik ke field input supaya user bisa lihat
+                this.dimP = String(p);
+                this.dimL = String(l);
+                this.dimT = String(t);
+                if (this.activeTas) {
+                    this.activeTas.dim_p = p;
+                    this.activeTas.dim_l = l;
+                    this.activeTas.dim_t = t;
+                }
+            }
+
+            const zh = Math.round(t / 3);
+            PX_PER_CM    = Math.min(BAG_W / p, 72 / zh);
+            this.pxPerCm = Math.round(PX_PER_CM * 10) / 10;
+            this.bagCm   = {p, t, zh};
+            // Reset kanvas saat skala berubah
+            placed = {sangat_penting:[], penting:[], cukup_penting:[]};
+            document.getElementById('inner-area')?.querySelectorAll('.placed-item').forEach(el => el.remove());
+            this.usedIds = [];
+            this.recalcStats();
+        },
+
+        recalcStats() {
+            this.zonaList = this.zonaList.map(z => {
+                const total = BAG_W * ZONA_H[z.key];
+                const used  = placed[z.key].reduce((s,p)=>s+p.px.w*p.px.h, 0);
+                return {...z, pct: Math.min(100, Math.round(used/total*100))};
+            });
+        },
+
+        async setAktif(id) {
+            // Simpan state tas sekarang sebelum pindah
+            this.syncPlacedToState();
+            this.activeTasId = id;
+            await this.syncActiveTas();
+            this.restoreItemsToCanvas();
+            this.saveToLocal();
+        },
+
+        async hapusTas(id) {
+            if (!confirm('Hapus tas ini?')) return;
+            this.semuaTas    = this.semuaTas.filter(t => t.id !== id);
+            if (String(this.activeTasId) === String(id)) {
+                this.activeTasId = this.semuaTas[0]?.id ?? null;
+            }
+            await this.syncActiveTas();
+            this.restoreItemsToCanvas();
+            this.saveToLocal();
+        },
+
+        async updateDimensi() {
+            if (!this.activeTas) return;
+            const p = parseFloat(this.dimP);
+            const l = parseFloat(this.dimL);
+            const t = parseFloat(this.dimT);
+            if (p > 0) this.activeTas.dim_p = p;
+            if (l > 0) this.activeTas.dim_l = l;
+            if (t > 0) this.activeTas.dim_t = t;
+            // Hitung liter dari dimensi kalau lengkap, atau pakai activeTas.liter kalau hanya liter yg diisi
+            if (p > 0 && l > 0 && t > 0) {
+                this.activeTas.liter = Math.round((p * l * t / 1000) * 10) / 10;
+            }
+            this.calcScale();
+            this.saveToLocal();
+        },
+
+        // Dipanggil saat user input liter langsung (tanpa isi dimensi P/L/T)
+        updateLiterLangsung(liter) {
+            if (!this.activeTas) return;
+            const val = parseFloat(liter);
+            if (!val || val <= 0) return;
+            this.activeTas.liter = val;
+            // Kosongkan dim agar calcScale tahu ini mode liter-only
+            this.dimP = ''; this.dimL = ''; this.dimT = '';
+            this.activeTas.dim_p = 0;
+            this.activeTas.dim_l = 0;
+            this.activeTas.dim_t = 0;
+            this.calcScale();
+            this.saveToLocal();
+        },
+
+        async updateKategori(kat) {
+            if (!this.activeTas) return;
+            this.activeTas.kategori = kat;
+            if (navigator.onLine) await this.loadRekomendasi();
+            this.saveToLocal();
+        },
+
+        async loadRekomendasi() {
+            if (!this.activeTas) return;
+            try {
+                const res = await fetch(`/api/tas/rekomendasi/${this.activeTas.kategori}`);
+                if (res.ok) {
+                    this.rekomendasi = await res.json();
+                    // Update backup rekomendasi di localStorage
+                    const raw = localStorage.getItem('tas_siaga_offline_data');
+                    if (raw) {
+                        const d = JSON.parse(raw);
+                        d.rekomendasi = this.rekomendasi;
+                        localStorage.setItem('tas_siaga_offline_data', JSON.stringify(d));
+                    }
+                }
+            } catch(e) { console.log('Gagal load rekomendasi dari server.'); }
+        },
+
+        toggleRotate(itemId) {
+            if (this.rotatedIds.includes(itemId)) {
+                this.rotatedIds = this.rotatedIds.filter(x => x !== itemId);
+            } else {
+                this.rotatedIds.push(itemId);
+            }
+        },
+
+        getPreviewStyle(item) {
+            const cm      = ITEM_CM[item.nama_item] || DEFAULT_CM;
+            const rotated = this.rotatedIds.includes(item.id);
+            const rawW    = rotated ? cm.h : cm.w;
+            const rawH    = rotated ? cm.w : cm.h;
+            const scale   = Math.min(40/rawW, 40/rawH);
+            const pw = Math.round(rawW * scale);
+            const ph = Math.round(rawH * scale);
+            const zona  = item.zona_saran;
+            const color = zona==='sangat_penting'?'#C0392B':zona==='penting'?'#E67E22':'#27AE60';
+            return `width:${pw}px;height:${ph}px;background:${color};opacity:0.25;border:1.5px solid ${color}`;
+        },
+
+        getDimHint(item) {
+            const cm      = ITEM_CM[item.nama_item] || DEFAULT_CM;
+            const rotated = this.rotatedIds.includes(item.id);
+            return `${rotated?cm.h:cm.w}×${rotated?cm.w:cm.h}cm`;
+        },
+
+        initCardDelegation() {
+            this.$nextTick(() => {
+                const grid = document.getElementById('item-grid-blade');
+                if (!grid || grid._delegated) return;
+                grid._delegated = true;
+                const handler = (e) => {
+                    if (e.type==='mousedown' && e.button!==0) return;
+                    if (e.target.closest('button')) return;
+                    const card = e.target.closest('.icard');
+                    if (!card || card.classList.contains('used')) return;
+                    if (e.cancelable) e.preventDefault();
+                    const id   = card.dataset.itemId || card.dataset.id;
+                    const item = this.rekomendasi.find(r => String(r.id) === String(id));
+                    if (!item) return;
+                    const rotated = this.rotatedIds.includes(parseInt(id));
+                    startDragCard(e, item.id, item.nama_item, item.zona_saran, rotated);
+                };
+                grid.addEventListener('mousedown', handler);
+                grid.addEventListener('touchstart', handler, {passive:false});
+            });
+        },
+
+        sortZona(zona) { sortZona(zona); this.recalcStats(); },
+        sortAll()      { ['sangat_penting','penting','cukup_penting'].forEach(z=>sortZona(z)); this.recalcStats(); },
+    }));
 });
+
 </script>
 @endpush
