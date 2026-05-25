@@ -19,25 +19,89 @@
 
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
 .do-shake{animation:shake .3s ease}
-.placed{position:absolute;cursor:grab;border-radius:3px;transition:opacity .15s}
-.placed:active{cursor:grabbing}
+.placed{
+    position:absolute;
+    cursor:grab;
+    border-radius:3px;
+    transition:opacity .2s, transform .2s ease;
+    box-shadow: 0 2px 8px rgba(90, 130, 126, 0.2);
+}
+.placed:active{
+    cursor:grabbing;
+    box-shadow: 0 8px 20px rgba(90, 130, 126, 0.4) !important;
+}
 .placed.dp{opacity:.3}
-.ghost-box{position:absolute;pointer-events:none;border:2px dashed #5A827E;border-radius:4px;background:rgba(90,130,126,.15);z-index:40;display:none}
+.ghost-box{
+    position:absolute;
+    pointer-events:none;
+    border:2px dashed #5A827E;
+    border-radius:4px;
+    background:rgba(90,130,126,.15);
+    z-index:40;
+    display:none;
+    box-shadow: inset 0 0 10px rgba(90, 130, 126, 0.1);
+}
 .ghost-box.bad{border-color:#5A827E;background:rgba(90,130,126,.1)}
 
-.tas-tab{white-space:nowrap;transition:all .2s;border:1px solid #B9D4AA}
+.tas-tab{white-space:nowrap;transition:all .3s ease;border:1px solid #B9D4AA}
+.tas-tab:hover:not(.active){background:rgba(44,62,80,0.05)}
 .tas-tab.active{background:#5A827E;color:#fff;border-color:#5A827E}
 .slim-scroll::-webkit-scrollbar{height:0}
 
-/* GRID & KARTU EDUKASI - PALETTE BARU */
-#content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; }
+/* ANIMASI SMOOTH UNTUK BERBAGAI ELEMEN */
+button, input, select {
+    transition: all 0.3s ease;
+}
+
+button:focus, input:focus, select:focus {
+    outline: none;
+}
+
+/* ANIMASI FADE-IN UNTUK GRID */
+@keyframes fadeIn {
+    from { 
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#content-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+}
+
+#content-grid.fade-loading {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+#content-grid.fade-loading .info-card {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+#content-grid .info-card {
+    animation: fadeIn 0.4s ease-out backwards;
+}
+
 .info-card { 
     background: #FFFFFF; 
     border-radius: 20px; 
     padding: 20px; 
     border: 2px solid #84AE92; 
     box-shadow: 0 4px 15px rgba(90, 130, 126, 0.1);
+    transition: box-shadow 0.3s ease;
 }
+
+.info-card:hover {
+    box-shadow: 0 8px 25px rgba(90, 130, 126, 0.2);
+}
+
 .img-box { width: 100%; height: 140px; background: #B9D4AA; border-radius: 12px; margin-bottom: 15px; }
 .card-title { color: #5A827E; font-weight: 800; }
 .card-desc { color: #5A827E; opacity: 0.8; }
@@ -51,18 +115,140 @@
     border: none; 
     cursor: pointer; 
     font-weight: 700;
+    transition: all 0.3s ease;
 }
-.category-btn.active { background: #5A827E; color: white; }
+
+.category-btn:hover:not(.active) {
+    background: #a3c399;
+    transform: none;
+}
+
+.category-btn.active { 
+    background: #5A827E; 
+    color: white; 
+}
 
 .step-btn { 
-    width: 52px; height: 52px; border-radius: 18px; 
-    background: white; border: 2px solid #B9D4AA; 
-    color: #5A827E; font-weight: 800; transition: .25s;
+    width: 52px; 
+    height: 52px; 
+    border-radius: 18px; 
+    background: white; 
+    border: 2px solid #B9D4AA; 
+    color: #5A827E; 
+    font-weight: 800; 
+    transition: all 0.3s ease;
+    cursor: pointer;
 }
-.step-btn.active { background: #5A827E; color: white; border-color: #5A827E; }
+
+.step-btn:hover:not(.active) {
+    border-color: #5A827E;
+    color: #5A827E;
+    transform: none;
+}
+
+.step-btn.active { 
+    background: #5A827E; 
+    color: white; 
+    border-color: #5A827E; 
+}
 
 /* LAIN-LAIN */
-.icard { border: .5px solid #84AE92; border-radius: 12px; padding: 8px 6px 6px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: grab; background: #fff; transition: opacity .2s; touch-action: none !important; user-select: none !important; }
+.icard { 
+    border: .5px solid #84AE92; 
+    border-radius: 12px; 
+    padding: 8px 6px 6px; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 4px; 
+    cursor: grab; 
+    background: #fff; 
+    transition: opacity .2s, transform .1s ease; 
+    touch-action: none !important; 
+    user-select: none !important;
+    min-height: 100px;
+}
+
+.icard:active {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(90, 130, 126, 0.3);
+    z-index: 50;
+}
+
+/* Container scroll untuk item grid */
+.item-scroll-container {
+    height: 450px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid #f0f0f0;
+    border-radius: 12px;
+    background: #fafafa;
+    padding: 12px;
+    scroll-behavior: smooth;
+}
+
+.item-scroll-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.item-scroll-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.item-scroll-container::-webkit-scrollbar-thumb {
+    background: #B9D4AA;
+    border-radius: 10px;
+}
+
+.item-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: #84AE92;
+}
+
+#item-grid-blade {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+@media (max-width: 640px) {
+    .item-scroll-container {
+        height: 500px;
+    }
+    
+    #item-grid-blade {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+    
+    .icard {
+        padding: 10px 8px 8px;
+        min-height: 110px;
+    }
+    
+    .icard:active {
+        transform: scale(1.1);
+    }
+}
+
+/* Touch-friendly improvements untuk mobile */
+@media (hover: none) and (pointer: coarse) {
+    .icard {
+        min-height: 120px;
+        padding: 12px 10px;
+    }
+    
+    .icard::before {
+        content: '';
+        position: absolute;
+        top: -8px;
+        left: -8px;
+        right: -8px;
+        bottom: -8px;
+        touch-action: none;
+    }
+}
+
 .zdot{width:6px;height:6px;border-radius:50%}
 .da{background:#5A827E}.db{background:#84AE92}.dc{background:#B9D4AA}
 .zona-bar{height:5px;border-radius:3px;background:#FAFFCA;overflow:hidden;flex:1;margin:0 8px}
@@ -183,36 +369,6 @@ body.modal-open{overflow:hidden}
   </div>
 </div>
 
-        {{-- Dimensi Input --}}
-        <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-3">
-          <div class="flex items-center justify-between">
-            <p class="font-head font-semibold text-navy text-sm">Dimensi Tas</p>
-            <span class="text-xs text-gray-400">Liter = P × L × T ÷ 1000</span>
-          </div>
-          <div class="flex items-center gap-2 flex-wrap">
-            <div class="flex flex-col items-center gap-1">
-              <label class="text-xs text-gray-400">Panjang (cm)</label>
-              <input type="number" class="dim-input" x-model="dimP" @change="updateDimensi()" min="1" max="200" step="0.5"/>
-            </div>
-            <span class="text-gray-300 mt-4">×</span>
-            <div class="flex flex-col items-center gap-1">
-              <label class="text-xs text-gray-400">Lebar (cm)</label>
-              <input type="number" class="dim-input" x-model="dimL" @change="updateDimensi()" min="1" max="200" step="0.5"/>
-            </div>
-            <span class="text-gray-300 mt-4">×</span>
-            <div class="flex flex-col items-center gap-1">
-              <label class="text-xs text-gray-400">Tinggi (cm)</label>
-              <input type="number" class="dim-input" x-model="dimT" @change="updateDimensi()" min="1" max="200" step="0.5"/>
-            </div>
-            <span class="text-gray-300 mt-4">=</span>
-            <div class="flex flex-col items-center gap-1">
-              <label class="text-xs text-gray-400">Liter</label>
-              <div class="dim-input bg-gray-50 text-navy font-bold flex items-center justify-center" x-text="literHitung + ' L'"></div>
-            </div>
-          </div>
-          <p class="text-xs text-gray-400">Mengubah dimensi akan mereset isi tas (skala berubah)</p>
-        </div>
-
         {{-- Info Skala Realtime --}}
         <div class="bg-navy/5 rounded-xl px-4 py-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-navy font-medium">
           <span>📐 Tas: <strong x-text="bagCm.p + ' × ' + bagCm.t + ' cm'"></strong></span>
@@ -274,49 +430,82 @@ body.modal-open{overflow:hidden}
 
       {{-- KOLOM KANAN: DAFTAR ELEMEN ITEM --}}
       <div class="space-y-3">
-        <div class="flex items-center justify-between">
+        {{-- Dimensi Input --}}
+        <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <p class="font-head font-semibold text-navy text-sm">Dimensi Tas</p>
+            <span class="text-xs text-gray-400">Liter = P × L × T ÷ 1000</span>
+          </div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <div class="flex flex-col items-center gap-1">
+              <label class="text-xs text-gray-400">Panjang (cm)</label>
+              <input type="number" class="dim-input" x-model="dimP" @change="updateDimensi()" min="1" max="200" step="0.5"/>
+            </div>
+            <span class="text-gray-300 mt-4">×</span>
+            <div class="flex flex-col items-center gap-1">
+              <label class="text-xs text-gray-400">Lebar (cm)</label>
+              <input type="number" class="dim-input" x-model="dimL" @change="updateDimensi()" min="1" max="200" step="0.5"/>
+            </div>
+            <span class="text-gray-300 mt-4">×</span>
+            <div class="flex flex-col items-center gap-1">
+              <label class="text-xs text-gray-400">Tinggi (cm)</label>
+              <input type="number" class="dim-input" x-model="dimT" @change="updateDimensi()" min="1" max="200" step="0.5"/>
+            </div>
+            <span class="text-gray-300 mt-4">=</span>
+            <div class="flex flex-col items-center gap-1">
+              <label class="text-xs text-gray-400">Liter</label>
+              <div class="dim-input bg-gray-50 text-navy font-bold flex items-center justify-center" x-text="literHitung + ' L'"></div>
+            </div>
+          </div>
+          <p class="text-xs text-gray-400">Mengubah dimensi akan mereset isi tas (skala berubah)</p>
+        </div>
+
+        <div class="flex items-center justify-between my-3">
           <h3 class="font-head font-bold text-navy text-lg">Daftar Item</h3>
           <span class="text-xs text-gray-400 capitalize">Rekomendasi: <span x-text="activeTas.kategori"></span></span>
         </div>
-        <div class="relative">
+        <div class="relative mb-3">
           <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
           <input type="text" x-model="search" placeholder="Cari item..."
                  class="w-full pl-9 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-navy shadow-sm"/>
         </div>
 
-        <div class="grid grid-cols-3 sm:grid-cols-4 gap-3" id="item-grid-blade">
-  <template x-for="item in filteredRekomendasi" :key="item.id">
-    
-    <div :data-item-id="item.id"
-         :data-rotated="rotatedIds.includes(item.id) ? '1' : '0'"
-         :class="{'used': usedIds.includes(item.id)}"
-         draggable="false"
-         class="icard relative select-none">
+        <!-- Item Grid with Internal Scroll -->
+        <div class="item-scroll-container">
+          <div class="grid grid-cols-3 sm:grid-cols-4 gap-3" id="item-grid-blade">
+    <template x-for="item in filteredRekomendasi" :key="item.id">
+      
+      <div :data-item-id="item.id"
+           :data-rotated="rotatedIds.includes(item.id) ? '1' : '0'"
+           :class="{'used': usedIds.includes(item.id)}"
+           draggable="false"
+           class="icard relative select-none">
 
-      {{-- Rotate Button --}}
-      <button x-show="!usedIds.includes(item.id)"
-        @click.stop="toggleRotate(item.id)"
-        :class="rotatedIds.includes(item.id) ? 'bg-orange-100 text-orange-500' : 'bg-gray-100 text-gray-400'"
-        class="absolute top-1.5 right-1.5 w-5 h-5 rounded-full flex items-center justify-center text-xs hover:opacity-80 transition-all"
-        title="Rotate item">
-        🔄
-      </button>
+        {{-- Rotate Button --}}
+        <button x-show="!usedIds.includes(item.id)"
+          @click.stop="toggleRotate(item.id)"
+          :class="rotatedIds.includes(item.id) ? 'bg-orange-100 text-orange-500' : 'bg-gray-100 text-gray-400'"
+          class="absolute top-1.5 right-1.5 w-5 h-5 rounded-full flex items-center justify-center text-xs hover:opacity-80 transition-all"
+          title="Rotate item">
+          🔄
+        </button>
 
-      {{-- Dimensi Mini Preview (Tambahkan draggable="false" pada gambarnya juga) --}}
-      <div draggable="false" class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden relative">
-        <div :style="getPreviewStyle(item)" class="rounded-sm opacity-60 border border-gray-300 bg-gray-300 transition-all duration-200"></div>
+        {{-- Dimensi Mini Preview --}}
+        <div draggable="false" class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden relative">
+          <div :style="getPreviewStyle(item)" class="rounded-sm opacity-60 border border-gray-300 bg-gray-300 transition-all duration-200"></div>
+        </div>
+
+        <p class="text-xs font-semibold text-navy text-center leading-tight" x-text="item.nama_item"></p>
+        <span class="text-xs text-gray-400" x-text="getDimHint(item)"></span>
+        <span class="zdot" :class="item.zona_saran==='sangat_penting'?'da':item.zona_saran==='penting'?'db':'dc'"></span>
+        <span x-show="usedIds.includes(item.id)" class="text-xs text-gray-400">✓ Sudah</span>
       </div>
 
-      <p class="text-xs font-semibold text-navy text-center leading-tight" x-text="item.nama_item"></p>
-      <span class="text-xs text-gray-400" x-text="getDimHint(item)"></span>
-      <span class="zdot" :class="item.zona_saran==='sangat_penting'?'da':item.zona_saran==='penting'?'db':'dc'"></span>
-      <span x-show="usedIds.includes(item.id)" class="text-xs text-gray-400">✓ Sudah</span>
-    </div>
+    </template>
+  </div>
+        </div>
 
-  </template>
-</div>
-
-        <p class="text-xs text-gray-400 text-center">
+        <p class="text-xs text-gray-400 text-center mt-3">
           🔴 Sangat penting &nbsp;·&nbsp; 🟠 Penting &nbsp;·&nbsp; 🟢 Cukup penting<br>
           Item hanya masuk zona yang sesuai · 🔄 untuk rotate · ukuran menyesuaikan dimensi tas
         </p>
@@ -704,16 +893,25 @@ function renderGrid() {
     const grid = document.getElementById('content-grid');
     if (!grid) return;
     
+    // Tambahkan class loading untuk animasi fade
+    grid.classList.add('fade-loading');
+    
     // Potong data jadi 3 per halaman
     const items = fullData[currentCat].slice(currentPage * 3, (currentPage * 3) + 3);
     
-    grid.innerHTML = items.map(item => `
-        <div class="info-card">
-            <div class="img-box"></div>
-            <h3 class="font-bold text-lg mb-2">${item.title}</h3>
-            <p class="text-sm text-gray-500">${item.desc}</p>
-        </div>
-    `).join('');
+    // Gunakan setTimeout agar animasi fade out terlihat sebelum konten berubah
+    setTimeout(() => {
+        grid.innerHTML = items.map((item, idx) => `
+            <div class="info-card" style="animation-delay: ${idx * 0.1}s">
+                <div class="img-box"></div>
+                <h3 class="font-bold text-lg mb-2">${item.title}</h3>
+                <p class="text-sm text-gray-500">${item.desc}</p>
+            </div>
+        `).join('');
+        
+        // Hapus class loading untuk menampilkan dengan fade in
+        grid.classList.remove('fade-loading');
+    }, 150);
 }
 
 // Event Delegation (Tahan Banting)
@@ -723,7 +921,16 @@ document.getElementById('category-container').addEventListener('click', (e) => {
         document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentCat = btn.getAttribute('data-category');
-        currentPage = 0;
+        
+        currentPage = 0; // Halaman data sudah direset ke 0
+
+        // ====================================================================
+        // TAMBAHKAN 2 BARIS INI UNTUK MERESET TOMBOL PAGINATION / STEP ANGKA:
+        // ====================================================================
+        document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('.step-btn[data-page="0"]').classList.add('active');
+        // ====================================================================
+
         renderGrid();
     }
 });

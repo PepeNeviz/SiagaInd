@@ -404,27 +404,25 @@
      FOOTER (Style 1 - Illustrated Light Theme)
      PERBAIKAN: Sisi atas berbentuk OVAL TINGGI & ELEGAN sesuai mockup
 ══════════════════════════════════════════════════ --}}
-<footer class="relative mt-32 w-full" style="z-index: var(--z-base);">
+<footer class="relative mt-24 w-full" style="z-index: var(--z-base);">
     
-    <div class="relative overflow-hidden flex flex-col justify-between min-h-[520px] w-full pt-16"
+    <div class="relative overflow-hidden flex flex-col justify-between min-h-[460px] w-full pt-16 pb-0"
          style="background: #1e252b; 
-                border-top: 1px solid rgba(255,255,255,0.15);
-                border-top-left-radius: 50% 80px;
-                border-top-right-radius: 50% 80px;">
+                border-top: 1px solid rgba(255,255,255,0.15);">
 
         <div class="absolute inset-0 w-full h-full pointer-events-none z-0">
-            <img src="{{ asset('images/Footer_bg.jpg') }}" alt="Footer Background" class="w-full h-full object-cover object-bottom block">
+            <img src="{{ asset('images/Footer_bg.png') }}" alt="Footer Background" class="w-full h-full object-cover object-bottom block opacity-40">
         </div>
 
-        <div class="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.5fr_0.8fr_0.8fr_0.8fr] gap-8 px-8 lg:px-12 pb-16 pt-6 text-white">
+        <div class="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-[1.2fr_2fr] gap-12 px-6 sm:px-8 lg:px-12 pb-12 text-white">
 
-            <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-4 items-start w-full">
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-xl overflow-hidden shadow-sm bg-white border border-white/20">
+                    <div class="w-12 h-12 rounded-xl overflow-hidden shadow-sm bg-white border border-white/20 flex-shrink-0">
                         <img src="{{ asset('images/logo-siagaind.png') }}" class="w-full h-full object-cover" alt="Logo SiagaInd">
                     </div>
                     <div>
-                        <div class="text-2xl font-head font-extrabold tracking-tight text-white">SiagaInd</div>
+                        <div class="text-2xl font-head font-extrabold tracking-tight text-white leading-tight">SiagaInd</div>
                         <div class="text-xs font-semibold uppercase tracking-wider text-white/70">Siap sebelum terjadi</div>
                     </div>
                 </div>
@@ -432,54 +430,59 @@
                     Platform edukasi kesiapsiagaan bencana dengan visual interaktif, tutorial survival, caregiver, dan panduan kondisi darurat.
                 </p>
                 <div class="flex items-center gap-2 mt-2">
-                    <a href="#" class="footer-social" style="background: rgba(255,255,255,0.1); color: white;"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#" class="footer-social" style="background: rgba(255,255,255,0.1); color: white;"><i class="fa-brands fa-twitter"></i></a>
-                    <a href="#" class="footer-social" style="background: rgba(255,255,255,0.1); color: white;"><i class="fa-brands fa-youtube"></i></a>
-                    <a href="#" class="footer-social" style="background: rgba(255,255,255,0.1); color: white;"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all bg-white/10 text-white hover:bg-white/20 active:scale-95 text-base"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all bg-white/10 text-white hover:bg-white/20 active:scale-95 text-base"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all bg-white/10 text-white hover:bg-white/20 active:scale-95 text-base"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="#" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all bg-white/10 text-white hover:bg-white/20 active:scale-95 text-base"><i class="fa-brands fa-github"></i></a>
                 </div>
             </div>
 
-            <div class="lg:pl-8">
-                <div class="footer-title text-white font-bold mb-4">Navigasi</div>
-                <div class="footer-links">
-                    <a href="{{ route('netral') }}" class="text-white/80 hover:text-white font-medium transition-colors">Beranda</a>
-                    <a href="{{ route('sebelum') }}" class="text-white/80 hover:text-white font-medium transition-colors">Mitigasi</a>
-                    <a href="{{ route('saat') }}" class="text-white/80 hover:text-white font-medium transition-colors">Darurat</a>
-                    <a href="{{ route('sesudah') }}" class="text-white/80 hover:text-white font-medium transition-colors">Recovery</a>
+            <div class="grid grid-cols-3 gap-4 sm:gap-8 w-full">
+                
+                <div>
+                    <div class="text-white font-bold text-base sm:text-lg mb-3 tracking-wide relative after:content-[''] after:block after:w-8 after:h-0.5 after:bg-white/30 after:mt-1">Navigasi</div>
+                    <div class="flex flex-col gap-2 text-[13px] sm:text-[14px]">
+                        <a href="{{ route('netral') }}" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Beranda</a>
+                        <a href="{{ route('sebelum') }}" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Mitigasi</a>
+                        <a href="{{ route('saat') }}" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Darurat</a>
+                        <a href="{{ route('sesudah') }}" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Recovery</a>
+                    </div>
                 </div>
-            </div>
 
-            <div>
-                <div class="footer-title text-white font-bold mb-4">Bantuan</div>
-                <div class="footer-links">
-                    <a href="#" class="text-white/80 hover:text-white font-medium transition-colors">FAQ</a>
-                    <a href="#" class="text-white/80 hover:text-white font-medium transition-colors">Kontak</a>
-                    <a href="#" class="text-white/80 hover:text-white font-medium transition-colors">Panduan</a>
-                    <a href="#" class="text-white/80 hover:text-white font-medium transition-colors">Darurat</a>
+                <div>
+                    <div class="text-white font-bold text-base sm:text-lg mb-3 tracking-wide relative after:content-[''] after:block after:w-8 after:h-0.5 after:bg-white/30 after:mt-1">Bantuan</div>
+                    <div class="flex flex-col gap-2 text-[13px] sm:text-[14px]">
+                        <a href="#" class="text-white/80 hover:text-white font-medium transition-colors w-max block">FAQ</a>
+                        <a href="#" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Kontak</a>
+                        <a href="#" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Panduan</a>
+                        <a href="#" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Darurat</a>
+                    </div>
                 </div>
-            </div>
 
-            <div>
-                <div class="footer-title text-white font-bold mb-4">Lainnya</div>
-                <div class="footer-links">
-                    <a href="#" class="text-white/80 hover:text-white font-medium transition-colors">Tentang Kami</a>
-                    <a href="#" class="text-white/80 hover:text-white font-medium transition-colors">Kebijakan Privasi</a>
-                    <a href="#" class="text-white/80 hover:text-white font-medium transition-colors">Syarat & Ketentuan</a>
+                <div>
+                    <div class="text-white font-bold text-base sm:text-lg mb-3 tracking-wide relative after:content-[''] after:block after:w-8 after:h-0.5 after:bg-white/30 after:mt-1">Lainnya</div>
+                    <div class="flex flex-col gap-2 text-[13px] sm:text-[14px]">
+                        <a href="#" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Tentang Kami</a>
+                        <a href="#" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Kebijakan Privasi</a>
+                        <a href="#" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Syarat & Ketentuan</a>
+                        <a href="#" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Peta Situs</a>
+                    </div>
                 </div>
+
             </div>
         </div>
 
-        <div class="relative z-10 w-full border-top border-white/10" style="background: rgba(0, 0, 0, 0.25); border-top: 1px solid rgba(255,255,255,0.1);">
-            <div class="max-w-7xl mx-auto px-8 lg:px-12 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div class="text-xs font-semibold text-white/80">
-                    © 2026 SiagaInd. All rights reserved. <span class="opacity-60">Made for TECHNOVA 1.0</span>
+        <div class="relative z-10 w-full border-t border-white/10" style="background: rgba(0, 0, 0, 0.3);">
+            <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+                <div class="text-xs font-semibold text-white/80 tracking-wide">
+                    © 2026 SiagaInd. All rights reserved. <span class="opacity-60 block sm:inline sm:ml-1">| Made for TECHNOVA 1.0</span>
                 </div>
-                <div class="flex items-center gap-4 text-xs font-semibold text-white/80">
-                    <a href="#" class="hover:underline transition-all">Privacy</a>
-                    <span class="w-1 h-1 rounded-full bg-current opacity-40"></span>
-                    <a href="#" class="hover:underline transition-all">Terms</a>
-                    <span class="w-1 h-1 rounded-full bg-current opacity-40"></span>
-                    <a href="#" class="hover:underline transition-all">Contact</a>
+                <div class="flex flex-wrap justify-center items-center gap-4 text-xs font-semibold text-white/80">
+                    <a href="#" class="hover:underline hover:text-white transition-all">Privacy</a>
+                    <span class="w-1 h-1 rounded-full bg-current opacity-40 hidden sm:inline-block"></span>
+                    <a href="#" class="hover:underline hover:text-white transition-all">Terms</a>
+                    <span class="w-1 h-1 rounded-full bg-current opacity-40 hidden sm:inline-block"></span>
+                    <a href="#" class="hover:underline hover:text-white transition-all">Contact</a>
                 </div>
             </div>
         </div>

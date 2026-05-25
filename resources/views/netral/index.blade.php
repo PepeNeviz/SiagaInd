@@ -180,31 +180,16 @@
     </div>
     <div class="grid md:grid-cols-3 gap-6">
         <a href="{{ route('sebelum') }}" class="phase-card reveal">
-            <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background: rgba(90,130,126,0.12);">
-                <svg class="w-6 h-6" style="color: var(--c-teal);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                </svg>
-            </div>
             <h3 class="font-head font-bold text-xl mb-2" style="color: var(--color-text-primary);">Sebelum</h3>
             <p class="text-sm leading-relaxed" style="color: var(--color-text-secondary);">Siapkan tas siaga, cek lingkungan, dan latih respons sebelum bencana datang.</p>
             <div class="bar" style="background: var(--c-teal);"></div>
         </a>
         <a href="{{ route('saat') }}" class="phase-card reveal" style="animation-delay:0.1s">
-            <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background: rgba(192,57,43,0.1);">
-                <svg class="w-6 h-6" style="color: var(--color-danger);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                </svg>
-            </div>
             <h3 class="font-head font-bold text-xl mb-2" style="color: var(--color-text-primary);">Saat</h3>
             <p class="text-sm leading-relaxed" style="color: var(--color-text-secondary);">Panduan tindakan cepat berbasis decision tree. Tap — dan kamu tahu apa yang harus dilakukan.</p>
             <div class="bar" style="background: var(--color-danger);"></div>
         </a>
         <a href="{{ route('sesudah') }}" class="phase-card reveal" style="animation-delay:0.2s">
-            <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background: rgba(39,174,96,0.1);">
-                <svg class="w-6 h-6" style="color: #27AE60;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                </svg>
-            </div>
             <h3 class="font-head font-bold text-xl mb-2" style="color: var(--color-text-primary);">Sesudah</h3>
             <p class="text-sm leading-relaxed" style="color: var(--color-text-secondary);">Panduan pemulihan, penanganan luka, dan pengecekan supply pasca bencana.</p>
             <div class="bar" style="background: #27AE60;"></div>

@@ -5,6 +5,10 @@
 @section('content')
 
 <style>
+    [x-cloak] {
+        display: none !important;
+    }
+
     /* =========================================
         SESUDAH PAGE STYLE
     ========================================== */
@@ -172,6 +176,40 @@
         backdrop-filter:blur(10px);
     }
 
+    .modal-overlay {
+        position: fixed !important;
+        inset: 0 !important;
+        background-color: rgba(0, 0, 0, 0.6) !important;
+        backdrop-filter: blur(10px) !important;
+        z-index: 50 !important;
+        padding: 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .modal-box {
+        position: relative;
+        z-index: 51;
+        width: 100% !important;
+        max-width: 860px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        background: var(--c-light);
+        border-radius: 28px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        transform: none !important;
+        margin: 0 auto !important;
+    }
+
+    .modal-backdrop {
+        position: absolute;
+        inset: 0;
+        background: transparent;
+        cursor: pointer;
+    }
+
     .popup-panel{
         background:#F3F3F3;
         border-radius:28px;
@@ -210,6 +248,132 @@
         }
 
     }
+
+    /* =========================================
+        AFTER DISASTER INFO - COLOR PALETTE TEAL
+    ========================================== */
+    @keyframes fadeIn {
+        from { 
+            opacity: 0;
+            transform: translateY(8px);
+        }
+        to { 
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    #after-info-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        width: 100%;
+    }
+
+    #after-info-grid.fade-loading {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    #after-info-grid.fade-loading .after-info-card {
+        animation: fadeIn 0.4s ease-out forwards;
+    }
+
+    #after-info-grid .after-info-card {
+        animation: fadeIn 0.4s ease-out backwards;
+    }
+
+    .after-info-card { 
+        background: #FFFFFF; 
+        border-radius: 20px; 
+        padding: 20px; 
+        border: 2px solid #3E8E8E; 
+        box-shadow: 0 4px 15px rgba(45, 106, 106, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .after-info-card:hover {
+        box-shadow: 0 8px 25px rgba(45, 106, 106, 0.2);
+        border-color: #2D6A6A;
+        transform: translateY(-2px);
+    }
+
+    .after-info-img { 
+        width: 100%; 
+        height: 140px; 
+        background: linear-gradient(135deg, #7FC7C7 0%, #3E8E8E 100%); 
+        border-radius: 12px; 
+        margin-bottom: 15px; 
+    }
+
+    .after-info-title { 
+        color: #2D6A6A; 
+        font-weight: 800; 
+    }
+
+    .after-info-desc { 
+        color: #2D6A6A; 
+        opacity: 0.8; 
+    }
+
+    /* TOMBOL - AFTER DISASTER PALETTE */
+    .after-category-btn { 
+        background: #7FC7C7; 
+        color: #2D6A6A; 
+        padding: 12px 24px; 
+        border-radius: 16px; 
+        border: none; 
+        cursor: pointer; 
+        font-weight: 700;
+        transition: all 0.3s ease;
+    }
+
+    .after-category-btn:hover:not(.active) {
+        background: #5fb3b3;
+        transform: none;
+    }
+
+    .after-category-btn.active { 
+        background: #2D6A6A; 
+        color: white; 
+    }
+
+    .after-step-btn { 
+        width: 52px; 
+        height: 52px; 
+        border-radius: 18px; 
+        background: white; 
+        border: 2px solid #7FC7C7; 
+        color: #2D6A6A; 
+        font-weight: 800; 
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .after-step-btn:hover:not(.active) {
+        border-color: #2D6A6A;
+        color: #2D6A6A;
+        transform: none;
+    }
+
+    .after-step-btn.active { 
+        background: #2D6A6A; 
+        color: white; 
+        border-color: #2D6A6A; 
+    }
+
+    @media (max-width: 768px) {
+        #after-info-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 640px) {
+        #after-info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
 </style>
 
 <div
@@ -241,8 +405,43 @@
         </div>
     </section>
 
+    {{-- INFORMASI PEMULIHAN BENCANA --}}
+    <section class="py-20" style="background: linear-gradient(135deg, #E8F6F3 0%, #f0faf9 100%);">
+        <div class="max-w-6xl mx-auto px-4">
+            {{-- HEADER --}}
+            <div class="mb-10">
+                <span class="inline-block px-3 py-1 text-teal-600 text-xs font-bold rounded-full uppercase tracking-widest mb-3" style="background: #E8F6F3; color: #2D6A6A;">
+                    Panduan Pemulihan
+                </span>
+                <h2 class="text-4xl font-extrabold" style="color: #2D6A6A;">
+                    Informasi Sesudah Bencana
+                </h2>
+                <p class="text-gray-600 mt-1 text-sm">
+                    Langkah-langkah penting untuk pemulihan setelah bencana alam.
+                </p>
+            </div>
+
+            {{-- FILTER KATEGORI --}}
+            <div id="after-category-container" class="flex justify-center gap-3 mb-10 flex-wrap">
+                <button data-category="gempa" class="after-category-btn disaster-btn active">Gempa Bumi</button>
+                <button data-category="banjir" class="after-category-btn disaster-btn">Banjir</button>
+                <button data-category="longsor" class="after-category-btn disaster-btn">Longsor</button>
+            </div>
+
+            {{-- KONTEN INFORMASI --}}
+            <div id="after-info-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10"></div>
+
+            {{-- NAVIGASI STEP --}}
+            <div id="after-step-container" class="flex justify-center gap-3">
+                <button class="after-step-btn active" data-page="0">1</button>
+                <button class="after-step-btn" data-page="1">2</button>
+            </div>
+        </div>
+    </section>
+
     {{-- JENIS LUKA --}}
     <section class="py-24">
+
         <div class="max-w-6xl mx-auto px-5">
 
             <div class="text-center mb-16">
@@ -522,65 +721,66 @@
 
     </section>
 
-    {{-- MODAL --}}
-    <div
-        x-show="modal"
-        x-transition
-        class="fixed inset-0 z-[999] flex items-center justify-center p-5 modal-bg"
-        style="display:none"
-    >
-
+    {{-- MODAL (MENGGUNAKAN X-TELEPORT AGAR SELALU DI ATAS NAVBAR) --}}
+    <template x-teleport="body">
         <div
-            @click.outside="modal = false"
-            class="popup-panel max-w-4xl w-full"
+            x-show="modal"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            x-cloak
+            class="modal-overlay"
         >
+            <div
+                class="modal-backdrop"
+                @click="modal = false"
+            ></div>
 
-            <div class="grid md:grid-cols-2">
+            <div
+                @click.stop="modal = false"
+                class="modal-box"
+            >
+                <div class="grid md:grid-cols-2 h-full">
+                    <div class="p-8 flex flex-col justify-between">
+                        <div>
+                            <div class="flex gap-2 mb-8">
+                                <div class="pagination-btn">1</div>
+                                <div class="pagination-btn">2</div>
+                                <div class="pagination-btn">3</div>
+                            </div>
 
-                <div class="p-8">
+                            <h2 class="font-head text-3xl font-black mb-3" style="color: var(--c-dark-red);" x-text="modalData.title"></h2>
+                            <p class="text-gray-500 leading-relaxed" x-text="modalData.desc"></p>
+                        </div>
 
-                    <div class="flex gap-2 mb-8">
-                        <div class="pagination-btn">1</div>
-                        <div class="pagination-btn">2</div>
-                        <div class="pagination-btn">3</div>
+                        <div class="mt-10 flex gap-3 flex-wrap">
+                            <template x-for="tag in modalData.tags">
+                                <span class="px-4 py-2 rounded-full text-sm font-bold" style="background: rgba(191,49,49,.12); color: var(--c-red);" x-text="tag"></span>
+                            </template>
+                        </div>
                     </div>
 
-                    <h2 class="font-head text-3xl font-black mb-3" x-text="modalData.title"></h2>
-
-                    <p class="text-gray-500 leading-relaxed" x-text="modalData.desc"></p>
-
-                    <div class="mt-10 flex gap-3 flex-wrap">
-
-                        <template x-for="tag in modalData.tags">
-                            <span class="px-4 py-2 rounded-full bg-[#BF3131]/10 text-[#BF3131] text-sm font-bold" x-text="tag"></span>
-                        </template>
-
+                    <div class="p-8 flex items-center justify-center" style="background: var(--c-beige);">
+                        <div class="w-full flex items-center justify-center text-8xl">
+                            <span x-text="modalData.icon"></span>
+                        </div>
                     </div>
-
                 </div>
 
-                <div class="bg-[#E5E5E5] p-8 flex items-center">
-
-                    <div class="popup-video w-full flex items-center justify-center text-8xl">
-                        <span x-text="modalData.icon"></span>
-                    </div>
-
+                <div class="border-t border-black/5 p-6 flex justify-end bg-gray-50">
+                    <button
+                        @click="modal = false"
+                        class="rusty-btn px-6 py-3 rounded-full font-bold text-sm"
+                    >
+                        Tutup
+                    </button>
                 </div>
-
             </div>
-
-            <div class="border-t border-black/5 p-6 flex justify-end">
-                <button
-                    @click="modal = false"
-                    class="rusty-btn px-6 py-3 rounded-full font-bold"
-                >
-                    Tutup
-                </button>
-            </div>
-
         </div>
-
-    </div>
+    </template>
 
 </div>
 
@@ -719,7 +919,62 @@ function sesudahPage(){
             }
         ],
 
+        afterDisasterData: {
+            gempa: [
+                {title: "1. Periksa Bangunan", desc: "Hati-hati terhadap gempa susulan."},
+                {title: "2. Catat Damage", desc: "Dokumentasi kerusakan untuk klaim."},
+                {title: "3. Rawat Luka", desc: "Berikan first aid pada korban."},
+                {title: "4. Evakuasi Barang", desc: "Amankan benda berharga."},
+                {title: "5. Hubungi Keluarga", desc: "Konfirmasi keselamatan."},
+                {title: "6. Cari Bantuan", desc: "Hubungi posko pengungsian resmi."}
+            ],
+            banjir: [
+                {title: "1. Evakuasi Barang", desc: "Pindahkan ke tempat aman."},
+                {title: "2. Bersihkan Rumah", desc: "Musnahkan bakteri dan kuman."},
+                {title: "3. Kesehatan Keluarga", desc: "Pantau gejala penyakit."},
+                {title: "4. Air Bersih", desc: "Gunakan air terfilter atau rebus."},
+                {title: "5. Sanitasi", desc: "Gunakan jamban darurat/portable."},
+                {title: "6. Psikologi", desc: "Dukung mental keluarga."}
+            ],
+            longsor: [
+                {title: "1. Relokasi Sementara", desc: "Pindah ke daerah aman."},
+                {title: "2. Catat Kerusakan", desc: "Lapor ke pemerintah daerah."},
+                {title: "3. Periksa Air", desc: "Gunakan air bersih untuk minum."},
+                {title: "4. Nutrisi", desc: "Pastikan asupan gizi keluarga."},
+                {title: "5. Sosialisasi", desc: "Kumpul dengan tetangga untuk dukung moral."},
+                {title: "6. Rencana Bangkit", desc: "Mulai proses rekonstruksi."}
+            ]
+        },
+
+        currentDisasterCat: 'gempa',
+        currentDisasterPage: 0,
+
+        renderAfterDisasterGrid() {
+            const grid = document.getElementById('after-info-grid');
+            if (!grid) return;
+            
+            grid.classList.add('fade-loading');
+            
+            const items = this.afterDisasterData[this.currentDisasterCat].slice(
+                this.currentDisasterPage * 3, 
+                (this.currentDisasterPage * 3) + 3
+            );
+            
+            setTimeout(() => {
+                grid.innerHTML = items.map((item, idx) => `
+                    <div class="after-info-card" style="animation-delay: ${idx * 0.1}s">
+                        <div class="after-info-img"></div>
+                        <h3 class="font-bold text-lg mb-2 after-info-title">${item.title}</h3>
+                        <p class="text-sm text-gray-500 after-info-desc">${item.desc}</p>
+                    </div>
+                `).join('');
+                
+                grid.classList.remove('fade-loading');
+            }, 150);
+        },
+
         openCaregiver(item){
+
 
             this.modalData = {
                 title:item.name,
@@ -798,6 +1053,48 @@ function sesudahPage(){
     }
 
 }
+
+// Event Listeners untuk Informasi Sesudah Bencana
+document.addEventListener('DOMContentLoaded', function() {
+    const afterCategoryContainer = document.getElementById('after-category-container');
+    const afterStepContainer = document.getElementById('after-step-container');
+    
+    if (afterCategoryContainer) {
+        const sesudahInstance = sesudahPage();
+        
+        // Render grid pertama kali
+        sesudahInstance.renderAfterDisasterGrid();
+        
+        // Event untuk kategori
+        afterCategoryContainer.addEventListener('click', (e) => {
+            const btn = e.target.closest('.after-category-btn');
+            if (btn) {
+                document.querySelectorAll('.after-category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                sesudahInstance.currentDisasterCat = btn.getAttribute('data-category');
+                sesudahInstance.currentDisasterPage = 0;
+                
+                document.querySelectorAll('.after-step-btn').forEach(b => b.classList.remove('active'));
+                document.querySelector('.after-step-btn[data-page="0"]').classList.add('active');
+                
+                sesudahInstance.renderAfterDisasterGrid();
+            }
+        });
+        
+        // Event untuk pagination
+        if (afterStepContainer) {
+            afterStepContainer.addEventListener('click', (e) => {
+                const btn = e.target.closest('.after-step-btn');
+                if (btn) {
+                    document.querySelectorAll('.after-step-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    sesudahInstance.currentDisasterPage = parseInt(btn.getAttribute('data-page'));
+                    sesudahInstance.renderAfterDisasterGrid();
+                }
+            });
+        }
+    }
+});
 </script>
 
 @endsection

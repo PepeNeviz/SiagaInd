@@ -6,6 +6,10 @@
 
 <style>
 
+    [x-cloak] {
+        display: none !important;
+    }
+
     /* ====================================================
         SAAT PAGE — RED & BEIGE PALETTE
     ==================================================== */
@@ -83,6 +87,40 @@
     .popup-bg{
         background:rgba(0,0,0,.68);
         backdrop-filter:blur(12px);
+    }
+
+    .modal-overlay {
+        position: fixed !important;
+        inset: 0 !important;
+        background-color: rgba(0, 0, 0, 0.6) !important;
+        backdrop-filter: blur(12px) !important;
+        z-index: 50 !important;
+        padding: 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .modal-box {
+        position: relative;
+        z-index: 51;
+        width: 100% !important;
+        max-width: 860px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        background: var(--c-light);
+        border-radius: 32px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        transform: none !important;
+        margin: 0 auto !important;
+    }
+
+    .modal-backdrop {
+        position: absolute;
+        inset: 0;
+        background: transparent;
+        cursor: pointer;
     }
 
     .popup-panel{
@@ -239,68 +277,258 @@
     {{-- =========================================
         POPUP QUESTION FLOW
     ========================================== --}}
-    <div
-        x-show="popup"
-        x-transition
-        class="fixed inset-0 z-[999] flex items-center justify-center p-5 popup-bg"
-        style="display:none"
-    >
-
+    <template x-teleport="body">
         <div
-            @click.outside="popup = false"
-            class="popup-panel max-w-5xl w-full"
+            x-show="popup"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            x-cloak
+            class="modal-overlay"
         >
+            <div class="modal-backdrop" @click="popup = false"></div>
 
-            <div class="grid md:grid-cols-2">
+            <div
+                @click.stop
+                class="modal-box"
+            >
 
-                {{-- LEFT --}}
-                <div class="p-8">
+                <div class="grid md:grid-cols-2 h-full">
 
-                    <div class="flex items-center justify-between mb-10">
+                    {{-- LEFT --}}
+                    <div class="p-8 flex flex-col justify-between">
 
-                        <button
-                            @click="prevQuestion"
-                            class="nav-arrow"
-                        >
-                            ←
-                        </button>
+                        <div class="flex items-center justify-between mb-10">
 
-                        <div class="text-center">
+                            <button
+                                @click="prevQuestion"
+                                class="nav-arrow"
+                            >
+                                ←
+                            </button>
 
-                            <p class="text-xs uppercase tracking-[.25em] text-gray-400 mb-2">
-                                Pertanyaan
-                            </p>
+                            <div class="text-center">
 
-                            <h2
-                                class="font-head text-3xl font-black"
-                                x-text="currentQuestion.title"
-                            ></h2>
+                                <p class="text-xs uppercase tracking-[.25em] text-gray-400 mb-2">
+                                    Pertanyaan
+                                </p>
+
+                                <h2
+                                    class="font-head text-3xl font-black"
+                                    x-text="currentQuestion.title"
+                                ></h2>
+
+                            </div>
+
+                            <button
+                                @click="nextQuestion"
+                                class="nav-arrow"
+                            >
+                                →
+                            </button>
 
                         </div>
 
+                        <div class="grid grid-cols-2 gap-4">
+
+                            <template x-for="choice in currentQuestion.options">
+
+                                <button
+                                    @click="selectedChoice = choice"
+                                    class="question-option rounded-[22px] p-5 text-center"
+                                >
+
+                                    <div class="text-4xl mb-4" x-text="choice.icon"></div>
+
+                                    <h3 class="font-bold text-sm mb-2" x-text="choice.label"></h3>
+
+                                    <p class="text-xs text-gray-500" x-text="choice.desc"></p>
+
+                                </button>
+
+                            </template>
+
+                        </div>
+
+                        <div class="mt-10 flex items-center justify-between">
+
+                            <div class="flex gap-2">
+
+                                <template x-for="(step, index) in questions">
+
+                                    <button
+                                        @click="goQuestion(index)"
+                                        class="step-btn"
+                                        :class="{ 'active': currentStep === index }"
+                                        x-text="index + 1"
+                                    ></button>
+
+                                </template>
+
+                            </div>
+
+                            <button
+                                x-show="currentStep < questions.length - 1"
+                                @click="nextQuestion"
+                                class="done-btn px-5 py-3 rounded-full text-sm font-bold"
+                            >
+                                Next
+                            </button>
+
+                            <button
+                                x-show="currentStep === questions.length - 1"
+                                @click="finishFlow"
+                                class="done-btn px-5 py-3 rounded-full text-sm font-bold"
+                            >
+                                Done
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    {{-- RIGHT --}}
+                    <div class="p-8 flex items-center" style="background: var(--c-beige)">
+
+                        <div class="w-full">
+
+                            <div class="visual-box h-[350px] flex items-center justify-center text-[8rem]">
+                                <span x-text="currentQuestion.visual"></span>
+                            </div>
+
+                            <div class="mt-6 text-center">
+
+                                <h3
+                                    class="font-head text-2xl font-black mb-3"
+                                    x-text="currentQuestion.caption"
+                                ></h3>
+
+                                <p
+                                    class="text-gray-500 leading-relaxed"
+                                    x-text="currentQuestion.description"
+                                ></p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </template>
+
+    {{-- =========================================
+        POPUP ADA LUKA?
+    ========================================== --}}
+    <template x-teleport="body">
+        <div
+            x-show="injuryPopup"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            x-cloak
+            class="modal-overlay"
+        >
+            <div class="modal-backdrop" @click="injuryPopup = false"></div>
+
+            <div
+                @click.stop
+                class="modal-box"
+            >
+
+                <div class="p-12 text-center">
+
+                    <h2 class="font-head text-5xl font-black mb-4">
+                        Ada Luka?
+                    </h2>
+
+                    <p class="text-gray-500 text-lg mb-12">
+                        Pilih kondisi setelah mencapai tempat aman
+                    </p>
+
+                    <div class="grid grid-cols-2 gap-5">
+
                         <button
-                            @click="nextQuestion"
-                            class="nav-arrow"
+                            @click="goSupply"
+                            class="done-btn py-5 rounded-[22px] text-xl font-bold"
                         >
-                            →
+                            Tidak
+                        </button>
+
+                        <button
+                            @click="openInjurySelect"
+                            class="done-btn py-5 rounded-[22px] text-xl font-bold"
+                        >
+                            Ya
                         </button>
 
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
+                </div>
 
-                        <template x-for="choice in currentQuestion.options">
+            </div>
+
+        </div>
+    </template>
+
+    {{-- =========================================
+        POPUP JENIS LUKA
+    ========================================== --}}
+    <template x-teleport="body">
+        <div
+            x-show="caregiverPopup"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            x-cloak
+            class="modal-overlay"
+        >
+            <div class="modal-backdrop" @click="caregiverPopup = false"></div>
+
+            <div
+                @click.stop
+                class="modal-box"
+            >
+
+                <div class="p-10">
+
+                    <div class="text-center mb-10">
+
+                        <h2 class="font-head text-4xl font-black mb-3">
+                            Jenis Luka
+                        </h2>
+
+                        <p class="text-gray-500">
+                            Pilih luka untuk pindah ke caregiver
+                        </p>
+
+                    </div>
+
+                    <div class="grid grid-cols-4 gap-4">
+
+                        <template x-for="injury in injuries">
 
                             <button
-                                @click="selectedChoice = choice"
-                                class="question-option rounded-[22px] p-5 text-center"
+                                @click="goCaregiver(injury)"
+                                class="injury-btn rounded-[20px] p-5 text-center"
                             >
 
-                                <div class="text-4xl mb-4" x-text="choice.icon"></div>
+                                <div class="text-5xl mb-4" x-text="injury.icon"></div>
 
-                                <h3 class="font-bold text-sm mb-2" x-text="choice.label"></h3>
-
-                                <p class="text-xs text-gray-500" x-text="choice.desc"></p>
+                                <h3 class="font-bold text-sm" x-text="injury.name"></h3>
 
                             </button>
 
@@ -308,164 +536,12 @@
 
                     </div>
 
-                    <div class="mt-10 flex items-center justify-between">
-
-                        <div class="flex gap-2">
-
-                            <template x-for="(step, index) in questions">
-
-                                <button
-                                    @click="goQuestion(index)"
-                                    class="step-btn"
-                                    :class="{ 'active': currentStep === index }"
-                                    x-text="index + 1"
-                                ></button>
-
-                            </template>
-
-                        </div>
-
-                        <button
-                            x-show="currentStep < questions.length - 1"
-                            @click="nextQuestion"
-                            class="done-btn px-5 py-3 rounded-full text-sm font-bold"
-                        >
-                            Next
-                        </button>
-
-                        <button
-                            x-show="currentStep === questions.length - 1"
-                            @click="finishFlow"
-                            class="done-btn px-5 py-3 rounded-full text-sm font-bold"
-                        >
-                            Done
-                        </button>
-
-                    </div>
-
-                </div>
-
-                {{-- RIGHT --}}
-                <div class="p-8 flex items-center" style="background: var(--c-beige)">
-
-                    <div class="w-full">
-
-                        <div class="visual-box h-[350px] flex items-center justify-center text-[8rem]">
-                            <span x-text="currentQuestion.visual"></span>
-                        </div>
-
-                        <div class="mt-6 text-center">
-
-                            <h3
-                                class="font-head text-2xl font-black mb-3"
-                                x-text="currentQuestion.caption"
-                            ></h3>
-
-                            <p
-                                class="text-gray-500 leading-relaxed"
-                                x-text="currentQuestion.description"
-                            ></p>
-
-                        </div>
-
-                    </div>
-
                 </div>
 
             </div>
 
         </div>
-
-    </div>
-
-    {{-- =========================================
-        POPUP ADA LUKA?
-    ========================================== --}}
-    <div
-        x-show="injuryPopup"
-        x-transition
-        class="fixed inset-0 z-[999] flex items-center justify-center p-5 popup-bg"
-        style="display:none"
-    >
-
-        <div class="popup-panel max-w-xl w-full p-12 text-center">
-
-            <h2 class="font-head text-5xl font-black mb-4">
-                Ada Luka?
-            </h2>
-
-            <p class="text-gray-500 text-lg mb-12">
-                Pilih kondisi setelah mencapai tempat aman
-            </p>
-
-            <div class="grid grid-cols-2 gap-5">
-
-                <button
-                    @click="goSupply"
-                    class="done-btn py-5 rounded-[22px] text-xl font-bold"
-                >
-                    Tidak
-                </button>
-
-                <button
-                    @click="openInjurySelect"
-                    class="done-btn py-5 rounded-[22px] text-xl font-bold"
-                >
-                    Ya
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    {{-- =========================================
-        POPUP JENIS LUKA
-    ========================================== --}}
-    <div
-        x-show="caregiverPopup"
-        x-transition
-        class="fixed inset-0 z-[999] flex items-center justify-center p-5 popup-bg"
-        style="display:none"
-    >
-
-        <div class="popup-panel max-w-3xl w-full p-10">
-
-            <div class="text-center mb-10">
-
-                <h2 class="font-head text-4xl font-black mb-3">
-                    Jenis Luka
-                </h2>
-
-                <p class="text-gray-500">
-                    Pilih luka untuk pindah ke caregiver
-                </p>
-
-            </div>
-
-            <div class="grid grid-cols-4 gap-4">
-
-                <template x-for="injury in injuries">
-
-                    <button
-                        @click="goCaregiver(injury)"
-                        class="injury-btn rounded-[20px] p-5 text-center"
-                    >
-
-                        <div class="text-5xl mb-4" x-text="injury.icon"></div>
-
-                        <h3 class="font-bold text-sm" x-text="injury.name"></h3>
-
-                    </button>
-
-                </template>
-
-            </div>
-
-        </div>
-
-    </div>
+    </template>
 
 </div>
 
