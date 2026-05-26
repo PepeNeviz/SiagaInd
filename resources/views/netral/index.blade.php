@@ -521,7 +521,7 @@
     </div>
 </div>
 
-{{-- Modal: Info / Caregiver --}}
+{{-- Modal: Info --}}
 <div
     x-data="infoModal()"
     x-show="open"
@@ -533,88 +533,144 @@
     x-transition:leave-end="opacity-0"
     x-cloak
     @open-info.window="openModal($event.detail)"
-    class="modal-overlay"
+    class="fixed inset-0 z-[60] flex items-center justify-center p-4"
 >
-    <div class="modal-backdrop" @click="closeModal()"></div>
-    <div class="modal-box flex flex-col justify-between" @click.stop>
-        <div class="modal-header border-b border-slate-100 px-6 py-4 bg-white rounded-t-2xl flex justify-between items-center">
-            <div>
-                <p class="text-[10px] uppercase tracking-widest font-black text-slate-400" x-text="type"></p>
-                <h2 class="modal-title mt-0.5 text-lg font-bold text-slate-800" x-text="item"></h2>
+    <div class="absolute inset-0 bg-black/50" @click="closeModal()"></div>
+    
+    <div class="bg-white rounded-2xl w-full max-w-2xl p-6 relative shadow-2xl flex flex-col" @click.stop>
+        
+        <div class="flex justify-center gap-2 mb-6">
+            <template x-for="i in 3">
+                <button @click="currentStep = i; updateContent()" 
+                        class="w-9 h-9 rounded-lg border font-bold text-sm transition-colors" 
+                        :class="currentStep === i ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'" 
+                        x-text="i"></button>
+            </template>
+        </div>
+
+        <div class="flex items-center justify-center mb-6 gap-2">
+            <button @click="prevStep()" 
+                    :disabled="currentStep === 1"
+                    class="w-14 flex justify-center text-3xl p-3 rounded-full transition"
+                    :class="currentStep === 1 ? 'text-gray-200' : 'hover:bg-gray-100 text-gray-800'">◀</button>
+            
+            <div class="h-64 w-full max-w-[450px] bg-gray-200 rounded-2xl flex items-center justify-center shadow-inner">
+                <div class="text-[100px]" x-text="icon"></div>
             </div>
-            <button @click="closeModal()" class="modal-close text-slate-400 hover:text-rose-600">✕</button>
+
+            <button @click="nextStep()" 
+                    :disabled="currentStep === 3"
+                    class="w-14 flex justify-center text-3xl p-3 rounded-full transition"
+                    :class="currentStep === 3 ? 'text-gray-200' : 'hover:bg-gray-100 text-gray-800'">▶</button>
         </div>
-        <div class="modal-body flex-1 p-6 overflow-y-auto flex flex-col justify-center">
-            <div class="w-full h-44 rounded-2xl flex items-center justify-center text-6xl mb-4 bg-slate-50 border border-slate-100">🧰</div>
-            <p class="text-sm leading-relaxed text-slate-600 text-center max-w-md mx-auto" x-text="description"></p>
+
+        <div class="text-center mb-6 flex-grow">
+            <h3 class="font-bold text-lg text-slate-800" x-text="item"></h3>
+            <p class="text-slate-600 text-sm mt-2 max-w-md mx-auto" x-text="description"></p>
         </div>
-        <div class="p-4 bg-slate-50 border-t border-slate-100 rounded-b-2xl text-center">
-            <button @click="closeModal()" class="px-6 h-9 rounded-xl text-white font-bold text-xs bg-slate-800 hover:bg-slate-900 transition-colors">Tutup Panduan</button>
+
+        <div class="flex justify-between items-center mt-auto pt-4 border-t border-slate-100">
+            <div class="flex items-center px-3 py-1.5 rounded-lg border border-slate-100 bg-slate-50">
+                <div class="text-xl" x-text="toolIcon"></div>
+            </div>
+
+            <button @click="closeModal()" 
+                    :disabled="currentStep !== 3"
+                    :class="currentStep === 3 ? 'bg-gray-800 hover:bg-gray-900' : 'bg-gray-300 cursor-not-allowed'"
+                    class="px-8 h-9 rounded-xl text-white font-bold text-xs transition-colors">
+                Done
+            </button>
         </div>
     </div>
 </div>
 
 {{-- Modal: Crafting --}}
-<div
-    x-data="craftingModal()"
-    x-show="open"
-    x-transition:enter="transition ease-out duration-200"
-    x-transition:enter-start="opacity-0"
-    x-transition:enter-end="opacity-100"
-    x-transition:leave="transition ease-in duration-150"
-    x-transition:leave-start="opacity-100"
-    x-transition:leave-end="opacity-0"
-    x-cloak
-    @open-crafting.window="openModal($event.detail)"
-    class="modal-overlay"
->
-    <div class="modal-backdrop" @click="closeModal()"></div>
-    <div class="modal-box modal-box-lg flex flex-col justify-between" @click.stop>
-        <div class="modal-header border-b border-slate-100 px-6 py-4 bg-white rounded-t-2xl flex justify-between items-center">
-            <div>
-                <p class="text-[10px] uppercase tracking-widest font-black" :style="type==='Survival'?'color:var(--c-teal)':'color:#27AE60'" x-text="'Crafting ' + type"></p>
-                <h2 class="modal-title mt-0.5 text-lg font-bold text-slate-800" x-text="item"></h2>
+<div x-data="craftingModal()" 
+     @open-crafting.window="openModal($event.detail)" 
+     x-show="open" 
+     x-cloak 
+     class="fixed inset-0 z-50 flex items-center justify-center p-4">
+
+    <div class="absolute inset-0 bg-black/50" @click="closeModal()"></div>
+
+    <div class="bg-white rounded-2xl w-full max-w-2xl p-6 relative shadow-2xl flex flex-col transition-all" @click.stop>
+        
+        <div x-show="currentView === 'selection'" class="flex flex-col">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-lg font-bold" x-text="item"></h2>
+                <button @click="open=false" class="text-xl hover:text-gray-500">✕</button>
             </div>
-            <button @click="closeModal()" class="modal-close text-slate-400 hover:text-rose-600">✕</button>
+            
+            <div class="grid grid-cols-[200px_1fr] gap-6">
+                <div class="bg-gray-50 rounded-xl p-4 flex flex-col items-center justify-center border h-[200px]">
+                    <div class="text-7xl" x-text="icon"></div>
+                    <div class="font-bold mt-2 text-sm" x-text="item"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3 h-[200px]">
+                    <template x-for="(m, idx) in materials" :key="idx">
+                        <div class="border p-3 rounded-xl relative flex flex-col items-center justify-center shadow-inner bg-white">
+                            <div class="text-3xl" x-text="m.icon"></div>
+                            <span class="text-[10px] font-bold mt-1 text-center" x-text="m.name"></span>
+                            <button x-show="m.swappable" @click="switchMaterial(idx)" 
+                                    class="absolute top-1.5 right-1.5 p-0.5 bg-gray-100 rounded text-[9px] hover:bg-gray-200 transition">⇅</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <button @click="currentView = 'process'" 
+                        class="px-6 py-2.5 bg-gray-900 text-white rounded-xl font-bold hover:bg-gray-700 transition text-sm">Next</button>
+            </div>
         </div>
-        <div class="modal-body flex-1 p-6 overflow-y-auto">
-            <div class="grid md:grid-cols-[300px_1px_1fr] gap-6 items-stretch">
+
+        <div x-show="currentView === 'process'" class="flex flex-col">
+            <div class="flex justify-center gap-2 mb-6">
+                <template x-for="i in 3">
+                    <button @click="currentStep = i" 
+                            class="w-9 h-9 rounded-lg border font-bold text-sm transition-colors" 
+                            :class="currentStep === i ? 'bg-gray-800 text-white' : 'bg-gray-100 hover:bg-gray-200'" 
+                            x-text="i"></button>
+                </template>
+            </div>
+
+            <div class="h-72 flex items-center justify-center mb-6 gap-2">
+                <div class="w-14 flex justify-center">
+                    <button @click="currentStep--" x-show="currentStep > 1" class="text-3xl p-3 hover:bg-gray-100 rounded-full transition">◀</button>
+                </div>
                 
-                {{-- Kolom Kiri: Icon Besar --}}
-                <div class="flex flex-col justify-between items-center p-6 rounded-2xl relative" style="background: rgba(var(--color-text-muted-rgb, 128,128,128), 0.1); min-height: 280px;">
-                    <div class="my-auto text-7xl select-none" x-text="icon"></div>
-                    <div class="w-full text-center">
-                        <span class="inline-block bg-white text-gray-900 px-6 py-2 rounded-full font-bold text-sm tracking-wide shadow-sm" x-text="item">
-                        </span>
-                    </div>
+                <div class="bg-gray-200 w-full max-w-[450px] h-full rounded-2xl flex items-center justify-center shadow-inner">
+                    <div class="text-[110px]" x-text="icon"></div>
                 </div>
 
-                {{-- Divider --}}
-                <div class="hidden md:block w-[1px] bg-gray-300 my-4 opacity-60"></div>
-
-                {{-- Kolom Kanan: Bahan Grid --}}
-                <div class="p-5 rounded-2xl flex flex-col justify-center" style="background: rgba(var(--color-text-muted-rgb, 128,128,128), 0.05);">
-                    <div class="grid grid-cols-2 gap-4">
-                        <template x-for="(material, idx) in materials" :key="idx">
-                            <div class="bg-white rounded-xl p-5 flex flex-col items-center justify-center relative shadow-sm border border-gray-100 min-h-[110px]">
-                                <template x-if="material.swappable">
-                                    <button @click.stop="$dispatch('swap-material', { target: material.name })" 
-                                            class="absolute top-2 right-2 w-7 h-7 bg-gray-100 hover:bg-gray-200 rounded-md flex items-center justify-center text-gray-500 hover:text-gray-800 transition shadow-xs text-sm"
-                                            title="Pilih bahan alternatif">
-                                        ⇅
-                                    </button>
-                                </template>
-                                <div class="text-4xl mb-2 select-none" x-text="material.icon"></div>
-                                <p class="text-xs font-bold text-center text-gray-700" x-text="material.name"></p>
-                            </div>
-                        </template>
-                    </div>
+                <div class="w-14 flex justify-center">
+                    <button @click="currentStep++" x-show="currentStep < 3" class="text-3xl p-3 hover:bg-gray-100 rounded-full transition">▶</button>
                 </div>
-
             </div>
-        </div>
-        <div class="p-4 bg-slate-50 border-t border-slate-100 rounded-b-2xl text-right">
-            <button @click="closeModal()" class="px-5 h-9 rounded-xl text-white font-bold text-xs bg-slate-800 hover:bg-slate-900 transition-colors">Selesai Menyimak</button>
+
+            <div class="text-center mb-5">
+                <h3 class="font-bold text-md" x-text="'Step ' + currentStep"></h3>
+                <p class="text-gray-500 text-xs px-10">Lorem ipsum deskripsi pengerjaan step <span x-text="currentStep"></span>.</p>
+            </div>
+
+            <div class="flex gap-3 mb-5 justify-center">
+                <template x-for="m in materials">
+                    <div class="flex flex-col items-center bg-gray-50 p-1.5 rounded-lg border">
+                        <div class="text-lg" x-text="m.icon"></div>
+                        <span class="text-[8px] font-bold" x-text="m.name"></span>
+                    </div>
+                </template>
+            </div>
+
+            <div class="flex justify-between items-center mt-auto pt-4 border-t">
+                <button @click="currentView = 'selection'" 
+                        class="px-5 py-2 border rounded-xl font-bold hover:bg-gray-50 transition text-sm">Prev</button>
+                
+                <button @click="open=false" 
+                        :disabled="currentStep !== 3"
+                        :class="currentStep === 3 ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-gray-300 text-gray-500 cursor-not-allowed'"
+                        class="px-7 py-2 rounded-xl font-bold transition text-sm">Done</button>
+            </div>
         </div>
     </div>
 </div>
@@ -653,123 +709,91 @@
     }
 
     function infoModal() {
-        const desc = {
-            'Kain Segitiga': 'Digunakan untuk menopang tangan cedera atau sebagai perban darurat di lapangan.',
-            'CPR': 'Teknik pertolongan pertama untuk membantu pernapasan dan sirkulasi darah saat darurat.',
-            'Perban': 'Digunakan menutup luka agar tidak terinfeksi dan membantu menghentikan pendarahan.',
-            'Obat Darurat': 'Persediaan medis dasar termasuk antiseptik, penghilang nyeri, dan obat demam.'
+        const stepsData = {
+            'Membuka Kaleng': {
+                tool: '🥄',
+                steps: [
+                    { d: 'Langkah 1: Bersihkan permukaan kaleng dari kotoran.', i: '🥫' },
+                    { d: 'Langkah 2: Tekan pinggiran tutup dengan benda keras.', i: '🥫' },
+                    { d: 'Langkah 3: Congkel perlahan sampai kaleng terbuka.', i: '🥫' }
+                ]
+            },
+            'Simpul Kilat': {
+                tool: '🪢',
+                steps: [
+                    { d: 'Langkah 1: Siapkan tali dan buat loop dasar.', i: '🧵' },
+                    { d: 'Langkah 2: Masukkan ujung tali ke dalam loop.', i: '🧵' },
+                    { d: 'Langkah 3: Tarik kedua sisi hingga simpul mengunci.', i: '🧵' }
+                ]
+            }
         };
+
         return {
-            open: false, type: '', item: '', description: '',
-            openModal(data) { this.open = true; this.type = data.type; this.item = data.item; this.description = desc[data.item] || 'Informasi belum tersedia.'; document.body.classList.add('modal-open'); },
-            closeModal()    { this.open = false; document.body.classList.remove('modal-open'); }
+            open: false, item: '', description: '', icon: '', toolIcon: '', currentStep: 1, steps: [],
+            
+            openModal(data) { 
+                this.open = true; 
+                this.item = data.item; 
+                const itemData = stepsData[data.item] || { tool: '🛠️', steps: [{d:'...',i:'📦'},{d:'...',i:'📦'},{d:'...',i:'📦'}] };
+                this.toolIcon = itemData.tool;
+                this.steps = itemData.steps;
+                this.currentStep = 1; 
+                this.updateContent();
+                document.body.classList.add('modal-open'); 
+            },
+            updateContent() {
+                const current = this.steps[this.currentStep - 1];
+                this.description = current.d;
+                this.icon = current.i;
+            },
+            nextStep() { if (this.currentStep < 3) { this.currentStep++; this.updateContent(); } },
+            prevStep() { if (this.currentStep > 1) { this.currentStep--; this.updateContent(); } },
+            closeModal() { 
+                this.open = false; 
+                document.body.classList.remove('modal-open'); 
+            }
         }
     }
 
     function craftingModal() {
-        const craftingData = {
-            'Survival': {
-                'Filter Air': {
-                    icon: '🧴',
-                    materials: [
-                        {icon: '🧴', name: 'Botol Plastik', swappable: true},
-                        {icon: '🔥', name: 'Arang Aktif', swappable: true},
-                        {icon: '🪨', name: 'Kerikil / Batu', swappable: false},
-                        {icon: '🌾', name: 'Pasir Bersih', swappable: true}
-                    ]
-                },
-                'Jerat Sederhana': {
-                    icon: '🪝',
-                    materials: [
-                        {icon: '🪢', name: 'Tali/Benang', swappable: true},
-                        {icon: '🌿', name: 'Ranting', swappable: false},
-                        {icon: '🔧', name: 'Batu Tajam', swappable: true},
-                        {icon: '🪵', name: 'Kayu Konstruksi', swappable: false}
-                    ]
-                },
-                'Korek Darurat': {
-                    icon: '🔥',
-                    materials: [
-                        {icon: '🪵', name: 'Kayu Kering', swappable: false},
-                        {icon: '🪨', name: 'Batu Kersik', swappable: true},
-                        {icon: '🍃', name: 'Daun/Rumput', swappable: true},
-                        {icon: '💨', name: 'Udara Kering', swappable: false}
-                    ]
-                },
-                'Kompas Sederha': {
-                    icon: '🧭',
-                    materials: [
-                        {icon: '⚡', name: 'Magnet/Logam', swappable: false},
-                        {icon: '🪡', name: 'Jarum Logam', swappable: true},
-                        {icon: '💧', name: 'Air/Minyak', swappable: true},
-                        {icon: '🍃', name: 'Daun Apung', swappable: true}
-                    ]
-                }
-            },
-            'Caregiver': {
-                'Kain Segitiga': {
-                    icon: '🩹',
-                    materials: [
-                        {icon: '🧣', name: 'Kain Slayer', swappable: true},
-                        {icon: '✂️', name: 'Gunting Steril', swappable: false},
-                        {icon: '🧷', name: 'Peniti', swappable: true},
-                        {icon: '🧼', name: 'Antiseptik', swappable: false}
-                    ]
-                },
-                'Cairan P3K': {
-                    icon: '🧪',
-                    materials: [
-                        {icon: '🧴', name: 'Botol Steril', swappable: true},
-                        {icon: '💧', name: 'Air Matang', swappable: false},
-                        {icon: '🧂', name: 'Garam/Antiseptik', swappable: true},
-                        {icon: '🧹', name: 'Pengaduk', swappable: true}
-                    ]
-                },
-                'Perban Darurat': {
-                    icon: '🩺',
-                    materials: [
-                        {icon: '🧻', name: 'Kain Steril', swappable: true},
-                        {icon: '🧵', name: 'Benang/Tali', swappable: true},
-                        {icon: '🧼', name: 'Antiseptik', swappable: false},
-                        {icon: '✂️', name: 'Gunting', swappable: true}
-                    ]
-                },
-                'Kit Obat Medis': {
-                    icon: '💊',
-                    materials: [
-                        {icon: '💊', name: 'Obat Darurat', swappable: false},
-                        {icon: '🩹', name: 'Plester Luka', swappable: true},
-                        {icon: '🧴', name: 'Cairan Pembersih', swappable: true},
-                        {icon: '🧷', name: 'Pengikat', swappable: true}
-                    ]
-                }
-            }
-        };
+    return {
+        open: false,
+        item: '', icon: '',
+        currentView: 'selection',
+        currentStep: 1,
+        materials: [],
 
-        return {
-            open: false,
-            type: '',
-            item: '',
-            icon: '',
-            materials: [],
-            openModal(data) {
-                this.type = data.type;
-                this.item = data.item;
-                this.icon = data.icon;
-                
-                const itemData = craftingData[data.type]?.[data.item];
-                if (itemData) {
-                    this.materials = itemData.materials;
-                }
-                
-                this.open = true;
-                document.body.classList.add('modal-open');
-            },
-            closeModal() {
-                this.open = false;
-                document.body.classList.remove('modal-open');
+        craftingData: {
+            'Filter Air': {
+                icon: '🧴',
+                materials: [
+                    { name: 'Botol Plastik', icon: '🧴', swappable: true, options: [{n: 'Botol Plastik', i: '🧴'}, {n: 'Wadah Bambu', i: '🎋'}] },
+                    { name: 'Arang Aktif', icon: '🔥', swappable: true, options: [{n: 'Arang Aktif', i: '🔥'}, {n: 'Batu Bara', i: '🪨'}] },
+                    { name: 'Kerikil / Batu', icon: '🪨', swappable: false },
+                    { name: 'Pasir Bersih', icon: '🌾', swappable: false }
+                ]
             }
+        },
+
+        openModal(data) {
+            this.item = data.item;
+            this.icon = this.craftingData[data.item].icon;
+            this.materials = JSON.parse(JSON.stringify(this.craftingData[data.item].materials));
+            this.currentView = 'selection';
+            this.currentStep = 1;
+            this.open = true;
+        },
+
+        switchMaterial(idx) {
+            let m = this.materials[idx];
+            if (!m.swappable) return;
+            let curIdx = m.options.findIndex(o => o.n === m.name);
+            let next = m.options[(curIdx + 1) % m.options.length];
+            m.name = next.n;
+            m.icon = next.i;
         }
     }
+}
+    
 </script>
 @endpush
