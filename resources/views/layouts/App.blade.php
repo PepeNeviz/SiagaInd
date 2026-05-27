@@ -366,7 +366,7 @@
 
 {{-- ══════ KONTEN ══════ --}}
 {{-- Tambahin pt-20 (Mobile) dan md:pt-24 (Desktop) biar konten nggak nyundul navbar --}}
-<main class="relative pt-20 md:pt-24" style="z-index: var(--z-base);">
+<main class="relative" style="z-index: var(--z-base);">
     @yield('content')
 </main>
 

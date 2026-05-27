@@ -301,7 +301,7 @@
     x-data="saatPage()"
 
     {{-- TUTORIAL --}}
-    <section class="py-24">
+    <section>
 
         <div class="max-w-6xl mx-auto px-5">
 
@@ -380,7 +380,7 @@
     </section>
 
     {{-- =========================================
-        POPUP QUESTION FLOW
+        POPUP QUESTION FLOW (Palette Saat Bencana)
     ========================================== --}}
     <template x-teleport="body" @teleport="$nextTick(() => {})">
         <div
@@ -398,117 +398,101 @@
 
             <div
                 @click.stop
-                class="modal-box"
+                class="modal-box w-full max-w-4xl bg-white rounded-[24px] md:rounded-[32px] overflow-hidden flex flex-col relative"
             >
 
-                {{-- Pembungkus Utama Kiri & Kanan --}}
-                <div class="grid grid-cols-1 md:grid-cols-2 h-screen w-full overflow-hidden">
-
-{{-- LEFT --}}
-                    {{-- pt-[10vh] mengosongkan 10% atas, pb-10 mengunci tombol bawah agar tidak berubah --}}
-                    <div class="px-6 pb-10 pt-[10vh] md:p-8 flex flex-col h-full justify-between md:justify-center gap-6 md:gap-8 question-container relative bg-white z-10" @touchstart="handleTouchStart" @touchend="handleTouchEnd" @touchmove="handleTouchMove">
-
-                        {{-- Navigasi Atas --}}
-                        <div class="flex items-center justify-between shrink-0">
-                            <button @click="prevQuestion" class="nav-arrow" title="Pertanyaan Sebelumnya">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-6 h-6">
-                                    <polyline points="15 18 9 12 15 6"></polyline>
-                                </svg>
-                            </button>
-
-                            <div class="text-center">
-                                <p class="text-xs uppercase tracking-[.25em] text-gray-400 mb-1 md:mb-2">Pertanyaan</p>
-                                <h2 class="font-head text-2xl md:text-3xl font-black" x-text="currentQuestion.title"></h2>
-                            </div>
-
-                            <button @click="nextQuestion" class="nav-arrow" title="Pertanyaan Berikutnya">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-6 h-6">
-                                    <polyline points="9 18 15 12 9 6"></polyline>
-                                </svg>
-                            </button>
-                        </div>
-
-                        {{-- Pilihan Jawaban (Kode tetap sama) --}}
-                        <div class="grid grid-cols-2 gap-4 md:gap-6 shrink-0">
-                            <template x-for="choice in currentQuestion.options">
-                                <button
-                                    @click="selectedChoice = choice"
-                                    class="question-option w-full rounded-[18px] md:rounded-[22px] p-4 md:p-6 flex flex-col items-center justify-center text-center transition-all"
-                                >
-                                    <div class="text-4xl md:text-5xl mb-3" x-text="choice.icon"></div>
-                                    <h3 class="font-bold text-sm md:text-base mb-1" x-text="choice.label"></h3>
-                                    <p class="text-xs md:text-sm text-gray-500 leading-relaxed line-clamp-2" x-text="choice.desc"></p>
-                                </button>
-                            </template>
-                        </div>
-
-                        {{-- Area Bawah: Pagination & Tombol (Kode tetap sama) --}}
-                        <div class="flex items-stretch justify-center md:justify-between gap-6 md:gap-4 shrink-0 w-full">
-                            
-                            {{-- Container Angka --}}
-                            <div class="grid grid-cols-3 md:grid-cols-5 gap-2 md:gap-3">
-                                <template x-for="(step, index) in questions">
-                                    <button
-                                        @click="goQuestion(index)"
-                                        class="step-btn w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-xl md:rounded-2xl text-lg md:text-xl font-bold transition-colors"
-                                        :class="{ 'active': currentStep === index }"
-                                        x-text="index + 1"
-                                    ></button>
-                                </template>
-                            </div>
-
-                            {{-- Tombol Next / Done --}}
-                            <button
-                                x-show="currentStep < questions.length - 1"
-                                @click="nextQuestion"
-                                class="done-btn w-28 md:w-24 rounded-xl md:rounded-xl text-base font-bold shrink-0 transition-colors flex items-center justify-center"
-                            >
-                                Next
-                            </button>
-
-                            <button
-                                x-show="currentStep === questions.length - 1"
-                                @click="finishFlow"
-                                class="done-btn w-28 md:w-24 rounded-xl md:rounded-xl text-base font-bold shrink-0 transition-colors flex items-center justify-center"
-                            >
-                                Done
-                            </button>
-                        </div>
-
-                        {{-- Notes Petunjuk Geser --}}
-                        <div class="text-center md:hidden animate-pulse shrink-0">
-                            <p class="text-[11px] font-medium text-gray-400">
-                                💡 Tip: Anda bisa menggeser (swipe) layar untuk pindah
-                            </p>
-                        </div>
-
+                {{-- 1. HEADER --}}
+                <div class="px-6 py-4 md:py-5 border-b flex justify-between items-center bg-white shrink-0" style="border-color: var(--c-light);">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl" x-text="currentDisasterIcon"></span>
+                        <h3 class="font-head text-lg md:text-xl font-black" style="color: var(--c-dark-red);" x-text="currentDisasterName"></h3>
                     </div>
-                    {{-- AKHIR DARI LEFT --}}
+                    <button @click="popup = false" class="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:opacity-80" style="background: var(--c-light); color: var(--c-dark-red);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-4 h-4" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
 
-                    {{-- RIGHT --}}
-                    {{-- Kasih w-full h-full biar nutupin layar kanan dengan sempurna --}}
-                    <div class="p-8 hidden md:flex items-center w-full h-full" style="background: var(--c-beige)">
-                        <div class="w-full">
-                            <div class="visual-box h-[350px] flex items-center justify-center text-[8rem] question-slide">
-                                <span x-text="currentQuestion.visual"></span>
-                            </div>
-
-                            <div class="mt-8 text-center">
-                                <h3
-                                    class="font-head text-2xl font-black mb-4"
-                                    x-text="currentQuestion.caption"
-                                ></h3>
-                                <p
-                                    class="text-gray-500 leading-relaxed text-base"
-                                    x-text="currentQuestion.description"
-                                ></p>
-                            </div>
+                {{-- Area konten yang bisa di swipe --}}
+                <div class="flex-1 overflow-y-auto flex flex-col" @touchstart="handleTouchStart" @touchend="handleTouchEnd" @touchmove="handleTouchMove">
+                    
+                    {{-- 2. QUESTION NAVIGATION ROW (Panah Diperjelas) --}}
+                    <div class="px-6 md:px-12 pt-8 pb-6 flex items-center justify-between shrink-0">
+                        {{-- Tombol Kiri --}}
+                        <button @click="prevQuestion" class="w-10 h-10 shrink-0 rounded-full border-2 flex items-center justify-center transition-all hover:scale-105" style="border-color: var(--c-beige); color: var(--c-dark-red); background: white;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-5 h-5" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        </button>
+                        
+                        <div class="text-center px-4">
+                            <span class="text-xs uppercase tracking-[.25em] block mb-1 font-bold" style="color: var(--c-red);" x-text="currentQuestion.title"></span>
+                            <h2 class="font-head text-xl md:text-2xl font-black text-gray-800" x-text="currentQuestion.description"></h2>
                         </div>
+
+                        {{-- Tombol Kanan --}}
+                        <button @click="nextQuestion" class="w-10 h-10 shrink-0 rounded-full border-2 flex items-center justify-center transition-all hover:scale-105" style="border-color: var(--c-beige); color: var(--c-dark-red); background: white;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-5 h-5" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
                     </div>
-                    {{-- AKHIR DARI RIGHT --}}
+
+                    {{-- 3. OPTIONS GRID --}}
+                    <div class="px-6 md:px-12 grid grid-cols-2 gap-4 md:gap-6 shrink-0">
+                        <template x-for="choice in currentQuestion.options">
+                            <button @click="selectedChoice = choice"
+                                class="relative w-full rounded-[20px] border-2 p-4 md:p-5 flex flex-col transition-all bg-white hover:shadow-sm"
+                                :style="selectedChoice === choice ? 'border-color: var(--c-red); box-shadow: 0 8px 30px rgba(191,49,49,0.12); transform: scale(1.02); z-index: 10;' : 'border-color: var(--c-light);'">
+                                
+                                <div class="absolute top-4 right-4 flex items-center gap-2">
+                                    <span class="text-[10px] md:text-xs font-bold uppercase tracking-wide" 
+                                          :style="selectedChoice === choice ? 'color: var(--c-red);' : 'color: var(--c-beige);'" 
+                                          x-text="choice.label"></span>
+                                    <div class="w-2.5 h-2.5 rounded-full transition-colors" 
+                                         :style="selectedChoice === choice ? 'background: var(--c-red);' : 'background: var(--c-beige);'"></div>
+                                </div>
+
+                                <div class="w-full h-32 md:h-48 mt-8 mb-4 md:mb-6 rounded-xl flex items-center justify-center text-6xl md:text-7xl transition-colors border border-black/5"
+                                    :style="selectedChoice === choice ? 'background: rgba(191,49,49,0.05);' : 'background: var(--c-light);'">
+                                    <span class="drop-shadow-sm" x-text="choice.icon"></span>
+                                </div>
+
+                                <h3 class="font-bold text-sm md:text-lg text-gray-800 text-center w-full leading-tight" x-text="choice.desc"></h3>
+                            </button>
+                        </template>
+                    </div>
 
                 </div>
-                {{-- Akhir dari Grid Kiri & Kanan --}}
+
+                {{-- 5. FOOTER (Warna terintegrasi) --}}
+                <div class="px-6 md:px-12 py-5 border-t flex flex-wrap items-center justify-center md:justify-between gap-4 shrink-0" style="background: #FAFAFA; border-color: var(--c-light);">
+                    
+                    <div class="flex flex-wrap justify-center gap-2">
+                        <template x-for="(step, index) in questions">
+                            <button @click="goQuestion(index)"
+                                class="h-9 md:h-10 rounded-xl flex items-center justify-center text-sm font-bold transition-all duration-300 shadow-sm border"
+                                {{-- Jika aktif: padding dilebarkan. Jika tidak: lebarnya dikunci kotak (w-9) --}}
+                                :class="currentStep === index ? 'px-3.5 md:px-4' : 'w-9 md:w-10 px-0'"
+                                :style="currentStep === index ? 'background: var(--c-dark-red); color: white; border-color: var(--c-dark-red);' : 'background: white; color: var(--c-red); border-color: var(--c-beige);'">
+                                
+                                {{-- Ikon FontAwesome (Hanya muncul jika tombol sedang aktif) --}}
+                                <i x-show="currentStep === index" 
+                                   :class="step.navIcon" 
+                                   class="mr-1.5 md:mr-2 text-[11px] md:text-[13px]"></i>
+                                
+                                {{-- Angka --}}
+                                <span x-text="index + 1"></span>
+                                
+                            </button>
+                        </template>
+                    </div>
+
+                    <button x-show="currentStep < questions.length - 1" @click="nextQuestion"
+                        class="w-full md:w-auto px-10 py-3 md:py-3.5 rounded-xl font-bold text-white shadow-md transition-transform hover:-translate-y-0.5 active:scale-95" style="background: var(--c-red);">
+                        Selanjutnya
+                    </button>
+                    <button x-show="currentStep === questions.length - 1" @click="finishFlow"
+                        class="w-full md:w-auto px-10 py-3 md:py-3.5 rounded-xl font-bold text-white shadow-md transition-transform hover:-translate-y-0.5 active:scale-95" style="background: var(--c-dark-red);">
+                        Selesai
+                    </button>
+
+                </div>
 
             </div>
         </div>
@@ -660,6 +644,21 @@ function saatPage(){
         touchStartY:0,
         touchEndY:0,
 
+        // Tambahkan 2 variabel ini di bawah touchEndY: 0,
+        currentDisasterName: '',
+        currentDisasterIcon: '',
+
+        // ...
+
+        // Update fungsi startDisaster menjadi seperti ini:
+        startDisaster(item){
+            this.currentDisasterName = item.name;
+            this.currentDisasterIcon = item.icon;
+            this.currentStep = 0;
+            this.selectedChoice = null; // Reset pilihan setiap buka baru
+            this.popup = true;
+        },
+
         disasters:[
             {
                 name:'Gempa Bumi',
@@ -693,145 +692,86 @@ function saatPage(){
                 visual:'🏢',
                 caption:'Lokasi Saat Ini',
                 description:'Pilih kondisi lokasi kamu saat gempa terjadi.',
+                navIcon: 'fa-solid fa-location-dot', // <-- TAMBAH INI
                 options:[
-                    {
-                        label:'Luar Ruangan',
-                        icon:'🌳',
-                        desc:'Jauhi benda rawan jatuh.'
-                    },
-                    {
-                        label:'Dalam Ruangan',
-                        icon:'🏠',
-                        desc:'Lindungi kepala.'
-                    }
+                    { label:'Luar Ruangan', icon:'🌳', desc:'Jauhi benda rawan jatuh.' },
+                    { label:'Dalam Ruangan', icon:'🏠', desc:'Lindungi kepala.' }
                 ]
             },
-
             {
                 title:'Berapa Orang?',
                 visual:'👥',
                 caption:'Cek Sekitar',
                 description:'Pastikan siapa saja berada dekat denganmu.',
+                navIcon: 'fa-solid fa-users', // <-- TAMBAH INI (Ikon orang banyak)
                 options:[
-                    {
-                        label:'Sendiri',
-                        icon:'🧍',
-                        desc:'Fokus evakuasi diri.'
-                    },
-                    {
-                        label:'Bersama Orang',
-                        icon:'👨‍👩‍👧',
-                        desc:'Bantu kelompok.'
-                    }
+                    { label:'Sendiri', icon:'🧍', desc:'Fokus evakuasi diri.' },
+                    { label:'Bersama Orang', icon:'👨‍👩‍👧', desc:'Bantu kelompok.' }
                 ]
             },
-
             {
                 title:'Ada Anak?',
                 visual:'🧒',
                 caption:'Prioritas Evakuasi',
                 description:'Anak dan lansia harus diprioritaskan.',
+                navIcon: 'fa-solid fa-child-reaching', // <-- TAMBAH INI (Ikon anak)
                 options:[
-                    {
-                        label:'Ada',
-                        icon:'🧒',
-                        desc:'Bantu lebih dulu.'
-                    },
-                    {
-                        label:'Tidak Ada',
-                        icon:'👌',
-                        desc:'Lanjut evakuasi.'
-                    }
+                    { label:'Ada', icon:'🧒', desc:'Bantu lebih dulu.' },
+                    { label:'Tidak Ada', icon:'👌', desc:'Lanjut evakuasi.' }
                 ]
             },
-
             {
                 title:'Akses Keluar?',
                 visual:'🚪',
                 caption:'Cari Jalur Aman',
                 description:'Periksa jalur evakuasi.',
+                navIcon: 'fa-solid fa-door-open', // <-- TAMBAH INI
                 options:[
-                    {
-                        label:'Terbuka',
-                        icon:'🚪',
-                        desc:'Segera keluar.'
-                    },
-                    {
-                        label:'Tertutup',
-                        icon:'🪨',
-                        desc:'Cari jalur alternatif.'
-                    }
+                    { label:'Terbuka', icon:'🚪', desc:'Segera keluar.' },
+                    { label:'Tertutup', icon:'🪨', desc:'Cari jalur alternatif.' }
                 ]
             },
-
             {
                 title:'Ada Api?',
                 visual:'🔥',
                 caption:'Bahaya Tambahan',
                 description:'Periksa adanya kebakaran atau gas.',
+                navIcon: 'fa-solid fa-fire', // <-- TAMBAH INI
                 options:[
-                    {
-                        label:'Ada',
-                        icon:'🔥',
-                        desc:'Jauhi area.'
-                    },
-                    {
-                        label:'Tidak',
-                        icon:'✅',
-                        desc:'Lanjut aman.'
-                    }
+                    { label:'Ada', icon:'🔥', desc:'Jauhi area.' },
+                    { label:'Tidak', icon:'✅', desc:'Lanjut aman.' }
                 ]
             },
-
             {
                 title:'Menuju Shelter',
                 visual:'🏃',
                 caption:'Evakuasi',
                 description:'Ikuti jalur evakuasi resmi.',
+                navIcon: 'fa-solid fa-person-running', // <-- TAMBAH INI
                 options:[
-                    {
-                        label:'Ikuti Jalur',
-                        icon:'➡️',
-                        desc:'Tetap tenang.'
-                    },
-                    {
-                        label:'Cari Jalur',
-                        icon:'🧭',
-                        desc:'Gunakan area terbuka.'
-                    }
+                    { label:'Ikuti Jalur', icon:'➡️', desc:'Tetap tenang.' },
+                    { label:'Cari Jalur', icon:'🧭', desc:'Gunakan area terbuka.' }
                 ]
             },
-
             {
                 title:'Area Aman?',
                 visual:'⛺',
                 caption:'Shelter',
                 description:'Pastikan area jauh dari bangunan retak.',
+                navIcon: 'fa-solid fa-tents', // <-- TAMBAH INI
                 options:[
-                    {
-                        label:'Sudah',
-                        icon:'⛺',
-                        desc:'Tetap di shelter.'
-                    },
-                    {
-                        label:'Belum',
-                        icon:'⚠️',
-                        desc:'Cari tempat lain.'
-                    }
+                    { label:'Sudah', icon:'⛺', desc:'Tetap di shelter.' },
+                    { label:'Belum', icon:'⚠️', desc:'Cari tempat lain.' }
                 ]
             },
-
             {
                 title:'Aman',
                 visual:'🏡',
                 caption:'Kondisi Stabil',
                 description:'Kamu telah mencapai area aman.',
+                navIcon: 'fa-solid fa-check-circle', // <-- TAMBAH INI
                 options:[
-                    {
-                        label:'Lanjut',
-                        icon:'✅',
-                        desc:'Periksa kondisi tubuh.'
-                    }
+                    { label:'Lanjut', icon:'✅', desc:'Periksa kondisi tubuh.' }
                 ]
             }
         ],

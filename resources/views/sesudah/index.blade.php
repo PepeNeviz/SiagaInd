@@ -817,112 +817,70 @@
 
     </section>
 
-    {{-- INFORMASI --}}
-    <section class="py-24 bg-[#E8E8E8] border-y border-black/5">
-
-        <div class="max-w-6xl mx-auto px-5">
-
-            <div class="mb-14">
-                <h2 class="section-title">Informasi</h2>
-                <p class="section-sub">Alat penanganan dan tutorial cepat</p>
+{{-- INFORMASI --}}
+    {{-- Background pakai #EEEEEE biar misah sama section di bawahnya --}}
+    <section class="py-16 bg-[#EEEEEE] border-y border-black/5">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            
+            <div class="mb-10">
+                {{-- Accent Bar kecil di atas judul ala Netral --}}
+                <div class="w-11 h-1.5 rounded-full mb-3" style="background: var(--c-teal-main);"></div>
+                <h2 class="font-head text-3xl font-bold" style="color: var(--c-teal-dark);">Informasi & Survive</h2>
+                <p class="mt-2 text-gray-500">Panduan penanganan medis dan tutorial cepat</p>
             </div>
 
-            <div class="grid md:grid-cols-4 gap-6">
-
+            {{-- Grid 2 Kolom Lebar --}}
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
                 <template x-for="item in infoItems">
-
-                    <button
-                        @click="openInfo(item)"
-                        class="mini-card rounded-[28px] overflow-hidden"
-                    >
-
-                        <div class="h-44 bg-[#D5D5D5] flex items-center justify-center text-5xl">
+                    <div @click="openInfo(item)" class="bg-white p-5 rounded-[22px] border border-gray-200 shadow-sm cursor-pointer transition-all duration-300 hover:shadow-md hover:-translate-y-1">
+                        
+                        {{-- Box Gambar Lebar --}}
+                        <div class="h-48 rounded-xl flex items-center justify-center text-6xl mb-4" style="background: var(--c-teal-bg);">
                             <span x-text="item.icon"></span>
                         </div>
-
-                        <div class="p-4">
-                            <h3 class="font-bold text-sm mb-2" x-text="item.title"></h3>
-
-                            <p class="text-xs text-gray-500 leading-relaxed" x-text="item.desc"></p>
-                        </div>
-
-                    </button>
-
+                        
+                        {{-- Teks Rata Kiri --}}
+                        <h3 class="text-xl font-bold mt-2" style="color: var(--c-teal-dark);" x-text="item.title"></h3>
+                        <p class="text-sm mt-1 leading-relaxed text-gray-500" x-text="item.desc"></p>
+                    </div>
                 </template>
-
             </div>
 
         </div>
-
     </section>
 
     {{-- CRAFTING --}}
-    <section class="py-24">
-
-        <div class="max-w-6xl mx-auto px-5">
-
-            <div class="mb-16">
-                <h2 class="section-title">Crafting khusus Caregiver</h2>
+    <section class="py-16 bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            
+            <div class="mb-10">
+                {{-- Accent Bar kecil di atas judul --}}
+                <div class="w-11 h-1.5 rounded-full mb-3" style="background: var(--c-teal-main);"></div>
+                <h2 class="font-head text-3xl font-bold" style="color: var(--c-teal-dark);">Crafting Caregiver</h2>
+                <p class="mt-2 text-gray-500">Informasi pembuatan alat (Bahan lebih dari 1)</p>
             </div>
 
-            <div class="space-y-12">
-
+            {{-- Grid 4 Kolom --}}
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                 <template x-for="craft in craftingItems">
-
-                    <div class="craft-layout rust-card rounded-[32px] p-8">
-
-                        <div class="craft-preview">
-
-                            <div class="h-72 rounded-[22px] bg-[#D5D5D5] flex items-center justify-center text-7xl">
-                                <span x-text="craft.icon"></span>
-                            </div>
-
-                            <div class="mt-6 flex items-center justify-between gap-4">
-
-                                <div>
-                                    <h3 class="font-bold text-xl" x-text="craft.title"></h3>
-
-                                    <p class="text-sm text-gray-500 mt-1">
-                                        Tutorial improvisasi alat medis
-                                    </p>
-                                </div>
-
-                                <button
-                                    @click="openCraft(craft)"
-                                    class="rusty-btn px-5 py-3 rounded-full text-sm font-bold"
-                                >
-                                    Lihat Tutorial
-                                </button>
-
-                            </div>
-
+                    <button @click="openCraft(craft)" class="bg-white p-5 rounded-[22px] border border-gray-200 cursor-pointer transition-all hover:shadow-md hover:-translate-y-1 text-center w-full shadow-sm">
+                        
+                        {{-- Box Gambar Kotak --}}
+                        <div class="h-40 rounded-xl flex items-center justify-center text-5xl mb-4" style="background: var(--c-teal-bg);">
+                            <span x-text="craft.icon"></span>
                         </div>
-
-                        <div class="craft-materials">
-
-                            <template x-for="material in craft.materials">
-
-                                <div class="material-box">
-                                    <span x-text="material.qty"></span>
-
-                                    <div class="text-4xl mb-3" x-text="material.icon"></div>
-
-                                    <h4 class="font-bold text-sm" x-text="material.name"></h4>
-                                </div>
-
-                            </template>
-
-                        </div>
-
-                    </div>
-
+                        
+                        {{-- Teks Rata Tengah --}}
+                        <h3 class="text-sm font-bold" style="color: var(--c-teal-dark);" x-text="craft.title"></h3>
+                        <p class="text-[11px] mt-1 text-gray-400">Tap untuk detail crafting</p>
+                    </button>
                 </template>
-
             </div>
 
         </div>
-
     </section>
+
+    
 
     {{-- MODAL (MENGGUNAKAN X-TELEPORT AGAR SELALU DI ATAS NAVBAR) --}}
     <template x-teleport="body" @teleport="$nextTick(() => {})">
@@ -1128,49 +1086,170 @@
                 </div>
             </template>
 
-            <!-- DEFAULT MODAL (untuk konten lain) -->
-            <template x-if="currentInjuryType !== 'injury'">
-                <div
-                    @click.stop="modal = false"
-                    class="modal-box"
-                >
-                    <div class="grid md:grid-cols-2 h-full">
-                        <div class="p-8 flex flex-col justify-between">
-                            <div>
-                                <div class="flex gap-2 mb-8">
-                                    <div class="pagination-btn">1</div>
-                                    <div class="pagination-btn">2</div>
-                                    <div class="pagination-btn">3</div>
-                                </div>
+            <!-- INFO MODAL (Ukuran dan Layout Fix 100% Netral) -->
+            <template x-if="currentInjuryType === 'info'">
+                <div @click.stop class="bg-white rounded-2xl w-full max-w-2xl p-6 relative shadow-2xl flex flex-col mx-auto z-51">
 
-                                <h2 class="font-head text-3xl font-black mb-3" style="color: var(--c-dark-red);" x-text="modalData.title"></h2>
-                                <p class="text-gray-500 leading-relaxed" x-text="modalData.desc"></p>
+                    {{-- 1. Navigasi Angka Atas --}}
+                    <div class="flex justify-center gap-2 mb-6">
+                        <template x-for="(step, i) in modalData.steps">
+                            <button @click="injuryStepIndex = i"
+                                    class="w-9 h-9 rounded-lg border font-bold text-sm transition-colors"
+                                    :class="injuryStepIndex === i ? 'text-white border-transparent' : 'bg-gray-50 text-gray-400 hover:bg-gray-100 border-gray-200'"
+                                    :style="injuryStepIndex === i ? 'background: var(--c-teal-dark);' : ''"
+                                    x-text="i + 1"></button>
+                        </template>
+                    </div>
+
+                    {{-- 2. Area Tengah: Panah - Gambar - Panah --}}
+                    <div class="flex items-center justify-center mb-6 gap-2">
+                        
+                        {{-- Menggunakan teks panah persis seperti di Netral --}}
+                        <button @click="if(injuryStepIndex > 0) injuryStepIndex--"
+                                class="w-14 flex justify-center text-3xl p-3 rounded-full transition"
+                                :class="injuryStepIndex === 0 ? 'text-gray-200 cursor-not-allowed' : 'text-gray-400 hover:bg-gray-100 hover:text-[var(--c-teal-dark)]'">
+                            ◀
+                        </button>
+
+                        {{-- Ukuran box h-64 dan max-w-[450px] persis Netral --}}
+                        <div class="h-64 w-full max-w-[450px] rounded-2xl flex items-center justify-center border border-black/5 shadow-inner" style="background: var(--c-teal-bg);">
+                            <div class="text-[100px]" x-text="modalData.steps[injuryStepIndex].i"></div>
+                        </div>
+
+                        <button @click="if(injuryStepIndex < modalData.steps.length - 1) injuryStepIndex++"
+                                class="w-14 flex justify-center text-3xl p-3 rounded-full transition"
+                                :class="injuryStepIndex === modalData.steps.length - 1 ? 'text-gray-200 cursor-not-allowed' : 'text-gray-400 hover:bg-gray-100 hover:text-[var(--c-teal-dark)]'">
+                            ▶
+                        </button>
+                    </div>
+
+                    {{-- 3. Judul & Deskripsi --}}
+                    <div class="text-center mb-6 flex-grow">
+                        <h3 class="font-bold text-lg" style="color: var(--c-teal-dark);" x-text="modalData.title"></h3>
+                        <p class="text-gray-500 text-sm mt-2 max-w-md mx-auto" x-text="modalData.steps[injuryStepIndex].d"></p>
+                    </div>
+
+                    {{-- 4. Footer --}}
+                    <div class="flex justify-between items-center mt-auto pt-4 border-t border-gray-100">
+                        
+                        {{-- Kotak ikon bahan di kiri bawah --}}
+                        <div class="flex items-center px-3 py-1.5 rounded-lg border border-gray-100 bg-white shadow-sm">
+                            <div class="text-xl" x-text="modalData.toolIcon"></div>
+                        </div>
+
+                        {{-- Tombol Done ukuran kecil (h-9 px-8 text-xs) ala Netral --}}
+                        <button @click="modal = false"
+                                :disabled="injuryStepIndex !== modalData.steps.length - 1"
+                                :class="injuryStepIndex === modalData.steps.length - 1 ? 'hover:opacity-90' : 'bg-gray-300 cursor-not-allowed'"
+                                :style="injuryStepIndex === modalData.steps.length - 1 ? 'background: var(--c-teal-dark); color: white;' : 'color: white;'"
+                                class="px-8 h-9 rounded-xl font-bold text-xs transition-colors">
+                            Done
+                        </button>
+
+                    </div>
+
+                </div>
+            </template>
+
+            <template x-if="currentInjuryType === 'craft'">
+                <div @click.stop class="bg-white rounded-2xl w-full max-w-2xl p-6 relative shadow-2xl flex flex-col transition-all z-51 mx-auto">
+                    
+                    {{-- ==========================================
+                         VIEW 1: SELECTION BAHAN
+                    =========================================== --}}
+                    <div x-show="currentView === 'selection'" class="flex flex-col">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-lg font-bold" style="color: var(--c-teal-dark);" x-text="modalData.title"></h2>
+                            <button @click="modal = false" class="text-xl text-gray-400 hover:text-[var(--c-teal-dark)] transition-colors">✕</button>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6">
+                            <div class="rounded-xl p-4 flex flex-col items-center justify-center border border-black/5 h-[200px]" style="background: var(--c-teal-bg);">
+                                <div class="text-7xl drop-shadow-sm" x-text="modalData.icon"></div>
+                                <div class="font-bold mt-3 text-sm text-center" style="color: var(--c-teal-dark);" x-text="modalData.title"></div>
                             </div>
 
-                            <div class="mt-10 flex gap-3 flex-wrap">
-                                <template x-for="tag in modalData.tags">
-                                    <span class="px-4 py-2 rounded-full text-sm font-bold" style="background: rgba(191,49,49,.12); color: var(--c-red);" x-text="tag"></span>
+                            <div class="grid grid-cols-2 gap-3 h-[200px]">
+                                <template x-for="(m, idx) in craftingMaterials" :key="idx">
+                                    <div class="border border-gray-100 p-3 rounded-xl relative flex flex-col items-center justify-center bg-white shadow-sm transition-all hover:border-[var(--c-teal-light)]">
+                                        <div class="text-3xl drop-shadow-sm mb-1" x-text="m.icon"></div>
+                                        <span class="text-[10px] font-bold text-center text-gray-600" x-text="m.name"></span>
+                                        
+                                        <button x-show="m.swappable" @click="switchMaterial(idx)" 
+                                                class="absolute top-1.5 right-1.5 p-1 bg-gray-50 border border-gray-200 rounded text-[10px] text-gray-500 hover:bg-[var(--c-teal-bg)] hover:text-[var(--c-teal-dark)] transition-colors"
+                                                title="Ganti Bahan">⇅</button>
+                                    </div>
                                 </template>
                             </div>
                         </div>
 
-                        <div class="p-8 flex items-center justify-center" style="background: var(--c-beige);">
-                            <div class="w-full flex items-center justify-center text-8xl">
-                                <span x-text="modalData.icon"></span>
-                            </div>
+                        <div class="mt-6 flex justify-end">
+                            <button @click="currentView = 'process'" 
+                                    class="px-8 py-2.5 rounded-xl font-bold text-white shadow-md hover:-translate-y-0.5 active:scale-95 transition-all text-sm tracking-wide" 
+                                    style="background: var(--c-teal-dark);">
+                                Next
+                            </button>
                         </div>
                     </div>
 
-                    <div class="border-t border-black/5 p-6 flex justify-end bg-gray-50">
-                        <button
-                            @click="modal = false"
-                            class="rusty-btn px-6 py-3 rounded-full font-bold text-sm"
-                        >
-                            Tutup
-                        </button>
+                    {{-- ==========================================
+                         VIEW 2: PROCESS & SLIDER
+                    =========================================== --}}
+                    <div x-show="currentView === 'process'" class="flex flex-col">
+                        
+                        <div class="flex justify-center gap-2 mb-6">
+                            <template x-for="(step, i) in modalData.steps">
+                                <button @click="injuryStepIndex = i" 
+                                        class="w-9 h-9 rounded-lg border font-bold text-sm transition-colors" 
+                                        :class="injuryStepIndex === i ? 'text-white border-transparent' : 'bg-gray-50 text-gray-400 hover:bg-gray-100 border-gray-200'" 
+                                        :style="injuryStepIndex === i ? 'background: var(--c-teal-dark);' : ''"
+                                        x-text="i + 1"></button>
+                            </template>
+                        </div>
+
+                        <div class="h-64 flex items-center justify-center mb-6 gap-2">
+                            <div class="w-14 flex justify-center">
+                                <button @click="injuryStepIndex--" x-show="injuryStepIndex > 0" class="text-3xl p-3 text-gray-400 hover:bg-gray-100 hover:text-[var(--c-teal-dark)] rounded-full transition">◀</button>
+                            </div>
+                            
+                            <div class="w-full max-w-[450px] h-full rounded-2xl flex items-center justify-center border border-black/5 shadow-inner" style="background: var(--c-teal-bg);">
+                                <div class="text-[110px] drop-shadow-sm transition-transform duration-300" x-text="modalData.steps[injuryStepIndex].i"></div>
+                            </div>
+
+                            <div class="w-14 flex justify-center">
+                                <button @click="injuryStepIndex++" x-show="injuryStepIndex < modalData.steps.length - 1" class="text-3xl p-3 text-gray-400 hover:bg-gray-100 hover:text-[var(--c-teal-dark)] rounded-full transition">▶</button>
+                            </div>
+                        </div>
+
+                        <div class="text-center mb-5">
+                            <h3 class="font-bold text-lg mb-1" style="color: var(--c-teal-dark);" x-text="'Step ' + (injuryStepIndex + 1)"></h3>
+                            <p class="text-gray-500 text-sm px-10 leading-relaxed" x-text="modalData.steps[injuryStepIndex].d"></p>
+                        </div>
+
+                        <div class="flex gap-3 mb-5 justify-center">
+                            <template x-for="m in craftingMaterials">
+                                <div class="flex flex-col items-center justify-center bg-gray-50 p-1.5 w-[65px] rounded-lg border border-gray-100">
+                                    <div class="text-xl mb-0.5" x-text="m.icon"></div>
+                                    <span class="text-[8px] font-bold text-center leading-tight text-gray-600" x-text="m.name"></span>
+                                </div>
+                            </template>
+                        </div>
+
+                        <div class="flex justify-between items-center mt-auto pt-4 border-t border-gray-100">
+                            <button @click="currentView = 'selection'" 
+                                    class="px-6 py-2 border border-gray-200 text-gray-500 rounded-xl font-bold hover:bg-gray-50 transition-colors text-sm">Prev</button>
+                            
+                            <button @click="modal = false" 
+                                    :disabled="injuryStepIndex !== modalData.steps.length - 1"
+                                    :class="injuryStepIndex === modalData.steps.length - 1 ? 'hover:opacity-90 shadow-md text-white' : 'bg-gray-300 cursor-not-allowed text-white'"
+                                    :style="injuryStepIndex === modalData.steps.length - 1 ? 'background: var(--c-teal-dark);' : ''"
+                                    class="px-8 py-2 rounded-xl font-bold transition-all text-sm tracking-wide">Done</button>
+                        </div>
                     </div>
+
                 </div>
             </template>
+            
         </div>
     </template>
 
@@ -1183,6 +1262,9 @@ function sesudahPage(){
 
         modal:false,
         modalData:{},
+
+        currentView: 'selection',
+        craftingMaterials: [],
 
         // --- TAMBAHAN BARU: Variabel Mode Visual & Swipe ---
         currentInjuryType: null,
@@ -1355,50 +1437,63 @@ function sesudahPage(){
                 title:'CPR Dasar',
                 icon:'❤️',
                 desc:'Cara bantuan napas darurat.',
-                tags:['CPR']
+                toolIcon: '🫁',
+                steps: [
+                    { d: 'Langkah 1: Pastikan lingkungan aman dan cek kesadaran korban.', i: '🗣️' },
+                    { d: 'Langkah 2: Lakukan 30 kompresi dada bagian tengah dengan cepat.', i: '❤️' },
+                    { d: 'Langkah 3: Berikan 2 napas buatan, lalu ulangi siklus kompresi.', i: '😮‍💨' }
+                ]
             },
             {
                 title:'Membalut Luka',
                 icon:'🩹',
                 desc:'Teknik balut dasar.',
-                tags:['Balut']
+                toolIcon: '🩹',
+                steps: [
+                    { d: 'Langkah 1: Bersihkan area luka dengan air mengalir atau antiseptik.', i: '🚰' },
+                    { d: 'Langkah 2: Letakkan kasa steril tepat di atas luka terbuka.', i: '🩹' },
+                    { d: 'Langkah 3: Balut perlahan, pastikan tidak terlalu ketat.', i: '🎗️' }
+                ]
             },
             {
                 title:'Patah Tulang',
                 icon:'🦴',
                 desc:'Cara imobilisasi.',
-                tags:['Bidai']
+                toolIcon: '🪵',
+                steps: [
+                    { d: 'Langkah 1: Tenangkan korban dan jangan mencoba meluruskan tulang.', i: '🛑' },
+                    { d: 'Langkah 2: Siapkan bidai di sisi kiri dan kanan tulang yang patah.', i: '🪵' },
+                    { d: 'Langkah 3: Ikat bidai dengan kain secara menyilang, pastikan ikatan kuat.', i: '🪢' }
+                ]
             },
             {
-                title:'Penurunan Kesadaran',
-                icon:'🧠',
-                desc:'Cek respon dan napas.',
-                tags:['Kesadaran']
+                title:'Kain Segitiga',
+                icon:'🧣',
+                desc:'Tutorial melipat penyangga lengan & bahu darurat.',
+                toolIcon: '🧵',
+                steps: [
+                    { d: 'Langkah 1: Siapkan kain bersih dan lipat diagonal menjadi segitiga.', i: '📐' },
+                    { d: 'Langkah 2: Selipkan kain di bawah lengan korban dan kalungkan ke leher.', i: '💪' },
+                    { d: 'Langkah 3: Ikat ujung kain di belakang leher dengan kuat.', i: '🪢' }
+                ]
             }
         ],
 
         craftingItems:[
             {
-                title:'Kain Segitiga',
-                icon:'🧣',
-                materials:[
-                    {name:'Kain', icon:'🧵', qty:'1x'},
-                    {name:'Peniti', icon:'📌', qty:'2x'},
-                    {name:'Gunting', icon:'✂️', qty:'1x'},
-                    {name:'Air Bersih', icon:'💧', qty:'1x'},
-                ],
-                tags:['Penyangga','Patah Tulang']
-            },
-            {
                 title:'Bidai Darurat',
                 icon:'🪵',
                 materials:[
-                    {name:'Kayu', icon:'🪵', qty:'2x'},
-                    {name:'Kain', icon:'🧵', qty:'2x'},
-                    {name:'Tali', icon:'🪢', qty:'1x'},
-                    {name:'Gunting', icon:'✂️', qty:'1x'},
+                    { name: 'Kayu Lurus', icon: '🪵', swappable: true, options: [{n: 'Kayu Lurus', i: '🪵'}, {n: 'Bambu', i: '🎋'}] },
+                    { name: 'Kain Panjang', icon: '🧣', swappable: true, options: [{n: 'Kain Panjang', i: '🧣'}, {n: 'Kaos/Baju', i: '👕'}] },
+                    { name: 'Tali Pengikat', icon: '🪢', swappable: false },
+                    { name: 'Gunting', icon: '✂️', swappable: false }
                 ],
-                tags:['Bidai','Tulang']
+                steps: [
+                    { d: 'Siapkan dua bilah kayu atau bambu dengan panjang melebihi area tulang yang patah.', i: '🪵' },
+                    { d: 'Letakkan kayu secara perlahan di sisi kanan dan kiri area yang cedera sebagai penopang utama.', i: '🦵' },
+                    { d: 'Ikat kuat dengan kain atau tali di beberapa titik sendi agar bidai kokoh dan tidak bergeser.', i: '🪢' }
+                ]
             }
         ],
 
@@ -1527,18 +1622,29 @@ function sesudahPage(){
         },
 
         openInfo(item){
-            this.modalData = item
-            this.modal = true
+            this.modalData = item;
+            this.currentInjuryType = 'info'; 
+            this.injuryStepIndex = 0; // Mulai dari step awal
+            this.modal = true;
         },
 
         openCraft(item){
-            this.modalData = {
-                title:item.title,
-                desc:'Tutorial langkah demi langkah untuk membuat alat improvisasi.',
-                icon:item.icon,
-                tags:item.tags
-            }
-            this.modal = true
+            this.modalData = item;
+            this.currentInjuryType = 'craft';
+            this.currentView = 'selection';
+            // Kloning material biar kalau di-switch, data aslinya nggak rusak
+            this.craftingMaterials = JSON.parse(JSON.stringify(item.materials));
+            this.injuryStepIndex = 0;
+            this.modal = true;
+        },
+
+        switchMaterial(idx){
+            let m = this.craftingMaterials[idx];
+            if (!m.swappable) return;
+            let curIdx = m.options.findIndex(o => o.n === m.name);
+            let next = m.options[(curIdx + 1) % m.options.length];
+            m.name = next.n;
+            m.icon = next.i;
         },
 
         openSupply(type){
