@@ -1467,14 +1467,15 @@ function sesudahPage(){
                 ]
             },
             {
-                title:'Kain Segitiga',
+                title:'Kain Penyangga Tangan',
                 icon:'🧣',
                 desc:'Tutorial melipat penyangga lengan & bahu darurat.',
                 toolIcon: '🧵',
                 steps: [
-                    { d: 'Langkah 1: Siapkan kain bersih dan lipat diagonal menjadi segitiga.', i: '📐' },
-                    { d: 'Langkah 2: Selipkan kain di bawah lengan korban dan kalungkan ke leher.', i: '💪' },
-                    { d: 'Langkah 3: Ikat ujung kain di belakang leher dengan kuat.', i: '🪢' }
+                    { d: 'Langkah 1: Lipat kain membentuk segitiga.', i: '📐' },
+                    { d: 'Langkah 2: Tekuk lengan sekitar 90 derajat dan posisikan telapak tangan sedikit lebih tinggi dari siku.', i: '💪' },
+                    { d: 'Langkah 3: Masukkan lengan ke kain hingga siku tertutup dan tangan berada di tengah.', i: '🪢' },
+                    { d: 'Langkah 3: Ikat dua ujung kain ke leher.', i: '🪢' }
                 ]
             }
         ],
@@ -1484,15 +1485,17 @@ function sesudahPage(){
                 title:'Bidai Darurat',
                 icon:'🪵',
                 materials:[
-                    { name: 'Kayu Lurus', icon: '🪵', swappable: true, options: [{n: 'Kayu Lurus', i: '🪵'}, {n: 'Bambu', i: '🎋'}] },
-                    { name: 'Kain Panjang', icon: '🧣', swappable: true, options: [{n: 'Kain Panjang', i: '🧣'}, {n: 'Kaos/Baju', i: '👕'}] },
-                    { name: 'Tali Pengikat', icon: '🪢', swappable: false },
-                    { name: 'Gunting', icon: '✂️', swappable: false }
+                    { name: 'Kayu', role: 'Penyangga', icon: '👕', swappable: true, options: [{n: 'Kayu', i: '👕'}, {n: 'Bambu', i: '🛌'}, {n: 'Tongkat', i: '🧕'}, {n: 'Karton Tebal', i: '🧕'}] },
+                    { name: 'Perban', role: 'Pengikat', icon: '👕', swappable: true, options: [{n: 'Perban', i: '👕'}, {n: 'Tali', i: '🧵'}, {n: 'Kain', i: '🟩'}, {n: 'Syal', i: '�'}] },
+                    { name: 'Kain Lembut', role: 'Bantalan Tambahan', icon: '👕', swappable: true, options: [{n: 'Kain Lembut', i: '👕'}, {n: 'kapas', i: '🧵'}, {n: 'Handuk', i: '🟩'}, {n: 'Baju Lipat', i: ''}] }
                 ],
                 steps: [
-                    { d: 'Siapkan dua bilah kayu atau bambu dengan panjang melebihi area tulang yang patah.', i: '🪵' },
-                    { d: 'Letakkan kayu secara perlahan di sisi kanan dan kiri area yang cedera sebagai penopang utama.', i: '🦵' },
-                    { d: 'Ikat kuat dengan kain atau tali di beberapa titik sendi agar bidai kokoh dan tidak bergeser.', i: '🪢' }
+                    { d: 'Periksa cedera, apakah terluka atau patah. Jika posisi terlihat tidak normal jangan paksa diluruskan.', i: '🪵' },
+                    { d: 'Posisikan bidai, harus hingga melewati area cedera dan menopang atas bawah sendi cedera.', i: '🦵' },
+                    { d: 'Tambahkan bantalan di antara kulit dan bidai.', i: '🪢' },
+                    { d: 'Tempelkan bidai ke bagian tubuh yang cedera.', i: '🪢' },
+                    { d: 'Ikat perlahan agar stabil dan jangan terlalu kencang.', i: '🪢' },
+                    { d: 'Periksa sirkulasi agar tidak terganggu.', i: '🪢' }
                 ]
             }
         ],

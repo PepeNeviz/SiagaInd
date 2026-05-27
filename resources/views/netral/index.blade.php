@@ -88,44 +88,66 @@
     }
     .darurat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
 
-    /* ══════ MODAL FIXES (AMANKAN ALPINE.JS & UKURAN BOKS) ══════ */
-    
-    /* Overlay dikembalikan ke setelan standar tanpa memaksa display grid/flex */
+    /* ══════ MODAL — UNIVERSAL FIX ══════ */
+
+    /* modal-overlay: layout saja, display dikontrol Alpine x-show */
     .modal-overlay {
         position: fixed !important;
         inset: 0 !important;
-        background-color: rgba(16, 24, 32, 0.6) !important;
-        z-index: 50 !important;
+        z-index: 9999 !important;
+        align-items: center !important;
+        justify-content: center !important;
         padding: 20px !important;
+        background-color: rgba(16, 24, 32, 0.55) !important;
+        backdrop-filter: blur(6px) !important;
+        -webkit-backdrop-filter: blur(6px) !important;
+        /* JANGAN set display di sini — biarkan x-show Alpine yang atur */
     }
 
-    /* Setelan ukuran modal utama agar lebar dan tingginya pas satu layar */
+    /* Semua modal box: tidak overflow, flex column */
     .modal-box {
         position: relative;
-        z-index: 51;  
-        width: 100% !important; 
-        max-width: 860px !important; 
-        
-        /* Kunci tinggi agar pas monitor PC dan tidak geser saat ganti step */
-        height: 95vh !important; 
+        z-index: 10000;
+        width: 100% !important;
+        max-width: 860px !important;
+        height: 95vh !important;
         max-height: 95vh !important;
-        
-        /* Membagi ruang header, body, dan footer di dalam modal */
         display: flex !important;
         flex-direction: column !important;
-        overflow: hidden !important; 
-        
+        overflow: hidden !important;
         background: var(--color-surface);
         border: 1px solid var(--color-border-md);
         border-radius: var(--r-xl);
         box-shadow: var(--shadow-lg);
-        transform: none !important; 
+        transform: none !important;
         margin: 0 auto !important;
     }
+    .modal-box.modal-box-lg { max-width: 860px !important; }
 
-    .modal-box.modal-box-lg { 
-        max-width: 860px !important; 
+    /* Lock scroll saat modal buka */
+    body.modal-open {
+        overflow: hidden !important;
+        height: 100% !important;
     }
+
+    /* Backdrop gelap untuk modal info & crafting (div absolute inset-0) */
+    .modal-backdrop-blur {
+        position: fixed !important;
+        inset: 0 !important;
+        background: rgba(16, 24, 32, 0.55) !important;
+        backdrop-filter: blur(6px) !important;
+        -webkit-backdrop-filter: blur(6px) !important;
+        z-index: 9998 !important;
+    }
+
+    /* Modal info & crafting box */
+    .modal-inner-box {
+        position: relative;
+        z-index: 9999;
+    }
+
+    /* x-cloak: sembunyikan elemen sebelum Alpine selesai init */
+    [x-cloak] { display: none !important; }
 
 </style>
 @endpush
@@ -242,7 +264,7 @@
 
     <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
         @foreach([
-            ['🪢', 'Simpul Kilat', 'Panduan membuat simpul kuat darurat secara cepat hanya menggunakan seutas tali.'],
+            ['🪢', 'Kain Penyangga Tangan', 'Kain untuk menopang tangan saat cedera.'],
             ['🥫', 'Membuka Kaleng', 'Teknik membuka makanan kaleng darurat tanpa menggunakan alat pembuka khusus.'],
             ['🧭', 'Arah Mata Angin', 'Cara menentukan arah mata angin menggunakan metode navigasi alamiah.'],
             ['☀️', 'Baca Jam Matahari', 'Estimasi penunjuk waktu darurat dengan memanfaatkan bayangan dari sinar matahari.']
@@ -272,7 +294,7 @@
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             @foreach([
                 ['🧴', 'Filter Air', 'air-bersih'],
-                ['🪝', 'Jerat Sederhana', 'jerat-makanan'],
+                ['🪝', 'Pisau', 'pisau'],
                 ['🔥', 'Korek Darurat', 'korek-api'],
                 ['🧭', 'Kompas Sederha', 'kompas']
             ] as $craft)
@@ -304,7 +326,7 @@
 
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             @foreach([
-                ['🩹', 'Kain Segitiga', 'kain-segitiga'],
+                ['🩹', 'Bidai Darurat', 'Bidai Darurat'],
                 ['🧪', 'Cairan P3K', 'cairan-p3k'],
                 ['🩺', 'Perban Darurat', 'perban-darurat'],
                 ['💊', 'Kit Obat Medis', 'kit-obat']
@@ -321,6 +343,7 @@
             </button>
             @endforeach
         </div>
+
     </div>
 </section>
 
@@ -359,12 +382,14 @@
 {{-- ══════════════════════════════════════════════════
      MODAL PORTAL
 ══════════════════════════════════════════════════ --}}
-@push('modals')
 
+
+{{-- ══════ MODALS ══════ --}}
 {{-- Modal: Tutorial Bencana --}}
 <div
     x-data="tutorialModal()"
     x-show="open"
+    x-effect="document.body.classList.toggle('modal-open', open)"
     x-transition:enter="transition ease-out duration-200"
     x-transition:enter-start="opacity-0"
     x-transition:enter-end="opacity-100"
@@ -373,9 +398,9 @@
     x-transition:leave-end="opacity-0"
     x-cloak
     @open-tutorial.window="openModal($event.detail.bencana)"
+    @keydown.escape.window="closeModal()"
     class="modal-overlay"
->
-    <div class="modal-backdrop" @click="closeModal()"></div>
+    @click.self="closeModal()">
     <div class="modal-box modal-box-lg flex flex-col justify-between" @click.stop>
         
         <div class="modal-header border-b border-slate-100 flex items-center justify-between px-6 py-4 bg-white rounded-t-2xl relative">
@@ -525,6 +550,7 @@
 <div
     x-data="infoModal()"
     x-show="open"
+    x-effect="document.body.classList.toggle('modal-open', open)"
     x-transition:enter="transition ease-out duration-200"
     x-transition:enter-start="opacity-0"
     x-transition:enter-end="opacity-100"
@@ -533,149 +559,213 @@
     x-transition:leave-end="opacity-0"
     x-cloak
     @open-info.window="openModal($event.detail)"
-    class="fixed inset-0 z-[60] flex items-center justify-center p-4"
->
-    <div class="absolute inset-0 bg-black/50" @click="closeModal()"></div>
-    
-    <div class="bg-white rounded-2xl w-full max-w-2xl p-6 relative shadow-2xl flex flex-col" @click.stop>
-        
-        <div class="flex justify-center gap-2 mb-6">
-            <template x-for="i in 3">
-                <button @click="currentStep = i; updateContent()" 
-                        class="w-9 h-9 rounded-lg border font-bold text-sm transition-colors" 
-                        :class="currentStep === i ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'" 
-                        x-text="i"></button>
+    @keydown.escape.window="closeModal()"
+    class="modal-overlay"
+    @click.self="closeModal()">
+
+    <div class="modal-inner-box bg-white rounded-2xl w-full max-w-2xl p-6 shadow-2xl flex flex-col" @click.stop>
+
+        {{-- BUTTON STEP --}}
+        <div class="flex justify-center gap-2 mb-6 flex-wrap">
+            <template x-for="(step, index) in steps" :key="index">
+                <button
+                    @click="goToStep(index + 1)"
+                    class="w-9 h-9 rounded-lg border font-bold text-sm transition-colors"
+                    :class="currentStep === index + 1
+                        ? 'bg-gray-800 text-white'
+                        : 'bg-gray-100 text-gray-400 hover:bg-gray-200'">
+
+                    <span x-text="index + 1"></span>
+                </button>
             </template>
         </div>
 
+        {{-- CONTENT --}}
         <div class="flex items-center justify-center mb-6 gap-2">
-            <button @click="prevStep()" 
-                    :disabled="currentStep === 1"
-                    class="w-14 flex justify-center text-3xl p-3 rounded-full transition"
-                    :class="currentStep === 1 ? 'text-gray-200' : 'hover:bg-gray-100 text-gray-800'">◀</button>
-            
+
+            {{-- PREV --}}
+            <button
+                @click="prevStep()"
+                :disabled="currentStep === 1"
+                class="w-14 flex justify-center text-3xl p-3 rounded-full transition"
+                :class="currentStep === 1
+                    ? 'text-gray-200'
+                    : 'hover:bg-gray-100 text-gray-800'">
+                ◀
+            </button>
+
+            {{-- IMAGE / ICON --}}
             <div class="h-64 w-full max-w-[450px] bg-gray-200 rounded-2xl flex items-center justify-center shadow-inner">
-                <div class="text-[100px]" x-text="icon"></div>
+
+                <template x-if="currentContent.type === 'icon'">
+                    <div class="text-[100px]" x-text="currentContent.icon"></div>
+                </template>
+
+                <template x-if="currentContent.type === 'image'">
+                    <img
+                        :src="currentContent.image"
+                        class="w-full h-full object-cover rounded-2xl">
+                </template>
+
             </div>
 
-            <button @click="nextStep()" 
-                    :disabled="currentStep === 3"
-                    class="w-14 flex justify-center text-3xl p-3 rounded-full transition"
-                    :class="currentStep === 3 ? 'text-gray-200' : 'hover:bg-gray-100 text-gray-800'">▶</button>
-        </div>
-
-        <div class="text-center mb-6 flex-grow">
-            <h3 class="font-bold text-lg text-slate-800" x-text="item"></h3>
-            <p class="text-slate-600 text-sm mt-2 max-w-md mx-auto" x-text="description"></p>
-        </div>
-
-        <div class="flex justify-between items-center mt-auto pt-4 border-t border-slate-100">
-            <div class="flex items-center px-3 py-1.5 rounded-lg border border-slate-100 bg-slate-50">
-                <div class="text-xl" x-text="toolIcon"></div>
-            </div>
-
-            <button @click="closeModal()" 
-                    :disabled="currentStep !== 3"
-                    :class="currentStep === 3 ? 'bg-gray-800 hover:bg-gray-900' : 'bg-gray-300 cursor-not-allowed'"
-                    class="px-8 h-9 rounded-xl text-white font-bold text-xs transition-colors">
-                Done
+            {{-- NEXT --}}
+            <button
+                @click="nextStep()"
+                :disabled="currentStep === steps.length"
+                class="w-14 flex justify-center text-3xl p-3 rounded-full transition"
+                :class="currentStep === steps.length
+                    ? 'text-gray-200'
+                    : 'hover:bg-gray-100 text-gray-800'">
+                ▶
             </button>
         </div>
+
+        {{-- TEXT --}}
+        <div class="text-center mb-6 flex-grow">
+            <h3 class="font-bold text-lg text-slate-800" x-text="item"></h3>
+
+            <p class="text-slate-600 text-sm mt-2 max-w-md mx-auto"
+               x-text="currentContent.description">
+            </p>
+        </div>
+
+        {{-- FOOTER --}}
+<div class="flex justify-between items-center mt-auto pt-4 border-t border-slate-100">
+
+    {{-- ICON KIRI --}}
+    <div class="flex items-center gap-3">
+
+        {{-- BOX ICON --}}
+        <div class="relative">
+
+            <div class="w-11 h-11 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center shadow-sm">
+                <span class="text-xl" x-text="toolIcon"></span>
+            </div>
+
+            {{-- BUTTON SWITCH --}}
+            <button
+                x-show="toolIcons.length > 1"
+                @click="switchToolIcon()"
+                class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-teal-500 hover:bg-teal-600 text-white text-[8px] font-black transition flex items-center justify-center shadow">
+
+                ⇄
+            </button>
+
+        </div>
+
+        {{-- NAMA TOOL --}}
+        <div class="flex flex-col leading-tight">
+
+            <span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">
+                Tool
+            </span>
+
+            <span class="text-xs font-bold text-slate-700"
+                  x-text="toolName">
+            </span>
+
+        </div>
+
+    </div>
+
+    {{-- DONE BUTTON --}}
+    <button
+        @click="closeModal()"
+        :disabled="currentStep !== steps.length"
+        :class="currentStep === steps.length
+            ? 'bg-gray-800 hover:bg-gray-900 text-white'
+            : 'bg-gray-300 text-gray-500 cursor-not-allowed'"
+        class="px-8 h-10 rounded-xl font-bold text-xs transition-all">
+
+        Done
+    </button>
+
+    </div>
+
     </div>
 </div>
 
 {{-- Modal: Crafting --}}
 <div x-data="craftingModal()" 
      @open-crafting.window="openModal($event.detail)" 
-     x-show="open" 
-     x-cloak 
-     class="fixed inset-0 z-50 flex items-center justify-center p-4">
+     x-show="open"
+     x-effect="document.body.classList.toggle('modal-open', open)"
+     x-cloak
+     @keydown.escape.window="open=false"
+     class="modal-overlay"
+     @click.self="open=false">
 
-    <div class="absolute inset-0 bg-black/50" @click="closeModal()"></div>
-
-    <div class="bg-white rounded-2xl w-full max-w-2xl p-6 relative shadow-2xl flex flex-col transition-all" @click.stop>
+    <div class="modal-inner-box bg-white rounded-2xl w-full max-w-2xl p-6 shadow-2xl flex flex-col transition-all" @click.stop>
         
+        {{-- VIEW 1: SELECTION --}}
         <div x-show="currentView === 'selection'" class="flex flex-col">
-            <div class="flex justify-between items-center mb-6">
+            <div class="flex justify-between items-center mb-5">
                 <h2 class="text-lg font-bold" x-text="item"></h2>
-                <button @click="open=false" class="text-xl hover:text-gray-500">✕</button>
-            </div>
-            
-            <div class="grid grid-cols-[200px_1fr] gap-6">
-                <div class="bg-gray-50 rounded-xl p-4 flex flex-col items-center justify-center border h-[200px]">
-                    <div class="text-7xl" x-text="icon"></div>
-                    <div class="font-bold mt-2 text-sm" x-text="item"></div>
-                </div>
-                <div class="grid grid-cols-2 gap-3 h-[200px]">
-                    <template x-for="(m, idx) in materials" :key="idx">
-                        <div class="border p-3 rounded-xl relative flex flex-col items-center justify-center shadow-inner bg-white">
-                            <div class="text-3xl" x-text="m.icon"></div>
-                            <span class="text-[10px] font-bold mt-1 text-center" x-text="m.name"></span>
-                            <button x-show="m.swappable" @click="switchMaterial(idx)" 
-                                    class="absolute top-1.5 right-1.5 p-0.5 bg-gray-100 rounded text-[9px] hover:bg-gray-200 transition">⇅</button>
-                        </div>
-                    </template>
-                </div>
+                <button @click="closeModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-red-100 text-gray-400 transition text-sm font-bold">✕</button>
             </div>
 
-            <div class="mt-6 flex justify-end">
-                <button @click="currentView = 'process'" 
-                        class="px-6 py-2.5 bg-gray-900 text-white rounded-xl font-bold hover:bg-gray-700 transition text-sm">Next</button>
-            </div>
-        </div>
-
-        <div x-show="currentView === 'process'" class="flex flex-col">
-            <div class="flex justify-center gap-2 mb-6">
-                <template x-for="i in 3">
-                    <button @click="currentStep = i" 
-                            class="w-9 h-9 rounded-lg border font-bold text-sm transition-colors" 
-                            :class="currentStep === i ? 'bg-gray-800 text-white' : 'bg-gray-100 hover:bg-gray-200'" 
-                            x-text="i"></button>
-                </template>
-            </div>
-
-            <div class="h-72 flex items-center justify-center mb-6 gap-2">
-                <div class="w-14 flex justify-center">
-                    <button @click="currentStep--" x-show="currentStep > 1" class="text-3xl p-3 hover:bg-gray-100 rounded-full transition">◀</button>
-                </div>
-                
-                <div class="bg-gray-200 w-full max-w-[450px] h-full rounded-2xl flex items-center justify-center shadow-inner">
-                    <div class="text-[110px]" x-text="icon"></div>
-                </div>
-
-                <div class="w-14 flex justify-center">
-                    <button @click="currentStep++" x-show="currentStep < 3" class="text-3xl p-3 hover:bg-gray-100 rounded-full transition">▶</button>
-                </div>
-            </div>
-
-            <div class="text-center mb-5">
-                <h3 class="font-bold text-md" x-text="'Step ' + currentStep"></h3>
-                <p class="text-gray-500 text-xs px-10">Lorem ipsum deskripsi pengerjaan step <span x-text="currentStep"></span>.</p>
-            </div>
-
-            <div class="flex gap-3 mb-5 justify-center">
-                <template x-for="m in materials">
-                    <div class="flex flex-col items-center bg-gray-50 p-1.5 rounded-lg border">
-                        <div class="text-lg" x-text="m.icon"></div>
-                        <span class="text-[8px] font-bold" x-text="m.name"></span>
+            <div class="flex gap-5">
+                <div class="flex flex-col gap-3 flex-shrink-0" style="width:160px;">
+                    <div class="bg-gray-50 rounded-xl border flex flex-col items-center justify-center gap-2 py-6">
+                        <div class="text-6xl" x-text="icon"></div>
+                        <div class="font-bold text-xs text-center text-gray-600 px-2" x-text="item"></div>
                     </div>
-                </template>
-            </div>
+                    <button @click="currentView = 'process'" class="w-full py-2.5 bg-gray-900 text-white rounded-xl font-bold hover:bg-gray-700 transition text-sm">Next →</button>
+                </div>
 
-            <div class="flex justify-between items-center mt-auto pt-4 border-t">
-                <button @click="currentView = 'selection'" 
-                        class="px-5 py-2 border rounded-xl font-bold hover:bg-gray-50 transition text-sm">Prev</button>
-                
-                <button @click="open=false" 
-                        :disabled="currentStep !== 3"
-                        :class="currentStep === 3 ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-gray-300 text-gray-500 cursor-not-allowed'"
-                        class="px-7 py-2 rounded-xl font-bold transition text-sm">Done</button>
+                <div class="flex-1 overflow-y-auto" style="max-height:320px;">
+                    <p class="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">Bahan (Tap ⇅ untuk Ganti)</p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <template x-for="(m, idx) in materials" :key="idx">
+                            <div class="border p-3 rounded-xl relative flex flex-col items-center justify-center bg-white shadow-sm min-h-[90px]">
+                                <div class="text-3xl mb-1" x-text="m.icon"></div>
+                                <span class="text-[10px] font-bold text-center leading-tight text-gray-700" x-text="m.name"></span>
+                                <span class="text-[9px] font-semibold uppercase tracking-wide text-gray-400 mt-0.5" x-text="m.role"></span>
+                                <button x-show="m.swappable" @click="switchMaterial(idx)" class="absolute top-1.5 right-1.5 w-5 h-5 flex items-center justify-center bg-teal-500 text-white rounded-full text-[9px] font-bold transition">⇅</button>
+                            </div>
+                        </template>
+                    </div>
+                </div>
             </div>
         </div>
+
+        {{-- VIEW 2: PROCESS --}}
+<div x-show="currentView === 'process'" class="flex flex-col">
+    <div class="flex justify-center gap-2 mb-6">
+        <template x-for="i in 7">
+            <button @click="currentStep = i" class="w-9 h-9 rounded-lg border font-bold text-sm transition-colors" :class="currentStep === i ? 'bg-gray-800 text-white' : 'bg-gray-100 hover:bg-gray-200'" x-text="i"></button>
+        </template>
+    </div>
+
+    {{-- AREA GAMBAR/IKON DIBUAT LEBIH BESAR (h-64) --}}
+    <div class="h-64 flex items-center justify-center mb-6">
+        <div class="bg-gray-100 w-full max-w-[400px] h-full rounded-2xl flex items-center justify-center shadow-inner text-[120px]" x-text="icon"></div>
+    </div>
+
+    <div class="text-center mb-6">
+        <h3 class="font-bold text-md" x-text="'Step ' + currentStep"></h3>
+        <p class="text-gray-600 text-sm" x-text="getInstruction()"></p>
+    </div>
+
+    {{-- DAFTAR ITEM --}}
+    <div class="flex gap-2 mb-6 justify-center overflow-x-auto pb-2">
+        <template x-for="m in materials">
+            <div class="flex flex-col items-center bg-white border p-2 rounded-lg shadow-sm min-w-[70px]">
+                <div class="text-2xl" x-text="m.icon"></div>
+                <span class="text-[9px] font-bold text-gray-600 mt-1" x-text="m.name"></span>
+            </div>
+        </template>
+    </div>
+
+    <div class="flex justify-between items-center mt-auto pt-4 border-t">
+        <button @click="currentView = 'selection'" class="px-5 py-2 border rounded-xl font-bold hover:bg-gray-50 transition text-sm">Prev</button>
+        <button @click="open=false" class="px-7 py-2 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 transition text-sm">Done</button>
     </div>
 </div>
 
-@endpush
+    </div>
+</div>
 
 @push('scripts')
 <script>
@@ -709,70 +799,290 @@
     }
 
     function infoModal() {
-        const stepsData = {
-            'Membuka Kaleng': {
-                tool: '🥄',
-                steps: [
-                    { d: 'Langkah 1: Bersihkan permukaan kaleng dari kotoran.', i: '🥫' },
-                    { d: 'Langkah 2: Tekan pinggiran tutup dengan benda keras.', i: '🥫' },
-                    { d: 'Langkah 3: Congkel perlahan sampai kaleng terbuka.', i: '🥫' }
-                ]
-            },
-            'Simpul Kilat': {
-                tool: '🪢',
-                steps: [
-                    { d: 'Langkah 1: Siapkan tali dan buat loop dasar.', i: '🧵' },
-                    { d: 'Langkah 2: Masukkan ujung tali ke dalam loop.', i: '🧵' },
-                    { d: 'Langkah 3: Tarik kedua sisi hingga simpul mengunci.', i: '🧵' }
-                ]
-            }
-        };
 
-        return {
-            open: false, item: '', description: '', icon: '', toolIcon: '', currentStep: 1, steps: [],
-            
-            openModal(data) { 
-                this.open = true; 
-                this.item = data.item; 
-                const itemData = stepsData[data.item] || { tool: '🛠️', steps: [{d:'...',i:'📦'},{d:'...',i:'📦'},{d:'...',i:'📦'}] };
-                this.toolIcon = itemData.tool;
-                this.steps = itemData.steps;
-                this.currentStep = 1; 
+    const stepsData = {
+
+        'Kain Penyangga Tangan': {
+
+            toolIcons: [
+
+                { icon: '🥄', name: 'Kain Segitiga' },
+                { icon: '🪨', name: 'Syal' },
+                { icon: '🔪', name: 'Handuk Kecil' },
+                {icon: '🔪', name: 'Kain Panjang' }
+
+            ],
+
+            steps: [
+
+                {
+                    type: 'icon',
+                    icon: '🥫',
+                    description: 'Lipat kain membentuk segitiga.'
+                },
+
+                {
+                    type: 'icon',
+                    icon: '🪨',
+                    description: 'Tekuk lengan sekitar 90 derajat dan posisikan telapak tangan sedikit lebih tinggi dari siku.'
+                },
+
+                {
+                    type: 'icon',
+                    icon: '🥫',
+                    description: 'Masukkan lengan ke kain hingga siku tertutup dan tangan berada di tengah.'
+                },
+
+                {
+                    type: 'icon',
+                    icon: '🍲',
+                    description: 'Ikat dua ujung kain ke leher.'
+                }
+
+            ]
+        },
+
+        'Simpul Kilat': {
+
+            toolIcons: [
+
+                { icon: '🪢', name: 'Tali' },
+                { icon: '🧵', name: 'Benang Tebal' }
+
+            ],
+
+            steps: [
+
+                {
+                    type: 'icon',
+                    icon: '🧵',
+                    description: 'Siapkan tali dengan panjang secukupnya.'
+                },
+
+                {
+                    type: 'icon',
+                    icon: '🪢',
+                    description: 'Buat lingkaran kecil pada ujung tali.'
+                },
+
+                {
+                    type: 'icon',
+                    icon: '✋',
+                    description: 'Tarik kedua sisi tali hingga simpul mengencang.'
+                }
+
+            ]
+        },
+
+        'Arah Mata Angin': {
+
+            toolIcons: [
+
+                { icon: '🧭', name: 'Kompas' },
+                { icon: '☀️', name: 'Matahari' }
+
+            ],
+
+            steps: [
+
+                {
+                    type: 'icon',
+                    icon: '☀️',
+                    description: 'Perhatikan arah matahari terbit dan tenggelam.'
+                },
+
+                {
+                    type: 'icon',
+                    icon: '🪵',
+                    description: 'Gunakan bayangan tongkat untuk menentukan arah.'
+                },
+
+                {
+                    type: 'icon',
+                    icon: '🧭',
+                    description: 'Tentukan utara, selatan, timur, dan barat.'
+                }
+
+            ]
+        }
+
+    };
+
+    return {
+
+        open: false,
+
+        item: '',
+
+        currentStep: 1,
+
+        steps: [],
+
+        currentContent: {},
+
+        toolIcon: '🛠️',
+
+        toolName: '',
+
+        toolIcons: [],
+
+        currentToolIconIndex: 0,
+
+        openModal(data) {
+
+            this.open = true;
+
+            this.item = data.item;
+
+            const itemData = stepsData[data.item] || {
+
+                toolIcons: [
+                    { icon: '🛠️', name: 'Tool' }
+                ],
+
+                steps: [
+                    {
+                        type: 'icon',
+                        icon: '📦',
+                        description: 'Belum ada data.'
+                    }
+                ]
+            };
+
+            this.steps = itemData.steps;
+
+            this.toolIcons = itemData.toolIcons;
+
+            this.currentToolIconIndex = 0;
+
+            this.toolIcon = this.toolIcons[0].icon;
+
+            this.toolName = this.toolIcons[0].name;
+
+            this.currentStep = 1;
+
+            this.updateContent();
+
+            document.body.classList.add('modal-open');
+        },
+
+        updateContent() {
+
+            this.currentContent = this.steps[this.currentStep - 1];
+        },
+
+        nextStep() {
+
+            if (this.currentStep < this.steps.length) {
+
+                this.currentStep++;
+
                 this.updateContent();
-                document.body.classList.add('modal-open'); 
-            },
-            updateContent() {
-                const current = this.steps[this.currentStep - 1];
-                this.description = current.d;
-                this.icon = current.i;
-            },
-            nextStep() { if (this.currentStep < 3) { this.currentStep++; this.updateContent(); } },
-            prevStep() { if (this.currentStep > 1) { this.currentStep--; this.updateContent(); } },
-            closeModal() { 
-                this.open = false; 
-                document.body.classList.remove('modal-open'); 
             }
+        },
+
+        prevStep() {
+
+            if (this.currentStep > 1) {
+
+                this.currentStep--;
+
+                this.updateContent();
+            }
+        },
+
+        goToStep(step) {
+
+            this.currentStep = step;
+
+            this.updateContent();
+        },
+
+        switchToolIcon() {
+
+            if(this.toolIcons.length <= 1) return;
+
+            this.currentToolIconIndex++;
+
+            if(this.currentToolIconIndex >= this.toolIcons.length) {
+
+                this.currentToolIconIndex = 0;
+            }
+
+            this.toolIcon = this.toolIcons[this.currentToolIconIndex].icon;
+
+            this.toolName = this.toolIcons[this.currentToolIconIndex].name;
+        },
+
+        closeModal() {
+
+            this.open = false;
+
+            document.body.classList.remove('modal-open');
         }
     }
+}
 
     function craftingModal() {
     return {
-        open: false,
-        item: '', icon: '',
-        currentView: 'selection',
-        currentStep: 1,
-        materials: [],
-
+        open: false, item: '', icon: '', currentView: 'selection', currentStep: 1, materials: [],
+        
         craftingData: {
+
             'Filter Air': {
                 icon: '🧴',
                 materials: [
-                    { name: 'Botol Plastik', icon: '🧴', swappable: true, options: [{n: 'Botol Plastik', i: '🧴'}, {n: 'Wadah Bambu', i: '🎋'}] },
-                    { name: 'Arang Aktif', icon: '🔥', swappable: true, options: [{n: 'Arang Aktif', i: '🔥'}, {n: 'Batu Bara', i: '🪨'}] },
-                    { name: 'Kerikil / Batu', icon: '🪨', swappable: false },
-                    { name: 'Pasir Bersih', icon: '🌾', swappable: false }
-                ]
-            }
+                    { name: 'Botol Plastik', role: 'Wadah Filter', icon: '🧴', swappable: true, options: [{n: 'Botol Plastik', i: '🧴'}, {n: 'Botol Kaca', i: '🫙'}, {n: 'Wadah Bambu', i: '🎋'}, {n: 'Kaleng Tinggi', i: '🥫'}] },
+                    { name: 'Kain Bersih', role: 'Kain Penyaring', icon: '🟩', swappable: true, options: [{n: 'Kain Bersih', i: '🟩'}, {n: 'Tisu Tebal', i: '🧻'}, {n: 'Kapas', i: '🌸'}, {n: 'Kaos Bekas', i: '👕'}] },
+                    { name: 'Arang Kayu', role: 'Penyaring', icon: '🔥', swappable: true, options: [{n: 'Arang Kayu', i: '🔥'}, {n: 'Arang Tempurung Kelapa', i: '🥥'}, {n: 'Arang Bambu', i: '🎋'}, {n: 'Arang Kayu Keras', i: '🪵'}] },
+                    { name: 'Pasir Bersih', role: 'Penyaring Halus', icon: '🌾', swappable: true, options: [{n: 'Pasir Bersih', i: '🌾'}, {n: 'Pasir Sungai', i: '🏞️'}, {n: 'Pasir Bangunan', i: '🏗️'}, {n: 'Pasir Pantai', i: '🏖️'}] },
+                    { name: 'Batu Kerikil', role: 'Penyaring Kasar', icon: '🪨', swappable: true, options: [{n: 'Batu Kerikil', i: '🪨'}, {n: 'Batu Kali', i: '🪨'}, {n: 'Pecahan Bata', i: '🧱'}, {n: 'Kerikil Sungai', i: '🪨'}] },
+                    { name: 'Gelas', role: 'Wadah Penampung', icon: '🫗', swappable: true, options: [{n: 'Gelas', i: '🫗'}, {n: 'Botol', i: '🫙'}, {n: 'Baskom', i: '🎋'}, {n: 'Kaleng Bersih', i: '🥫'}] }
+                ],
+                instructions: {
+                    1: 'Siapkan dan bersihkan semua bahan yang telah dipilih.',
+                    2: 'Potong bagian bawah dan balik botol.',
+                    3: 'Taruh kain di mulut botol agar bahan tidak keluar.',
+                    4: 'Masukkan bahan mulai dari kerikil, pasir, arang, dan kain.',
+                    5: 'Tuang air kotor perlahan ke dalam filter.',
+                    6: 'Buang 1-2 hasil penyaringan awal.',
+                    7: 'Rebus kembali air jika untuk diminum.'
+                }
+            },
+
+            'Pisau': {
+                icon: '🧴',
+                materials: [
+                    { name: 'Batu', role: 'Bahan Utama', icon: '🧴', swappable: true, options: [{n: 'Batu', i: '🧴'}, {n: 'Logam Pecah', i: '🫙'}, {n: 'Plastik Keras', i: '🎋'}] },
+                    { name: 'Tali', role: 'Pengikat', icon: '🟩', swappable: true, options: [{n: 'Tali', i: '🟩'}, {n: 'Lakban', i: '🧻'}, {n: 'Serat Tanaman', i: '🌸'}, {n: 'Kaos Bekas', i: '👕'}] },
+                    { name: 'Kayu', role: 'Pegangan', icon: '🔥', swappable: true, options: [{n: 'Kayu', i: '🔥'}, {n: 'Ranting Tebal', i: '🥥'}, {n: 'Bambu', i: '🎋'}, {n: 'Pipa Kecil', i: '🪵'}] }
+                ],
+                instructions: {
+                    1: 'Cari bahan yang paling mudah untuk dibentuk/ditajamkan.',
+                    2: 'Tajamkan ujung atau pinggiran bahan dengan menggesek atau memukulkannya ke batu maupun benda lain.',
+                    3: 'Siapkan pengangan sepanjang tangan, lalu posisikan bahan menyesuaikan dengan pegangan.',
+                    4: 'Ikat bahan ke pegangan dan pastikan kuat.',
+                }
+            },
+
+            'Bidai Darurat': {
+                icon: '🩹',
+                materials: [
+                    { name: 'Kayu', role: 'Penyangga', icon: '👕', swappable: true, options: [{n: 'Kayu', i: '👕'}, {n: 'Bambu', i: '🛌'}, {n: 'Tongkat', i: '🧕'}, {n: 'Karton Tebal', i: '🧕'}] },
+                    { name: 'Perban', role: 'Pengikat', icon: '👕', swappable: true, options: [{n: 'Perban', i: '👕'}, {n: 'Tali', i: '🧵'}, {n: 'Kain', i: '🟩'}, {n: 'Syal', i: '�'}] },
+                    { name: 'Kain Lembut', role: 'Bantalan Tambahan', icon: '👕', swappable: true, options: [{n: 'Kain Lembut', i: '👕'}, {n: 'kapas', i: '🧵'}, {n: 'Handuk', i: '🟩'}, {n: 'Baju Lipat', i: ''}] }
+                ],
+                instructions: {
+                    1: 'Periksa cedera, apakah terluka atau patah. Jika posisi terlihat tidak normal jangan paksa diluruskan.',
+                    2: 'Posisikan bidai, harus hingga melewati area cedera dan menopang atas bawah sendi cedera.',
+                    3: 'Tambahkan bantalan di antara kulit dan bidai.',
+                    4: 'Tempelkan bidai ke bagian tubuh yang cedera.',
+                    5: 'Ikat perlahan agar stabil dan jangan terlalu kencang.',
+                    6: 'Periksa sirkulasi agar tidak terganggu.',
+                }
+            },
+
+            // Anda bisa menambah item Caregiver lain dengan format di atas
         },
 
         openModal(data) {
@@ -784,14 +1094,19 @@
             this.open = true;
         },
 
+        getInstruction() {
+            return this.craftingData[this.item]?.instructions[this.currentStep] || 'Lakukan langkah ini.';
+        },
+
         switchMaterial(idx) {
             let m = this.materials[idx];
-            if (!m.swappable) return;
             let curIdx = m.options.findIndex(o => o.n === m.name);
             let next = m.options[(curIdx + 1) % m.options.length];
-            m.name = next.n;
+            m.name = next.n; 
             m.icon = next.i;
-        }
+        },
+
+        closeModal() { this.open = false; document.body.classList.remove('modal-open'); }
     }
 }
     
