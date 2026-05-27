@@ -93,12 +93,12 @@
         position: fixed !important;
         inset: 0 !important;
         background-color: rgba(0, 0, 0, 0.6) !important;
-        backdrop-filter: blur(12px) !important;
+        backdrop-filter: blur(10px) !important;
         z-index: 50 !important;
         padding: 20px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
+        display: flex;            /* !important dihapus */
+        align-items: center;      /* !important dihapus */
+        justify-content: center;  /* !important dihapus */
     }
 
     .modal-box {
@@ -114,6 +114,76 @@
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         transform: none !important;
         margin: 0 auto !important;
+        touch-action: pan-y;
+    }
+
+    .question-container{
+        display:flex;
+        flex-direction:column;
+        position:relative;
+        overflow:hidden;
+    }
+
+    .question-slide{
+        animation: slideInFromRight 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .question-slide.exit-right{
+        animation: slideOutToLeft 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .question-slide.exit-left{
+        animation: slideOutToRight 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes slideInFromRight {
+        from {
+            opacity: 0;
+            transform: translateX(100px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes slideOutToLeft {
+        from {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        to {
+            opacity: 0;
+            transform: translateX(-100px);
+        }
+    }
+
+    @keyframes slideOutToRight {
+        from {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        to {
+            opacity: 0;
+            transform: translateX(100px);
+        }
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+        .modal-box {
+            max-width: 100% !important;
+            border-radius: 20px;
+            margin: 0 10px !important;
+        }
+
+        .modal-box > .grid {
+            grid-template-columns: 1fr !important;
+        }
+
+        .modal-box .p-8 {
+            padding: 16px !important;
+        }
     }
 
     .modal-backdrop {
@@ -133,47 +203,75 @@
         border: 1px solid rgba(191,49,49,.12);
         transition:.2s ease;
         background:white;
+        cursor: default;
     }
 
     .question-option:hover{
-        border-color: var(--c-red);
-        transform:translateY(-4px);
+        border-color: rgba(191,49,49,.12);
+        transform: none;
+    }
+
+    .question-option:active{
+        transform:scale(0.98);
     }
 
     .step-btn{
-        width:38px;
-        height:38px;
-        border-radius:10px;
+        width:44px;
+        height:44px;
+        border-radius:12px;
         background: var(--c-beige);
         display:flex;
         align-items:center;
         justify-content:center;
-        font-size:.8rem;
+        font-size:.9rem;
         font-weight:700;
         transition:.2s ease;
         cursor:pointer;
+        border:2px solid transparent;
     }
 
     .step-btn.active{
         background: var(--c-red);
         color:white;
+        box-shadow: 0 4px 12px rgba(191,49,49,.3);
+    }
+
+    .step-btn:hover:not(.active){
+        background: rgba(191,49,49,.08);
     }
 
     .nav-arrow{
-        width:44px;
-        height:44px;
-        border-radius:14px;
+        width:56px;
+        height:56px;
+        border-radius:16px;
         background: var(--c-beige);
         display:flex;
         align-items:center;
         justify-content:center;
         cursor:pointer;
-        transition:.2s ease;
+        transition:.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        border:none;
+        box-shadow: 0 4px 12px rgba(191,49,49,.12);
+        padding:0;
     }
 
     .nav-arrow:hover{
         background: var(--c-red);
-        color:white;
+        transform: scale(1.08) translateY(-2px);
+        box-shadow: 0 8px 24px rgba(191,49,49,.25);
+    }
+
+    .nav-arrow:active{
+        transform: scale(0.95);
+    }
+
+    .nav-arrow svg{
+        width:24px;
+        height:24px;
+        stroke-width:3;
+        stroke-linecap:round;
+        stroke-linejoin:round;
+        transition: inherit;
     }
 
     .done-btn{
@@ -209,56 +307,63 @@
 
             <div class="text-center mb-12 mt-14">
 
-                <h2 class="font-head text-5xl font-black" style="color: var(--c-dark-red)">
+                <h2 class="font-head text-4xl md:text-5xl font-black" style="color: var(--c-dark-red)">
                     Tutorial
                 </h2>
+                
+                {{-- Gw tambahin sub-judul tipis biar nggak terlalu kosong di bawah judul --}}
+                <p class="text-gray-500 mt-3 text-sm md:text-base">Pilih simulasi bencana untuk memulai panduan</p>
 
             </div>
 
-            <div class="grid md:grid-cols-2 gap-8">
+            <div class="grid md:grid-cols-2 gap-6 md:gap-8">
 
                 <template x-for="item in disasters">
 
+                    {{-- Tambahin class 'group' di pembungkus utama biar bisa trigger animasi barengan --}}
                     <button
                         @click="startDisaster(item)"
-                        class="tutorial-card rust-card rounded-[30px] p-6 text-left"
+                        class="tutorial-card rust-card group rounded-[28px] md:rounded-[32px] p-5 md:p-6 text-left flex gap-5 md:gap-6 items-center transition-all"
                     >
 
-                        <div class="flex gap-5">
+                        {{-- Icon Box dibikin lebih proporsional --}}
+                        <div class="visual-box w-24 h-24 md:w-28 md:h-28 rounded-[20px] md:rounded-[24px] flex items-center justify-center text-4xl md:text-5xl flex-shrink-0 shadow-inner">
+                            <span x-text="item.icon"></span>
+                        </div>
 
-                            <div class="visual-box w-28 h-28 flex items-center justify-center text-5xl flex-shrink-0">
-                                <span x-text="item.icon"></span>
+                        <div class="flex-1 w-full">
+
+                            <div class="flex items-center justify-between gap-3 mb-2 md:mb-3">
+
+                                {{-- Judul dikasih transisi: pas di hover berubah merah --}}
+                                <h3
+                                    class="font-head text-xl md:text-2xl font-black text-gray-800 group-hover:text-[#BF3131] transition-colors"
+                                    x-text="item.name"
+                                ></h3>
+
+                                {{-- Panah Baru: Diganti SVG keren. Kalau card di hover, panahnya maju ke kanan (group-hover:translate-x-2) --}}
+                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 group-hover:translate-x-2 group-hover:shadow-md" style="background: var(--c-light); border: 1px solid var(--c-beige-dk);">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-red)" class="w-5 h-5 md:w-6 md:h-6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        <polyline points="12 5 19 12 12 19"></polyline>
+                                    </svg>
+                                </div>
+
                             </div>
 
-                            <div class="flex-1">
+                            <p
+                                class="text-sm md:text-base text-gray-500 leading-relaxed mb-4 md:mb-5 line-clamp-2"
+                                x-text="item.desc"
+                            ></p>
 
-                                <div class="flex items-center justify-between gap-3 mb-3">
+                            <div class="flex gap-2 flex-wrap">
 
-                                    <h3
-                                        class="font-head text-xl font-black"
-                                        x-text="item.name"
-                                    ></h3>
-
-                                    <div class="w-8 h-8 rounded-full text-white flex items-center justify-center" style="background: var(--c-red)">
-                                        →
-                                    </div>
-
-                                </div>
-
-                                <p
-                                    class="text-sm text-gray-500 leading-relaxed mb-5"
-                                    x-text="item.desc"
-                                ></p>
-
-                                <div class="flex gap-2 flex-wrap">
-
-                                    <template x-for="tag in item.tags">
-                                        <span class="px-3 py-1 rounded-full text-xs font-bold" style="background: rgba(191,49,49,.12); color: var(--c-red)">
-                                            <span x-text="tag"></span>
-                                        </span>
-                                    </template>
-
-                                </div>
+                                <template x-for="tag in item.tags">
+                                    {{-- UI Tag diperhalus dengan border tipis --}}
+                                    <span class="px-3 py-1.5 rounded-full text-[11px] md:text-xs font-bold tracking-wide" style="background: rgba(191,49,49,.08); color: var(--c-red-light); border: 1px solid rgba(191,49,49,.1);">
+                                        <span x-text="tag"></span>
+                                    </span>
+                                </template>
 
                             </div>
 
@@ -277,16 +382,16 @@
     {{-- =========================================
         POPUP QUESTION FLOW
     ========================================== --}}
-    <template x-teleport="body">
+    <template x-teleport="body" @teleport="$nextTick(() => {})">
         <div
             x-show="popup"
+            style="display: none"
             x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="opacity-0"
             x-transition:enter-end="opacity-100"
             x-transition:leave="transition ease-in duration-150"
             x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
-            x-cloak
             class="modal-overlay"
         >
             <div class="modal-backdrop" @click="popup = false"></div>
@@ -296,84 +401,67 @@
                 class="modal-box"
             >
 
-                <div class="grid md:grid-cols-2 h-full">
+                {{-- Pembungkus Utama Kiri & Kanan --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 h-screen w-full overflow-hidden">
 
-                    {{-- LEFT --}}
-                    <div class="p-8 flex flex-col justify-between">
+{{-- LEFT --}}
+                    {{-- pt-[10vh] mengosongkan 10% atas, pb-10 mengunci tombol bawah agar tidak berubah --}}
+                    <div class="px-6 pb-10 pt-[10vh] md:p-8 flex flex-col h-full justify-between md:justify-center gap-6 md:gap-8 question-container relative bg-white z-10" @touchstart="handleTouchStart" @touchend="handleTouchEnd" @touchmove="handleTouchMove">
 
-                        <div class="flex items-center justify-between mb-10">
-
-                            <button
-                                @click="prevQuestion"
-                                class="nav-arrow"
-                            >
-                                ←
+                        {{-- Navigasi Atas --}}
+                        <div class="flex items-center justify-between shrink-0">
+                            <button @click="prevQuestion" class="nav-arrow" title="Pertanyaan Sebelumnya">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-6 h-6">
+                                    <polyline points="15 18 9 12 15 6"></polyline>
+                                </svg>
                             </button>
 
                             <div class="text-center">
-
-                                <p class="text-xs uppercase tracking-[.25em] text-gray-400 mb-2">
-                                    Pertanyaan
-                                </p>
-
-                                <h2
-                                    class="font-head text-3xl font-black"
-                                    x-text="currentQuestion.title"
-                                ></h2>
-
+                                <p class="text-xs uppercase tracking-[.25em] text-gray-400 mb-1 md:mb-2">Pertanyaan</p>
+                                <h2 class="font-head text-2xl md:text-3xl font-black" x-text="currentQuestion.title"></h2>
                             </div>
 
-                            <button
-                                @click="nextQuestion"
-                                class="nav-arrow"
-                            >
-                                →
+                            <button @click="nextQuestion" class="nav-arrow" title="Pertanyaan Berikutnya">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-6 h-6">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
                             </button>
-
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4">
-
+                        {{-- Pilihan Jawaban (Kode tetap sama) --}}
+                        <div class="grid grid-cols-2 gap-4 md:gap-6 shrink-0">
                             <template x-for="choice in currentQuestion.options">
-
                                 <button
                                     @click="selectedChoice = choice"
-                                    class="question-option rounded-[22px] p-5 text-center"
+                                    class="question-option w-full rounded-[18px] md:rounded-[22px] p-4 md:p-6 flex flex-col items-center justify-center text-center transition-all"
                                 >
-
-                                    <div class="text-4xl mb-4" x-text="choice.icon"></div>
-
-                                    <h3 class="font-bold text-sm mb-2" x-text="choice.label"></h3>
-
-                                    <p class="text-xs text-gray-500" x-text="choice.desc"></p>
-
+                                    <div class="text-4xl md:text-5xl mb-3" x-text="choice.icon"></div>
+                                    <h3 class="font-bold text-sm md:text-base mb-1" x-text="choice.label"></h3>
+                                    <p class="text-xs md:text-sm text-gray-500 leading-relaxed line-clamp-2" x-text="choice.desc"></p>
                                 </button>
-
                             </template>
-
                         </div>
 
-                        <div class="mt-10 flex items-center justify-between">
-
-                            <div class="flex gap-2">
-
+                        {{-- Area Bawah: Pagination & Tombol (Kode tetap sama) --}}
+                        <div class="flex items-stretch justify-center md:justify-between gap-6 md:gap-4 shrink-0 w-full">
+                            
+                            {{-- Container Angka --}}
+                            <div class="grid grid-cols-3 md:grid-cols-5 gap-2 md:gap-3">
                                 <template x-for="(step, index) in questions">
-
                                     <button
                                         @click="goQuestion(index)"
-                                        class="step-btn"
+                                        class="step-btn w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-xl md:rounded-2xl text-lg md:text-xl font-bold transition-colors"
                                         :class="{ 'active': currentStep === index }"
                                         x-text="index + 1"
                                     ></button>
-
                                 </template>
-
                             </div>
 
+                            {{-- Tombol Next / Done --}}
                             <button
                                 x-show="currentStep < questions.length - 1"
                                 @click="nextQuestion"
-                                class="done-btn px-5 py-3 rounded-full text-sm font-bold"
+                                class="done-btn w-28 md:w-24 rounded-xl md:rounded-xl text-base font-bold shrink-0 transition-colors flex items-center justify-center"
                             >
                                 Next
                             </button>
@@ -381,119 +469,125 @@
                             <button
                                 x-show="currentStep === questions.length - 1"
                                 @click="finishFlow"
-                                class="done-btn px-5 py-3 rounded-full text-sm font-bold"
+                                class="done-btn w-28 md:w-24 rounded-xl md:rounded-xl text-base font-bold shrink-0 transition-colors flex items-center justify-center"
                             >
                                 Done
                             </button>
+                        </div>
 
+                        {{-- Notes Petunjuk Geser --}}
+                        <div class="text-center md:hidden animate-pulse shrink-0">
+                            <p class="text-[11px] font-medium text-gray-400">
+                                💡 Tip: Anda bisa menggeser (swipe) layar untuk pindah
+                            </p>
                         </div>
 
                     </div>
+                    {{-- AKHIR DARI LEFT --}}
 
                     {{-- RIGHT --}}
-                    <div class="p-8 flex items-center" style="background: var(--c-beige)">
-
+                    {{-- Kasih w-full h-full biar nutupin layar kanan dengan sempurna --}}
+                    <div class="p-8 hidden md:flex items-center w-full h-full" style="background: var(--c-beige)">
                         <div class="w-full">
-
-                            <div class="visual-box h-[350px] flex items-center justify-center text-[8rem]">
+                            <div class="visual-box h-[350px] flex items-center justify-center text-[8rem] question-slide">
                                 <span x-text="currentQuestion.visual"></span>
                             </div>
 
-                            <div class="mt-6 text-center">
-
+                            <div class="mt-8 text-center">
                                 <h3
-                                    class="font-head text-2xl font-black mb-3"
+                                    class="font-head text-2xl font-black mb-4"
                                     x-text="currentQuestion.caption"
                                 ></h3>
-
                                 <p
-                                    class="text-gray-500 leading-relaxed"
+                                    class="text-gray-500 leading-relaxed text-base"
                                     x-text="currentQuestion.description"
                                 ></p>
-
                             </div>
-
                         </div>
-
                     </div>
+                    {{-- AKHIR DARI RIGHT --}}
 
                 </div>
+                {{-- Akhir dari Grid Kiri & Kanan --}}
 
             </div>
-
         </div>
     </template>
 
     {{-- =========================================
-        POPUP ADA LUKA?
+        POPUP PERTANYAAN TERLUKA
     ========================================== --}}
-    <template x-teleport="body">
+    <template x-teleport="body" @teleport="$nextTick(() => {})">
         <div
             x-show="injuryPopup"
+            style="display: none"
             x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="opacity-0"
             x-transition:enter-end="opacity-100"
             x-transition:leave="transition ease-in duration-150"
             x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
-            x-cloak
-            class="modal-overlay"
+            class="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6"
         >
-            <div class="modal-backdrop" @click="injuryPopup = false"></div>
+            {{-- Background Gelap --}}
+            <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="injuryPopup = false"></div>
 
+            {{-- Kotak Modal Utama --}}
+            {{-- relative dan z-10 agar posisinya di atas background gelap --}}
             <div
                 @click.stop
-                class="modal-box"
+                class="relative z-10 bg-white w-full max-w-lg rounded-[24px] md:rounded-[32px] p-8 md:p-10 shadow-2xl flex flex-col items-center justify-center text-center"
             >
-
-                <div class="p-12 text-center">
-
-                    <h2 class="font-head text-5xl font-black mb-4">
-                        Ada Luka?
+                
+                {{-- Judul dan Deskripsi --}}
+                <div class="mb-8 md:mb-10">
+                    <h2 class="font-head text-3xl md:text-4xl font-black mb-3 md:mb-4">
+                        Ada yang terluka?
                     </h2>
-
-                    <p class="text-gray-500 text-lg mb-12">
-                        Pilih kondisi setelah mencapai tempat aman
+                    <p class="text-sm md:text-base text-gray-500 leading-relaxed">
+                        Cek kondisi sekitar. Jika ada yang terluka, kami arahkan ke panduan penanganan (Caregiver).
                     </p>
+                </div>
 
-                    <div class="grid grid-cols-2 gap-5">
+                {{-- Pilihan Tombol (Ya/Tidak) --}}
+                {{-- Grid 2 kolom yang rapi dengan jarak (gap-4) --}}
+                <div class="grid grid-cols-2 gap-4 md:gap-6 w-full">
+                    
+                    {{-- Tombol Tida, Aman --}}
+                    <button 
+                        @click="goSupply()" 
+                        class="injury-btn rounded-[16px] md:rounded-[20px] p-4 md:p-6 flex flex-col items-center justify-center text-center transition-all bg-gray-50 hover:bg-gray-100"
+                    >
+                        <h3 class="font-bold text-sm md:text-base">Tidak</h3>
+                    </button>
 
-                        <button
-                            @click="goSupply"
-                            class="done-btn py-5 rounded-[22px] text-xl font-bold"
-                        >
-                            Tidak
-                        </button>
-
-                        <button
-                            @click="openInjurySelect"
-                            class="done-btn py-5 rounded-[22px] text-xl font-bold"
-                        >
-                            Ya
-                        </button>
-
-                    </div>
+                    {{-- Tombol Ya, Ada --}}
+                    <button 
+                        @click="openInjurySelect()" 
+                        class="injury-btn rounded-[16px] md:rounded-[20px] p-4 md:p-6 flex flex-col items-center justify-center text-center transition-all bg-red-50 hover:bg-red-100"
+                    >
+                        <h3 class="font-bold text-sm md:text-base text-red-700">Ya</h3>
+                    </button>
 
                 </div>
 
             </div>
-
         </div>
     </template>
 
     {{-- =========================================
         POPUP JENIS LUKA
     ========================================== --}}
-    <template x-teleport="body">
+    <template x-teleport="body" @teleport="$nextTick(() => {})">
         <div
             x-show="caregiverPopup"
+            style="display: none"
             x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="opacity-0"
             x-transition:enter-end="opacity-100"
             x-transition:leave="transition ease-in duration-150"
             x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
-            x-cloak
             class="modal-overlay"
         >
             <div class="modal-backdrop" @click="caregiverPopup = false"></div>
@@ -503,30 +597,33 @@
                 class="modal-box"
             >
 
-                <div class="p-10">
+                {{-- Padding diubah agar lebih ramah untuk HP (p-6) dan tetap lega di Desktop (md:p-10) --}}
+                <div class="p-6 md:p-10">
 
-                    <div class="text-center mb-10">
+                    <div class="text-center mb-14 mt-8 md:mb-10">
 
-                        <h2 class="font-head text-4xl font-black mb-3">
+                        <h2 class="font-head text-3xl md:text-4xl font-black mb-2 md:mb-3">
                             Jenis Luka
                         </h2>
 
-                        <p class="text-gray-500">
+                        <p class="text-sm md:text-base text-gray-500">
                             Pilih luka untuk pindah ke caregiver
                         </p>
 
                     </div>
 
-                    <div class="grid grid-cols-4 gap-4">
+                    {{-- INI KUNCINYA: grid-cols-2 (untuk HP/Mobile) dan md:grid-cols-4 (untuk Desktop) --}}
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
 
                         <template x-for="injury in injuries">
 
+                            {{-- flex-col dan justify-center ditambah agar konten rata tengah sempurna walau kotaknya membesar --}}
                             <button
                                 @click="goCaregiver(injury)"
-                                class="injury-btn rounded-[20px] p-5 text-center"
+                                class="injury-btn rounded-[16px] md:rounded-[20px] p-4 md:p-5 mt-4 flex flex-col items-center justify-center text-center w-full"
                             >
 
-                                <div class="text-5xl mb-4" x-text="injury.icon"></div>
+                                <div class="text-4xl md:text-5xl mb-2 md:mb-4" x-text="injury.icon"></div>
 
                                 <h3 class="font-bold text-sm" x-text="injury.name"></h3>
 
@@ -557,6 +654,11 @@ function saatPage(){
 
         currentStep:0,
         selectedChoice:null,
+
+        touchStartX:0,
+        touchEndX:0,
+        touchStartY:0,
+        touchEndY:0,
 
         disasters:[
             {
@@ -736,36 +838,124 @@ function saatPage(){
 
         injuries:[
             {
+                id:'luka_sayat',
                 name:'Luka Sayat',
-                icon:'🩸'
+                icon:'🩸',
+                desc:'Luka terbuka akibat benda tajam',
+                detail:'Penanganan luka sayat memerlukan pembersihan menyeluruh dan balutan steril untuk mencegah infeksi. Lakukan penekanan untuk menghentikan pendarahan.',
+                tags:['Balut','Bersihkan', 'Tekan'],
+                steps: [
+                    'Cuci tangan dengan sabun bersih',
+                    'Tekan luka dengan kain bersih untuk menghentikan darah',
+                    'Bilas dengan air bersih yang mengalir',
+                    'Oleskan antiseptik (betadine jika tersedia)',
+                    'Balut dengan kain steril'
+                ]
             },
             {
+                id:'luka_lecet',
                 name:'Luka Lecet',
-                icon:'🩹'
+                icon:'🩹',
+                desc:'Gesekan pada kulit',
+                detail:'Luka lecet (abrasi) adalah luka superfisial akibat gesekan. Fokus pada pembersihan dan pencegahan infeksi untuk penyembuhan optimal.',
+                tags:['Antiseptik','Bersih'],
+                steps: [
+                    'Bilas area lecet dengan air bersih',
+                    'Singkirkan kotoran atau debu dengan lembut',
+                    'Aplikasikan antiseptik (povidon iodine)',
+                    'Tutup dengan kain kasa jika diperlukan',
+                    'Jangan digosok, biarkan kering alami'
+                ]
             },
             {
+                id:'luka_bakar',
                 name:'Luka Bakar',
-                icon:'🔥'
+                icon:'🔥',
+                desc:'Dinginkan area luka',
+                detail:'Penanganan luka bakar harus segera. Pendinginan dengan air dingin sangat penting untuk mengurangi kedalaman luka dan menghilangkan rasa sakit.',
+                tags:['Air Dingin','Segera'],
+                steps: [
+                    'Segera jauhkan dari sumber panas',
+                    'Dinginkan area luka dengan air dingin 10-15 menit',
+                    'Jangan menggosok atau memberikan es langsung',
+                    'Keluarkan perhiasan/gelang dari area luka',
+                    'Tutup dengan perban steril (jangan pasta gigi)'
+                ]
             },
             {
+                id:'patah_tulang',
                 name:'Patah Tulang',
-                icon:'🦴'
+                icon:'🦴',
+                desc:'Stabilkan area tubuh',
+                detail:'Patah tulang memerlukan imobilisasi segera untuk mencegah kerusakan lebih lanjut. Buat bidai darurat dari bahan di sekitar untuk menstabilkan anggota yang terluka.',
+                tags:['Bidai','Imobilisasi','Medis'],
+                steps: [
+                    'Immobilisasi area yang dicurigai patah',
+                    'Buat bidai dari ranting, papan, atau kain tebal',
+                    'Terikat dengan tali atau kain untuk stabilisasi',
+                    'Kompres dengan air dingin jika ada pembengkakan',
+                    'Segera bawa ke pusat medis'
+                ]
             },
             {
+                id:'cedera_kepala',
                 name:'Cedera Kepala',
-                icon:'🧠'
+                icon:'🧠',
+                desc:'Pantau kesadaran',
+                detail:'Cedera kepala dapat mengancam jiwa. Monitor kesadaran dan cari tanda peringatan seperti mual, pusing, atau perubahan perilaku. Segera minta bantuan medis.',
+                tags:['BAHAYA','Monitor','Medis'],
+                steps: [
+                    'Letakkan korban dalam posisi recovery (miring)',
+                    'Monitor kesadaran dan responsif',
+                    'Cek adanya perdarahan dari telinga/hidung',
+                    'Jangan biarkan tidur jika cedera serius',
+                    'Hubungi medis darurat segera'
+                ]
             },
             {
+                id:'sesak_nafas',
                 name:'Sesak Nafas',
-                icon:'🫁'
+                icon:'🫁',
+                desc:'Pastikan jalan napas',
+                detail:'Sesak napas adalah kondisi gawat darurat. Pastikan jalan napas terbuka dan lakukan CPR jika korban tidak bernapas. Hubungi ambulans segera.',
+                tags:['CPR','DARURAT','Medis'],
+                steps: [
+                    'Buka jalan napas dengan posisi kepala terdorong ke belakang',
+                    'Buka mulut untuk cek sumbatan',
+                    'Lakukan CPR jika tidak bernapas (30 kompresi:2 napas)',
+                    'Letakkan dalam posisi pemulihan saat sadar',
+                    'Hubungi ambulans dan pantau napas'
+                ]
             },
             {
+                id:'pingsan',
                 name:'Pingsan',
-                icon:'😵'
+                icon:'😵',
+                desc:'Cek respon tubuh',
+                detail:'Korban pingsan butuh monitoring ketat. Letakkan dalam posisi pemulihan, cek responsif, dan segera hubungi medis jika tidak sadar lama.',
+                tags:['Recovery','Monitor','Medis'],
+                steps: [
+                    'Letakkan dalam posisi pemulihan (miring)',
+                    'Cek responsif dengan panggil dan sentuh ringan',
+                    'Monitor napas dan denyut nadi',
+                    'Jangan memberi minum selama belum sadar sepenuhnya',
+                    'Hubungi medis jika belum sadar dalam 5 menit'
+                ]
             },
             {
-                name:'Luka Dalam',
-                icon:'⚠️'
+                id:'luka_tusuk',
+                name:'Luka Tusuk',
+                icon:'⚠️',
+                desc:'Jangan cabut benda tertancap',
+                detail:'Luka tusuk sangat berbahaya karena dapat menembus organ dalam. JANGAN PERNAH MENCABUT benda asing. Segera minta bantuan medis profesional.',
+                tags:['DARURAT','Medis'],
+                steps: [
+                    'JANGAN CABUT benda tertancap',
+                    'Stabilkan benda dengan balutan ringan',
+                    'Hubungi ambulans/pusat medis segera',
+                    'Letakkan korban dalam posisi nyaman',
+                    'Monitor kondisi sampai bantuan datang'
+                ]
             }
         ],
 
@@ -826,8 +1016,34 @@ function saatPage(){
 
         goCaregiver(injury){
 
-            window.location.href = "{{ route('sesudah') }}#caregiver"
+            window.location.href = "{{ route('sesudah') }}?injury=" + injury.id
 
+        },
+
+        handleTouchStart(e){
+            this.touchStartX = e.changedTouches[0].screenX
+            this.touchStartY = e.changedTouches[0].screenY
+        },
+
+        handleTouchMove(e){
+            this.touchEndX = e.changedTouches[0].screenX
+            this.touchEndY = e.changedTouches[0].screenY
+        },
+
+        handleTouchEnd(){
+            const diffX = this.touchStartX - this.touchEndX
+            const diffY = Math.abs(this.touchStartY - this.touchEndY)
+            
+            // Pastikan swipe adalah horizontal, bukan vertical scroll
+            if(Math.abs(diffX) > diffY && Math.abs(diffX) > 50){
+                if(diffX > 0){
+                    // Swipe kiri (next question)
+                    this.nextQuestion()
+                } else {
+                    // Swipe kanan (prev question)
+                    this.prevQuestion()
+                }
+            }
         }
 
     }

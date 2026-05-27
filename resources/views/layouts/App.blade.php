@@ -117,52 +117,35 @@
         [x-cloak] { display: none !important; }
 
         /* ══════════════════════════════════════════════════
-            NAVBAR (Style 3: Transparan & Blur Permanen)
+            NAVBAR (Static & Minimalist Style)
         ══════════════════════════════════════════════════ */
-        .main-navbar {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: var(--z-navbar);
-            transition: all 0.5s ease;
-        }
-
-        .nav-bar-inner {
-            position: relative;
-            border-radius: var(--r-pill);
-            transition: all 0.5s ease;
-            background: var(--c-sage-lt) !important;
-            border: 1px solid var(--c-sage) !important;
-            box-shadow: 0 8px 32px rgba(90, 130, 126, 0.1) !important;
-        }
-
-        /* Pseudo-element blur agar tidak merusak stacking context modal */
-        .nav-bar-inner::before {
-            content: '';
-            position: absolute; inset: 0;
-            border-radius: inherit;
-            backdrop-filter: blur(8px) saturate(120%);
-            -webkit-backdrop-filter: blur(8px) saturate(120%);
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .nav-bar-inner > * { position: relative; z-index: 1; }
-
-        /* Nav pills dengan dark text untuk kontras di bg sage-lt */
-        .nav-pill {
-            padding: 10px 20px;
-            border-radius: var(--r-pill);
+        .nav-link {
+            font-family: 'Sora', sans-serif;
             font-size: 14px;
             font-weight: 600;
-            font-family: 'Sora', sans-serif;
-            color: var(--c-teal-dk) !important;
+            color: var(--color-text-primary);
             text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            transition: all var(--t-fast);
+            position: relative;
+            padding-bottom: 6px;
+            transition: color var(--t-fast);
         }
-        .nav-pill:hover { background: rgba(90, 130, 126, 0.15); color: var(--c-teal) !important; }
-        .nav-pill.active-nav { background: var(--c-teal) !important; color: white !important; }
+        
+        .nav-link:hover {
+            color: var(--c-teal-xdk);
+        }
+
+        /* Garis bawah tipis penanda menu yang sedang aktif */
+        .nav-link.active-nav::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 2.5px;
+            background-color: var(--c-teal-xdk);
+            border-radius: 4px;
+        }
 
         .mobile-nav {
             height: 48px; border-radius: var(--r-md);
@@ -170,11 +153,11 @@
             display: flex; align-items: center;
             font-size: 14px; font-weight: 600;
             font-family: 'Sora', sans-serif;
-            color: var(--c-teal);
+            color: var(--color-text-primary);
             text-decoration: none;
             transition: all var(--t-fast);
         }
-        .mobile-nav:hover { background: var(--c-sage-lt); }
+        .mobile-nav:hover { background: var(--color-surface-2); color: var(--c-teal-xdk); }
 
         /* ══════════════════════════════════════════════════
             MODAL SYSTEM (Updated: Kunci Tinggi & Responsive)
@@ -325,71 +308,55 @@
 <body class="min-h-screen relative">
 
 {{-- ══════════════════════════════════════════════════
-     NAVBAR (Style 3 - Transparent Header)
+     NAVBAR (Static Minimalist Header)
 ══════════════════════════════════════════════════ --}}
-<nav class="main-navbar" x-data="{ open: false }">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-5">
+<nav class="absolute top-0 left-0 right-0 w-full z-40 pt-6 md:pt-8" x-data="{ open: false }">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="flex items-center justify-between">
 
-        <div class="nav-bar-inner">
-            <div class="h-16 px-4 lg:px-6 flex items-center justify-between">
-
-                {{-- Logo --}}
-                <a href="{{ route('netral') }}" class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-2xl overflow-hidden"
-                         style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);">
-                        <img src="{{ asset('images/logo-siagaind.png') }}" class="w-full h-full object-cover" alt="SiagaInd">
-                    </div>
-                    <div>
-                        <div class="font-head font-extrabold text-xl leading-none text-white">
-                            SiagaInd
-                        </div>
-                        <div class="text-[10px] tracking-[0.22em] uppercase text-white/70 mt-1">
-                            Disaster Preparedness
-                        </div>
-                    </div>
-                </a>
-
-                {{-- Desktop menu --}}
-                <div class="hidden lg:flex items-center gap-1">
-                    <a href="{{ route('netral') }}"   class="nav-pill {{ request()->routeIs('netral')   ? 'active-nav' : '' }}">Netral</a>
-                    <a href="{{ route('sebelum') }}"  class="nav-pill {{ request()->routeIs('sebelum')  ? 'active-nav' : '' }}">Sebelum</a>
-                    <a href="{{ route('saat') }}"     class="nav-pill {{ request()->routeIs('saat*')    ? 'active-nav' : '' }}">Saat</a>
-                    <a href="{{ route('sesudah') }}"  class="nav-pill {{ request()->routeIs('sesudah*') ? 'active-nav' : '' }}">Sesudah</a>
+            {{-- Logo (Kiri) --}}
+            <a href="{{ route('netral') }}" class="flex items-center gap-2 md:gap-3">
+                <img src="{{ asset('images/logo-siagaind.png') }}" class="w-8 h-8 md:w-9 md:h-9 object-contain" alt="SiagaInd">
+                <div class="font-head font-extrabold text-lg md:text-xl leading-none text-gray-900 tracking-tight">
+                    SiagaInd
                 </div>
+            </a>
 
-                {{-- Right CTA --}}
-                <div class="hidden lg:flex items-center gap-3">
-                    
-                    <a href="{{ route('netral') }}#darurat" class="btn btn-primary" style="height:44px; font-size:13px; background: var(--c-teal);">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M5.07 19h13.86c1.54 0 2.5-1.67 1.73-3L13.73 4c-.77-1.33-2.69-1.33-3.46 0L3.34 16c-.77 1.33.19 3 1.73 3z"/>
-                        </svg>
-                        Hubungi
-                    </a>
-                </div>
-
-                {{-- Mobile toggle --}}
-                <button @click="open = !open"
-                        class="lg:hidden w-10 h-10 rounded-full flex items-center justify-center"
-                        style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.25); color: white;">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path x-show="!open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                        <path x-show="open"  stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                </button>
+            {{-- Desktop menu (Tengah) --}}
+            <div class="hidden lg:flex items-center gap-8 xl:gap-10">
+                <a href="{{ route('netral') }}"   class="nav-link {{ request()->routeIs('netral')   ? 'active-nav' : '' }}">Netral</a>
+                <a href="{{ route('sebelum') }}"  class="nav-link {{ request()->routeIs('sebelum')  ? 'active-nav' : '' }}">Sebelum</a>
+                <a href="{{ route('saat') }}"     class="nav-link {{ request()->routeIs('saat*')    ? 'active-nav' : '' }}">Saat</a>
+                <a href="{{ route('sesudah') }}"  class="nav-link {{ request()->routeIs('sesudah*') ? 'active-nav' : '' }}">Sesudah</a>
             </div>
-        </div>
 
+            {{-- Right CTA (Kanan) --}}
+            <div class="hidden lg:flex items-center">
+                <a href="{{ route('netral') }}#darurat" class="px-7 py-2.5 rounded-full text-[13px] font-bold text-white transition-transform hover:-translate-y-0.5 shadow-sm" style="background: var(--c-teal-xdk);">
+                    Darurat
+                </a>
+            </div>
+
+            {{-- Mobile toggle (Hamburger) --}}
+            <button @click="open = !open"
+                    class="lg:hidden w-10 h-10 flex items-center justify-end text-gray-800">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path x-show="!open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    <path x-show="open"  stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        
         {{-- Mobile dropdown --}}
         <div x-show="open" x-transition
-             class="lg:hidden mt-3 p-4 flex flex-col gap-2"
-             style="border-radius: var(--r-xl); background: rgba(255,255,255,0.96); border: 1px solid var(--color-border); box-shadow: var(--shadow-lg); display: none;">
-            <a href="{{ route('netral') }}"  class="mobile-nav">Beranda</a>
+             class="lg:hidden mt-4 p-4 flex flex-col gap-2 rounded-2xl bg-white/95 backdrop-blur-md shadow-lg border border-gray-100"
+             style="display: none;">
+            <a href="{{ route('netral') }}"  class="mobile-nav">Netral</a>
             <a href="{{ route('sebelum') }}" class="mobile-nav">Sebelum</a>
-            <a href="{{ route('saat') }}"     class="mobile-nav">Saat</a>
+            <a href="{{ route('saat') }}"    class="mobile-nav">Saat</a>
             <a href="{{ route('sesudah') }}" class="mobile-nav">Sesudah</a>
-            <a href="{{ route('saat') }}" class="btn btn-primary mt-2" style="height:48px; border-radius: var(--r-lg); justify-content: center; background: var(--c-teal);">
-                Mode Darurat
+            <a href="{{ route('netral') }}#darurat" class="mt-2 h-12 flex items-center justify-center rounded-xl text-white text-sm font-bold shadow-md" style="background: var(--c-teal-xdk);">
+                Darurat
             </a>
         </div>
     </div>
