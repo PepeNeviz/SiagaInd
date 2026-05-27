@@ -308,11 +308,13 @@
 <body class="min-h-screen relative">
 
 {{-- ══════════════════════════════════════════════════
-     NAVBAR (Static Minimalist Header)
+     NAVBAR (Fixed Glassmorphism Style)
 ══════════════════════════════════════════════════ --}}
-<nav class="absolute top-0 left-0 right-0 w-full z-40 pt-6 md:pt-8" x-data="{ open: false }">
+{{-- KUNCI EFEK KACA: fixed, bg-[#F4F8F0]/80 (transparan 80%), backdrop-blur-md --}}
+<nav class="fixed top-0 left-0 right-0 w-full z-50 bg-[#F4F8F0]/80 backdrop-blur-md border-b border-black/5" x-data="{ open: false }">
     <div class="max-w-7xl mx-auto px-6 lg:px-8">
-        <div class="flex items-center justify-between">
+        {{-- Tinggi navbar diset fix pakai h-16 (mobile) dan h-20 (desktop) --}}
+        <div class="flex items-center justify-between h-16 md:h-20">
 
             {{-- Logo (Kiri) --}}
             <a href="{{ route('netral') }}" class="flex items-center gap-2 md:gap-3">
@@ -349,7 +351,7 @@
         
         {{-- Mobile dropdown --}}
         <div x-show="open" x-transition
-             class="lg:hidden mt-4 p-4 flex flex-col gap-2 rounded-2xl bg-white/95 backdrop-blur-md shadow-lg border border-gray-100"
+             class="lg:hidden mt-2 mb-4 p-4 flex flex-col gap-2 rounded-2xl bg-white/95 backdrop-blur-md shadow-lg border border-gray-100"
              style="display: none;">
             <a href="{{ route('netral') }}"  class="mobile-nav">Netral</a>
             <a href="{{ route('sebelum') }}" class="mobile-nav">Sebelum</a>
@@ -363,7 +365,8 @@
 </nav>
 
 {{-- ══════ KONTEN ══════ --}}
-<main class="relative" style="z-index: var(--z-base);">
+{{-- Tambahin pt-20 (Mobile) dan md:pt-24 (Desktop) biar konten nggak nyundul navbar --}}
+<main class="relative pt-20 md:pt-24" style="z-index: var(--z-base);">
     @yield('content')
 </main>
 
