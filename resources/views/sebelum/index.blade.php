@@ -4,18 +4,252 @@
 
 @push('styles')
 <style>
-/* BAGIAN TAS - WARNA BARU */
+
+    /* ══════════════════════
+   HERO VARIABLES
+══════════════════════ */
+:root {
+  --h-teal:   #5A827E;
+  --h-sage:   #84AE92;
+  --h-mint:   #B9D4AA;
+  --h-cream:  #FAFFCA;
+  --h-dark:   #1e3330;
+  --h-muted:  #4a6b5e;
+  --h-teal-dk:#3d5c59;
+}
+ 
+/* ══════════════════════
+   HERO SECTION
+══════════════════════ */
+.hero-siaga {
+  position: relative;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: var(--h-cream);
+}
+ 
+/* ambient glow top right */
+.hero-siaga::before {
+  content: '';
+  position: absolute;
+  top: -120px; right: -100px;
+  width: 520px; height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(185,212,170,0.5) 0%, transparent 68%);
+  pointer-events: none; z-index: 0;
+}
+ 
+/* bottom wave fade */
+.hero-siaga::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0; right: 0;
+  height: 72px;
+  background: var(--h-mint);
+  clip-path: ellipse(55% 100% at 50% 100%);
+  z-index: 0;
+  opacity: 0.30;
+}
+ 
+.hero-siaga__inner {
+  position: relative; z-index: 2;
+  max-width: 1180px; width: 100%;
+  margin: 0 auto;
+  padding: 80px 48px;
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 40px;
+  align-items: center;
+}
+ 
+/* ── LEFT TEXT ── */
+.hero-siaga__text {
+  display: flex; flex-direction: column; gap: 22px;
+  animation: hEnterLeft 0.8s cubic-bezier(0.22,1,0.36,1) both;
+}
+ 
+.hero-siaga__eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(90,130,126,0.12);
+  border: 1px solid rgba(90,130,126,0.25);
+  border-radius: 99px;
+  padding: 6px 16px;
+  font-size: 12px; font-weight: 700;
+  color: var(--h-teal);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  width: fit-content;
+}
+ 
+.hero-siaga__h1 {
+  font-size: clamp(34px, 4.2vw, 56px);
+  font-weight: 900;
+  color: var(--h-dark);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+.hero-siaga__h1 em {
+  font-style: normal;
+  color: var(--h-teal);
+  position: relative;
+}
+.hero-siaga__h1 em::after {
+  content: '';
+  position: absolute;
+  bottom: 2px; left: 0; right: 0;
+  height: 4px;
+  background: var(--h-mint);
+  border-radius: 99px;
+  z-index: -1;
+}
+ 
+.hero-siaga__desc {
+  font-size: 15.5px;
+  color: var(--h-muted);
+  line-height: 1.7;
+  max-width: 400px;
+}
+ 
+.hero-siaga__cta {
+  display: flex; gap: 12px; flex-wrap: wrap;
+  margin-top: 4px;
+}
+ 
+.hero-btn-main {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px;
+  background: var(--h-teal);
+  color: #fff;
+  border-radius: 14px;
+  font-size: 14px; font-weight: 700;
+  text-decoration: none;
+  border: none; cursor: pointer;
+  box-shadow: 0 6px 20px rgba(90,130,126,0.35);
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+.hero-btn-main:hover {
+  background: var(--h-teal-dk);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(90,130,126,0.42);
+  color: #fff;
+  text-decoration: none;
+}
+ 
+.hero-btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px;
+  background: rgba(255,255,255,0.72);
+  color: var(--h-teal-dk);
+  border-radius: 14px;
+  font-size: 14px; font-weight: 700;
+  text-decoration: none;
+  border: 1.5px solid rgba(90,130,126,0.28);
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: background 0.2s, transform 0.15s;
+}
+.hero-btn-ghost:hover {
+  background: rgba(255,255,255,0.95);
+  transform: translateY(-2px);
+  text-decoration: none;
+  color: var(--h-teal-dk);
+}
+ 
+/* ── RIGHT ILLUSTRATION ── */
+.hero-siaga__scene {
+  position: relative;
+  height: 480px;
+  display: flex; align-items: center; justify-content: center;
+  animation: hEnterRight 0.85s cubic-bezier(0.22,1,0.36,1) 0.1s both;
+}
+ 
+.hero-siaga__svg {
+  width: 100%; height: 100%;
+  max-width: 560px;
+  overflow: visible;
+}
+ 
+/* ── FLOATING BADGES ── */
+.h-badge {
+  position: absolute;
+  background: rgba(255,255,255,0.90);
+  backdrop-filter: blur(10px);
+  border-radius: 14px;
+  padding: 9px 15px;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: 0 4px 24px rgba(90,130,126,0.16);
+  border: 1.5px solid rgba(185,212,170,0.65);
+  white-space: nowrap;
+  z-index: 10;
+}
+.h-badge__icon {
+  width: 32px; height: 32px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+}
+.h-badge__text strong { display: block; font-size: 13px; font-weight: 800; color: var(--h-dark); }
+.h-badge__text small  { display: block; font-size: 10px; color: var(--h-muted); margin-top: 1px; font-weight: 500; }
+ 
+.h-pulse {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--h-sage);
+  position: relative; flex-shrink: 0;
+}
+.h-pulse::after {
+  content: '';
+  position: absolute; inset: -3px;
+  border-radius: 50%;
+  border: 2px solid var(--h-sage);
+  animation: hPulse 1.8s ease-out infinite;
+  opacity: 0;
+}
+ 
+.h-badge--gempa     { top: 38px;    right: -10px;  animation: hFloat 3.2s ease-in-out infinite; }
+.h-badge--banjir    { top: 10px;    right: 175px;  animation: hFloat 3.8s ease-in-out 0.5s infinite; }
+.h-badge--kebakaran { bottom: 148px; left: -8px;   animation: hFloat 3.5s ease-in-out 1.1s infinite; }
+.h-badge--longsor   { bottom: 92px;  right: 0px;   animation: hFloat 3.0s ease-in-out 0.3s infinite; }
+ 
+/* ── KEYFRAMES ── */
+@keyframes hFloat   { 0%,100%{transform:translateY(0)}   50%{transform:translateY(-8px)} }
+@keyframes hPulse   { 0%{opacity:.7;transform:scale(1)}  100%{opacity:0;transform:scale(2)} }
+@keyframes hEnterLeft  { from{opacity:0;transform:translateX(-32px)} to{opacity:1;transform:translateX(0)} }
+@keyframes hEnterRight { from{opacity:0;transform:translateX(32px)}  to{opacity:1;transform:translateX(0)} }
+ 
+/* ── RESPONSIVE ── */
+@media (max-width: 820px) {
+  .hero-siaga__inner { grid-template-columns: 1fr; padding: 60px 24px 60px; gap: 40px; }
+  .hero-siaga__h1 { font-size: 36px; }
+  .hero-siaga__scene { height: 320px; }
+  .h-badge--banjir    { display: none; }
+  .h-badge--kebakaran { bottom: 95px; left: -4px; }
+  .h-badge--longsor   { bottom: 48px; }
+}
+
+/* BATAS BAGIAN TAS */
 #bag-wrap{position:relative;width:260px;user-select:none}
 #bag-svg{width:260px;display:block}
 #inner-area{position:absolute;top:108px;left:46px;width:168px;height:218px;overflow:hidden}
 .zona{position:absolute;left:0;width:168px;transition:background .15s,box-shadow .15s}
-/* Menggunakan palette baru untuk zona */
-#zona-a{top:0;height:72px;background:rgba(90,130,126,.08);border-bottom:1px dashed rgba(90,130,126,.3)}
-#zona-b{top:72px;height:72px;background:rgba(132,174,146,.08);border-bottom:1px dashed rgba(132,174,146,.3)}
-#zona-c{top:144px;height:74px;background:rgba(185,212,170,.08)}
 
-.zona.drag-v{background:rgba(185,212,170,.3)!important;box-shadow:inset 0 0 0 2px #84AE92}
-.zona.drag-iv{background:rgba(90,130,126,.2)!important;box-shadow:inset 0 0 0 2px #5A827E}
+/* Warna zona: atas=merah (sangat penting), tengah=oranye (penting), bawah=hijau (cukup penting) */
+#zona-a{top:0;height:72px;background:rgba(192,57,43,.08);border-bottom:1px dashed rgba(192,57,43,.3)}
+#zona-b{top:72px;height:72px;background:rgba(230,126,34,.08);border-bottom:1px dashed rgba(230,126,34,.3)}
+#zona-c{top:144px;height:74px;background:rgba(39,174,96,.08)}
+
+/* Label kecil tiap zona */
+#zona-a::before{content:'\1F534  Sangat Penting';color:#C0392B}
+#zona-b::before{content:'\1F7E0  Penting';color:#E67E22}
+#zona-c::before{content:'\1F7E2  Cukup Penting';color:#27AE60}
+.zona::before{position:absolute;top:3px;left:4px;font-size:7px;font-weight:700;opacity:0.6;pointer-events:none;white-space:nowrap}
+
+/* Highlight saat drag hover — warna sesuai zona masing-masing */
+#zona-a.drag-v{background:rgba(192,57,43,.2)!important;box-shadow:inset 0 0 0 2px #C0392B}
+#zona-b.drag-v{background:rgba(230,126,34,.2)!important;box-shadow:inset 0 0 0 2px #E67E22}
+#zona-c.drag-v{background:rgba(39,174,96,.2)!important;box-shadow:inset 0 0 0 2px #27AE60}
+.zona.drag-iv{background:rgba(0,0,0,.05)!important;box-shadow:inset 0 0 0 2px rgba(0,0,0,.15)}
 
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
 .do-shake{animation:shake .3s ease}
@@ -24,24 +258,23 @@
     cursor:grab;
     border-radius:3px;
     transition:opacity .2s, transform .2s ease;
-    box-shadow: 0 2px 8px rgba(90, 130, 126, 0.2);
+    box-shadow: 0 2px 8px rgba(0,0,0,.12);
 }
 .placed:active{
     cursor:grabbing;
-    box-shadow: 0 8px 20px rgba(90, 130, 126, 0.4) !important;
+    box-shadow: 0 6px 16px rgba(0,0,0,.22) !important;
 }
 .placed.dp{opacity:.3}
 .ghost-box{
     position:absolute;
     pointer-events:none;
-    border:2px dashed #5A827E;
     border-radius:4px;
-    background:rgba(90,130,126,.15);
     z-index:40;
     display:none;
-    box-shadow: inset 0 0 10px rgba(90, 130, 126, 0.1);
+    border:2px dashed #aaa;
+    background:rgba(0,0,0,.06);
 }
-.ghost-box.bad{border-color:#5A827E;background:rgba(90,130,126,.1)}
+.ghost-box.bad{border-color:#ccc;background:rgba(0,0,0,.03)}
 
 .tas-tab{white-space:nowrap;transition:all .3s ease;border:1px solid #B9D4AA}
 .tas-tab:hover:not(.active){background:rgba(44,62,80,0.05)}
@@ -254,10 +487,315 @@ button:focus, input:focus, select:focus {
 .zona-bar{height:5px;border-radius:3px;background:#FAFFCA;overflow:hidden;flex:1;margin:0 8px}
 .zona-bar-fill{height:100%;border-radius:3px;transition:width .3s;background:#5A827E}
 
-[x-cloak]{display:none !important}
-body.modal-open{overflow:hidden}
+
+/* Modal buat tas — pure vanilla, z-index harus di atas SEMUA elemen termasuk navbar */
+    #modal-buat-tas {
+        z-index: 99999 !important;
+    }
+
+    /* Saat modal buka: navbar/header ikut tercover oleh overlay */
+    body.modal-open > nav,
+    body.modal-open > header,
+    body.modal-open #navbar,
+    body.modal-open .navbar {
+        z-index: 1 !important;
+    }
+
+[x-cloak] { display: none !important; }
+body.modal-open { overflow: hidden !important; }
+
 </style>
 @endpush
+
+{{--
+    HERO SECTION — SiagaInd
+    Palette: #5A827E #84AE92 #B9D4AA #FAFFCA
+    Flat 2D SVG illustration inline
+    → Paste ke dalam @section('content') sebelum section lainnya
+--}}
+
+<section class="hero-siaga">
+  <div class="hero-siaga__inner">
+ 
+    {{-- ══ LEFT TEXT ══ --}}
+    <div class="hero-siaga__text">
+ 
+      <div class="hero-siaga__eyebrow">
+         Platform Kesiapsiagaan Bencana
+      </div>
+ 
+      <h1 class="hero-siaga__h1">
+        Persiapan hari ini,<br/>
+        <em>keamanan</em> esok hari.
+      </h1>
+ 
+      <p class="hero-siaga__desc">
+        Kenali risiko bencana di sekitarmu dan siapkan diri, keluarga,
+        serta lingkungan menjadi lebih tangguh.
+      </p>
+ 
+      <div class="hero-siaga__cta">
+        <a href="{{ route('sebelum') }}#bencana-section" class="hero-btn-main">📖 Pelajari Bencana</a>
+        <a href="{{ route('sebelum') }}#bag-wrap" class="hero-btn-ghost">🎒 Cek Tas Siaga</a>
+      </div>
+ 
+    </div>
+ 
+    {{-- ══ RIGHT ILLUSTRATION ══ --}}
+    <div class="hero-siaga__scene">
+ 
+      {{-- FLAT 2D SVG SCENE --}}
+      <svg class="hero-siaga__svg" viewBox="0 0 540 460" fill="none" xmlns="http://www.w3.org/2000/svg">
+ 
+        {{-- BG --}}
+        <rect width="540" height="460" rx="24" fill="#FAFFCA"/>
+ 
+        {{-- sun --}}
+        <circle cx="438" cy="72" r="44" fill="url(#sunGrad)"/>
+        <g stroke="#B9D4AA" stroke-width="2.5" stroke-linecap="round" opacity="0.7">
+          <line x1="438" y1="18"  x2="438" y2="8"/>
+          <line x1="438" y1="126" x2="438" y2="136"/>
+          <line x1="384" y1="72"  x2="374" y2="72"/>
+          <line x1="492" y1="72"  x2="502" y2="72"/>
+          <line x1="400" y1="34"  x2="393" y2="27"/>
+          <line x1="476" y1="110" x2="483" y2="117"/>
+          <line x1="476" y1="34"  x2="483" y2="27"/>
+          <line x1="400" y1="110" x2="393" y2="117"/>
+        </g>
+ 
+        {{-- clouds --}}
+        <g opacity="0.65">
+          <ellipse cx="96" cy="78" rx="38" ry="20" fill="#fff"/>
+          <ellipse cx="74" cy="84" rx="22" ry="16" fill="#fff"/>
+          <ellipse cx="118" cy="86" rx="20" ry="14" fill="#fff"/>
+          <ellipse cx="96" cy="90" rx="42" ry="14" fill="#fff"/>
+        </g>
+        <g opacity="0.42">
+          <ellipse cx="318" cy="55" rx="28" ry="14" fill="#fff"/>
+          <ellipse cx="302" cy="60" rx="16" ry="11" fill="#fff"/>
+          <ellipse cx="334" cy="62" rx="14" ry="10" fill="#fff"/>
+          <ellipse cx="318" cy="66" rx="31" ry="10" fill="#fff"/>
+        </g>
+ 
+        {{-- mountains --}}
+        <ellipse cx="90"  cy="320" rx="140" ry="95" fill="#84AE92" opacity="0.40"/>
+        <ellipse cx="470" cy="315" rx="130" ry="88" fill="#84AE92" opacity="0.40"/>
+        <ellipse cx="60"  cy="380" rx="170" ry="75" fill="#84AE92" opacity="0.55"/>
+        <ellipse cx="490" cy="375" rx="160" ry="70" fill="#84AE92" opacity="0.55"/>
+        <ellipse cx="270" cy="430" rx="330" ry="72" fill="#B9D4AA"/>
+ 
+        {{-- ground --}}
+        <rect x="0" y="388" width="540" height="72" fill="#B9D4AA"/>
+        <ellipse cx="100" cy="388" rx="80"  ry="18" fill="#B9D4AA"/>
+        <ellipse cx="270" cy="386" rx="120" ry="20" fill="#B9D4AA"/>
+        <ellipse cx="430" cy="388" rx="90"  ry="18" fill="#B9D4AA"/>
+ 
+        {{-- path --}}
+        <path d="M248 390 Q270 350 292 390 L296 460 L244 460 Z" fill="#FAFFCA" opacity="0.6"/>
+        <path d="M263 370 Q270 358 277 370 L279 390 L261 390 Z" fill="#FAFFCA" opacity="0.4"/>
+ 
+        {{-- trees left --}}
+        <rect x="44" y="340" width="12" height="52" rx="5" fill="#5A827E"/>
+        <ellipse cx="50" cy="324" rx="28" ry="34" fill="#5A827E"/>
+        <ellipse cx="50" cy="316" rx="20" ry="24" fill="#84AE92"/>
+ 
+        <rect x="98" y="354" width="10" height="38" rx="4" fill="#5A827E"/>
+        <ellipse cx="103" cy="340" rx="22" ry="28" fill="#5A827E"/>
+        <ellipse cx="103" cy="332" rx="16" ry="20" fill="#84AE92"/>
+ 
+        <ellipse cx="160" cy="385" rx="20" ry="14" fill="#84AE92"/>
+        <ellipse cx="148" cy="388" rx="14" ry="11" fill="#5A827E" opacity="0.6"/>
+        <ellipse cx="172" cy="387" rx="13" ry="10" fill="#5A827E" opacity="0.6"/>
+ 
+        {{-- trees right --}}
+        <rect x="434" y="342" width="12" height="50" rx="5" fill="#5A827E"/>
+        <ellipse cx="440" cy="326" rx="28" ry="34" fill="#5A827E"/>
+        <ellipse cx="440" cy="318" rx="20" ry="24" fill="#84AE92"/>
+ 
+        <rect x="382" y="356" width="10" height="36" rx="4" fill="#5A827E"/>
+        <ellipse cx="387" cy="342" rx="22" ry="27" fill="#5A827E"/>
+        <ellipse cx="387" cy="335" rx="16" ry="19" fill="#84AE92"/>
+ 
+        <ellipse cx="480" cy="386" rx="22" ry="14" fill="#84AE92"/>
+        <ellipse cx="468" cy="389" rx="14" ry="10" fill="#5A827E" opacity="0.55"/>
+ 
+        {{-- house shadow --}}
+        <ellipse cx="270" cy="396" rx="95" ry="10" fill="#5A827E" opacity="0.12"/>
+ 
+        {{-- house walls --}}
+        <rect x="184" y="294" width="172" height="100" rx="6" fill="#FAFFCA"/>
+        <rect x="318" y="294" width="38"  height="100" rx="0" fill="#B9D4AA" opacity="0.4"/>
+ 
+        {{-- door --}}
+        <rect x="248" y="336" width="44" height="58" rx="5" fill="#84AE92"/>
+        <rect x="248" y="336" width="44" height="58" rx="5" fill="#5A827E" opacity="0.28"/>
+        <rect x="254" y="342" width="14" height="20" rx="3" fill="#5A827E" opacity="0.22"/>
+        <rect x="272" y="342" width="14" height="20" rx="3" fill="#5A827E" opacity="0.22"/>
+        <circle cx="268" cy="368" r="3.5" fill="#5A827E"/>
+        <circle cx="272" cy="368" r="3.5" fill="#5A827E"/>
+ 
+        {{-- left window --}}
+        <rect x="196" y="310" width="42" height="36" rx="5" fill="#B9D4AA" opacity="0.7"/>
+        <rect x="196" y="310" width="42" height="36" rx="5" stroke="#84AE92" stroke-width="2.5" fill="none"/>
+        <line x1="217" y1="310" x2="217" y2="346" stroke="#84AE92" stroke-width="1.5"/>
+        <line x1="196" y1="328" x2="238" y2="328" stroke="#84AE92" stroke-width="1.5"/>
+        <rect x="193" y="344" width="48" height="5" rx="2.5" fill="#84AE92" opacity="0.5"/>
+ 
+        {{-- right window --}}
+        <rect x="302" y="310" width="42" height="36" rx="5" fill="#B9D4AA" opacity="0.7"/>
+        <rect x="302" y="310" width="42" height="36" rx="5" stroke="#84AE92" stroke-width="2.5" fill="none"/>
+        <line x1="323" y1="310" x2="323" y2="346" stroke="#84AE92" stroke-width="1.5"/>
+        <line x1="302" y1="328" x2="344" y2="328" stroke="#84AE92" stroke-width="1.5"/>
+        <rect x="299" y="344" width="48" height="5" rx="2.5" fill="#84AE92" opacity="0.5"/>
+ 
+        {{-- roof --}}
+        <polygon points="170,296 270,200 370,296" fill="#5A827E"/>
+        <polygon points="170,296 270,200 210,296" fill="#84AE92" opacity="0.22"/>
+        <polygon points="164,298 270,197 376,298 370,300 270,204 170,300" fill="#3d5c59"/>
+ 
+        {{-- chimney --}}
+        <rect x="300" y="224" width="22" height="44" rx="4" fill="#3d5c59"/>
+        <rect x="296" y="220" width="30" height="8" rx="3" fill="#3d5c59"/>
+        <circle cx="311" cy="206" r="8"   fill="#FAFFCA" opacity="0.52"/>
+        <circle cx="318" cy="196" r="6"   fill="#FAFFCA" opacity="0.38"/>
+        <circle cx="312" cy="188" r="4.5" fill="#FAFFCA" opacity="0.26"/>
+ 
+        {{-- fence left --}}
+        <g fill="#5A827E" opacity="0.35">
+          <rect x="165" y="366" width="6" height="24" rx="2"/>
+          <rect x="178" y="366" width="6" height="24" rx="2"/>
+          <rect x="191" y="366" width="6" height="24" rx="2"/>
+          <rect x="163" y="368" width="36" height="4" rx="2"/>
+          <rect x="163" y="378" width="36" height="4" rx="2"/>
+          <polygon points="168,366 171,360 174,366"/>
+          <polygon points="181,366 184,360 187,366"/>
+          <polygon points="194,366 197,360 200,366"/>
+        </g>
+ 
+        {{-- fence right --}}
+        <g fill="#5A827E" opacity="0.35">
+          <rect x="340" y="366" width="6" height="24" rx="2"/>
+          <rect x="353" y="366" width="6" height="24" rx="2"/>
+          <rect x="366" y="366" width="6" height="24" rx="2"/>
+          <rect x="338" y="368" width="36" height="4" rx="2"/>
+          <rect x="338" y="378" width="36" height="4" rx="2"/>
+          <polygon points="343,366 346,360 349,366"/>
+          <polygon points="356,366 359,360 362,366"/>
+          <polygon points="369,366 372,360 375,366"/>
+        </g>
+ 
+        {{-- grass tufts + flowers --}}
+        <g stroke="#84AE92" stroke-width="2" stroke-linecap="round" opacity="0.7">
+          <line x1="130" y1="390" x2="128" y2="378"/>
+          <line x1="135" y1="390" x2="136" y2="377"/>
+          <line x1="140" y1="390" x2="142" y2="380"/>
+          <line x1="390" y1="390" x2="388" y2="378"/>
+          <line x1="395" y1="390" x2="396" y2="377"/>
+        </g>
+        <circle cx="129" cy="377" r="3"   fill="#FAFFCA" opacity="0.9"/>
+        <circle cx="136" cy="376" r="2.5" fill="#FAFFCA" opacity="0.9"/>
+        <circle cx="142" cy="379" r="2"   fill="#FAFFCA" opacity="0.9"/>
+        <circle cx="388" cy="377" r="2.5" fill="#FAFFCA" opacity="0.9"/>
+        <circle cx="396" cy="376" r="2"   fill="#FAFFCA" opacity="0.9"/>
+ 
+        {{-- emergency bag --}}
+        <ellipse cx="410" cy="408" rx="46" ry="8" fill="#5A827E" opacity="0.14"/>
+        <path d="M390 360 Q390 345 400 345 L418 345 Q428 345 428 360" stroke="#5A827E" stroke-width="5" stroke-linecap="round" fill="none"/>
+        <rect x="366" y="358" width="88" height="50" rx="12" fill="#5A827E"/>
+        <rect x="366" y="358" width="88" height="22" rx="12" fill="#84AE92" opacity="0.3"/>
+        <line x1="366" y1="378" x2="454" y2="378" stroke="#3d5c59" stroke-width="2.5"/>
+        <rect x="406" y="372" width="8" height="12" rx="2" fill="#FAFFCA" opacity="0.8"/>
+        <rect x="402" y="367" width="16" height="4" rx="2" fill="#FAFFCA"/>
+        <rect x="408" y="361" width="4"  height="16" rx="2" fill="#FAFFCA"/>
+        <rect x="370" y="398" width="80" height="10" rx="0 0 10 10" fill="#3d5c59" opacity="0.6"/>
+ 
+        {{-- map --}}
+        <g transform="rotate(-8 320 390)">
+          <rect x="310" y="372" width="52" height="40" rx="4" fill="#FAFFCA"/>
+          <rect x="310" y="372" width="52" height="40" rx="4" stroke="#B9D4AA" stroke-width="1.5" fill="none"/>
+          <line x1="316" y1="381" x2="356" y2="381" stroke="#84AE92" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="316" y1="387" x2="348" y2="387" stroke="#84AE92" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="316" y1="393" x2="354" y2="393" stroke="#84AE92" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="316" y1="399" x2="344" y2="399" stroke="#84AE92" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="348" cy="385" r="4" fill="#5A827E"/>
+          <line x1="348" y1="389" x2="348" y2="395" stroke="#5A827E" stroke-width="2" stroke-linecap="round"/>
+        </g>
+ 
+        {{-- radio --}}
+        <g transform="translate(148,370)">
+          <rect width="52" height="36" rx="8" fill="#5A827E"/>
+          <rect x="6" y="6" width="24" height="18" rx="4" fill="#84AE92" opacity="0.5"/>
+          <circle cx="40" cy="10" r="3" fill="#84AE92" opacity="0.5"/>
+          <circle cx="40" cy="18" r="3" fill="#84AE92" opacity="0.5"/>
+          <circle cx="40" cy="26" r="3" fill="#84AE92" opacity="0.5"/>
+          <line x1="42" y1="6" x2="48" y2="-12" stroke="#3d5c59" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="20" cy="15" r="6" fill="#FAFFCA" opacity="0.6"/>
+        </g>
+ 
+        {{-- checklist --}}
+        <g transform="rotate(5 460 350)">
+          <rect x="456" y="340" width="44" height="58" rx="5" fill="#FAFFCA"/>
+          <rect x="456" y="340" width="44" height="12" rx="5 5 0 0" fill="#B9D4AA"/>
+          <line x1="463" y1="362" x2="493" y2="362" stroke="#84AE92" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="463" y1="370" x2="490" y2="370" stroke="#84AE92" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="463" y1="378" x2="492" y2="378" stroke="#84AE92" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="463" y1="386" x2="488" y2="386" stroke="#84AE92" stroke-width="1.5" stroke-linecap="round"/>
+          <polyline points="459,363 461,366 465,360" stroke="#5A827E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <polyline points="459,371 461,374 465,368" stroke="#5A827E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </g>
+ 
+        <defs>
+          <radialGradient id="sunGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stop-color="#FAFFCA"/>
+            <stop offset="55%"  stop-color="#B9D4AA" stop-opacity="0.75"/>
+            <stop offset="100%" stop-color="#B9D4AA" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+ 
+      </svg>
+ 
+      {{-- FLOATING BADGES --}}
+      <div class="h-badge h-badge--gempa">
+        <div class="h-badge__icon" style="background:rgba(90,130,126,0.12);">🌍</div>
+        <div class="h-badge__text">
+          <strong>Gempa Bumi</strong>
+          <small>Skala VI — Waspada</small>
+        </div>
+        <div class="h-pulse"></div>
+      </div>
+ 
+      <div class="h-badge h-badge--banjir">
+        <div class="h-badge__icon" style="background:rgba(132,174,146,0.14);">🌊</div>
+        <div class="h-badge__text">
+          <strong>Banjir</strong>
+          <small>Siaga I</small>
+        </div>
+        <div class="h-pulse"></div>
+      </div>
+ 
+      <div class="h-badge h-badge--kebakaran">
+        <div class="h-badge__icon" style="background:rgba(185,212,170,0.2);">🔥</div>
+        <div class="h-badge__text">
+          <strong>Kebakaran</strong>
+          <small>+13 titik aktif</small>
+        </div>
+        <div class="h-pulse"></div>
+      </div>
+ 
+      <div class="h-badge h-badge--longsor">
+        <div class="h-badge__icon" style="background:rgba(90,130,126,0.12);">⛰️</div>
+        <div class="h-badge__text">
+          <strong>Longsor</strong>
+          <small>Risiko Tinggi</small>
+        </div>
+        <div class="h-pulse"></div>
+      </div>
+ 
+    </div>{{-- /hero-siaga__scene --}}
+ 
+  </div>{{-- /hero-siaga__inner --}}
+</section>
+ 
 
 @section('content')
 <div x-data="tasSiaga" class="max-w-5xl mx-auto px-4 sm:px-6 py-10">
@@ -265,27 +803,18 @@ body.modal-open{overflow:hidden}
 
     
     {{-- SECTION INFORMASI BENCANA --}}
-<div class="max-w-5xl mx-auto px-4 py-10" id="bencana-section">
-    
-    <div class="max-w-6xl mx-auto px-4 py-10">
-
-    <div class="max-w-6xl mx-auto px-4 py-10">
-    {{-- FILTER KATEGORI --}}
-    <div id="category-container" class="flex justify-center gap-3 mb-10">
-        <button data-category="gempa" class="category-btn disaster-btn active">Gempa Bumi</button>
-        <button data-category="banjir" class="category-btn disaster-btn">Banjir</button>
-        <button data-category="longsor" class="category-btn disaster-btn">Longsor</button>
+    <div id="bencana-section" class="mb-12">
+        <div id="category-container" class="flex justify-center gap-3 mb-10">
+            <button data-category="gempa"   class="category-btn disaster-btn active">Gempa Bumi</button>
+            <button data-category="banjir"  class="category-btn disaster-btn">Banjir</button>
+            <button data-category="longsor" class="category-btn disaster-btn">Longsor</button>
+        </div>
+        <div id="content-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+        <div id="step-container" class="flex justify-center gap-3 mt-8">
+            <button class="step-btn active" data-page="0">1</button>
+            <button class="step-btn" data-page="1">2</button>
+        </div>
     </div>
-
-    {{-- KONTEN EDUKASI (HANYA INI YANG DIUBAH JS) --}}
-    <div id="content-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
-
-    {{-- NAVIGASI STEP --}}
-    <div id="step-container" class="flex justify-center gap-3 mt-8">
-        <button class="step-btn active" data-page="0">1</button>
-        <button class="step-btn" data-page="1">2</button>
-    </div>
-</div>
 
 
   {{-- =========================================
@@ -334,7 +863,7 @@ body.modal-open{overflow:hidden}
   </div>
 
   {{-- Tombol Tas Baru --}}
-  <button @click="$store.tasBuat.open = true"
+  <button onclick="bukaModalTas()"
           class="flex-shrink-0 px-4 py-2 text-sm font-semibold rounded-full flex items-center gap-2 transition-colors"
           style="background: #2C3E50; color: white;">
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -532,326 +1061,118 @@ body.modal-open{overflow:hidden}
       <div class="text-7xl mb-4">🎒</div>
       <h3 class="font-head font-bold text-navy text-2xl mb-2">Belum ada tas siaga</h3>
       <p class="text-gray-500 mb-6">Buat tas pertamamu untuk mulai menyusun perlengkapan darurat.</p>
-      <button @click="$store.tasBuat.open = true" class="px-6 py-3 bg-navy text-white font-semibold rounded-full hover:opacity-90">Buat Tas Sekarang</button>
+      <button onclick="bukaModalTas()" class="px-6 py-3 bg-navy text-white font-semibold rounded-full hover:opacity-90">Buat Tas Sekarang</button>
     </div>
   </template>
 </div>
 
 <div id="drag-ghost"></div>
 
-{{-- MODAL BUAT TAS --}}
-<template x-teleport="body">
-
+{{-- ══════ MODAL BUAT TAS — Pure Vanilla JS, TANPA Alpine ══════ --}}
+{{-- Diletakkan di sini (bukan teleport) agar tidak ada race condition --}}
 <div
-    x-show="$store.tasBuat.open"
-
-    x-effect="
-        document.body.classList.toggle(
-            'modal-open',
-            $store.tasBuat.open
-        )
-    "
-
-    x-transition:enter="transition ease-out duration-200"
-    x-transition:enter-start="opacity-0"
-    x-transition:enter-end="opacity-100"
-
-    @keydown.escape.window="$store.tasBuat.open=false"
-
-    class="modal-superfront"
-    style="display:none"
+    id="modal-buat-tas"
+    style="display:none; position:fixed; inset:0; z-index:999999; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; padding:16px;"
+    onclick="if(event.target===this) tutupModalTas()"
 >
-
-    {{-- BACKDROP --}}
-    <div
-        class="modal-backdrop"
-        @click="$store.tasBuat.open=false">
-    </div>
-
-    {{-- BOX --}}
-    <div
-        class="modal-box relative px-6 pt-8 pb-6"
-        @click.stop
-
-        x-transition:enter="transition ease-out duration-200"
-        x-transition:enter-start="opacity-0 scale-95"
-        x-transition:enter-end="opacity-100 scale-100"
-    >
+    <div style="background:white; border-radius:20px; width:100%; max-width:480px; max-height:90vh; overflow-y:auto; padding:32px 24px 24px; position:relative;" onclick="event.stopPropagation()">
 
         {{-- HEADER --}}
-        <div class="flex items-start justify-between mb-6">
-
-            <h3 class="font-head font-bold text-navy text-3xl">
-                Buat Tas Baru
-            </h3>
-
-            {{-- CLOSE BUTTON --}}
-            <button
-                type="button"
-                @click="$store.tasBuat.open=false"
-
-                class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors flex-shrink-0"
-            >
-                <svg
-                    class="w-5 h-5 text-gray-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M6 18L18 6M6 6l12 12"
-                    />
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:24px;">
+            <h3 class="font-head font-bold text-navy" style="font-size:28px;">Buat Tas Baru</h3>
+            <button type="button" onclick="tutupModalTas()"
+                style="width:40px; height:40px; border-radius:50%; background:#f3f4f6; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .2s;"
+                onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">
+                <svg width="20" height="20" fill="none" stroke="#6b7280" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
             </button>
-
         </div>
 
-        <form @submit.prevent="$store.tasBuat.submit()">
-
-            <div class="space-y-5">
+        <form id="form-buat-tas" onsubmit="submitModalTas(event)">
+            <div style="display:flex; flex-direction:column; gap:20px;">
 
                 {{-- Nama Tas --}}
                 <div>
-                    <label class="block text-sm font-semibold text-navy mb-2">
-                        Nama Tas
-                    </label>
-
-                    <input
-                        type="text"
-                        x-model="$store.tasBuat.form.nama_tas"
-
-                        placeholder="Contoh: Tas Keluarga"
-
-                        class="w-full px-4 py-3 border border-gray-200 rounded-2xl text-sm text-gray-800 focus:outline-none focus:border-navy"
-
-                        required
-                    />
+                    <label style="display:block; font-size:14px; font-weight:600; color:#2C3E50; margin-bottom:8px;">Nama Tas</label>
+                    <input type="text" id="tas-nama" placeholder="Contoh: Tas Keluarga" required
+                        style="width:100%; padding:12px 16px; border:1px solid #e5e7eb; border-radius:16px; font-size:14px; color:#1f2937; outline:none; box-sizing:border-box;"
+                        onfocus="this.style.borderColor='#2C3E50'" onblur="this.style.borderColor='#e5e7eb'"/>
                 </div>
 
                 {{-- Kategori --}}
                 <div>
-
-                    <label class="block text-sm font-semibold text-navy mb-2">
-                        Kategori
-                    </label>
-
-                    <div class="grid grid-cols-2 gap-2">
-
-                        <template x-for="kat in ['anak','remaja','dewasa','lansia']" :key="kat">
-
-                            <button
-                                type="button"
-
-                                @click="$store.tasBuat.form.kategori=kat"
-
-                                :class="$store.tasBuat.form.kategori===kat
-                                    ? 'bg-[#2C3E50] text-white border-[#2C3E50]'
-                                    : 'bg-white text-gray-700 border-gray-200 hover:border-[#2C3E50] hover:text-[#2C3E50]'"
-
-                                class="px-4 py-3 border rounded-2xl text-sm font-semibold capitalize transition-colors"
-                            >
-
-                                <span
-                                    x-text="kat==='anak'
-                                    ? 'Anak-Anak'
-                                    : kat.charAt(0).toUpperCase()+kat.slice(1)"
-                                ></span>
-
-                            </button>
-
-                        </template>
-
+                    <label style="display:block; font-size:14px; font-weight:600; color:#2C3E50; margin-bottom:8px;">Kategori</label>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;" id="kat-grid">
+                        <button type="button" data-kat="anak"   onclick="pilihKat(this)" class="kat-btn" style="padding:12px; border:1px solid #e5e7eb; border-radius:16px; font-size:14px; font-weight:600; cursor:pointer; background:white; color:#374151; transition:all .2s;">Anak-Anak</button>
+                        <button type="button" data-kat="remaja" onclick="pilihKat(this)" class="kat-btn" style="padding:12px; border:1px solid #e5e7eb; border-radius:16px; font-size:14px; font-weight:600; cursor:pointer; background:white; color:#374151; transition:all .2s;">Remaja</button>
+                        <button type="button" data-kat="dewasa" onclick="pilihKat(this)" class="kat-btn" style="padding:12px; border:1px solid #e5e7eb; border-radius:16px; font-size:14px; font-weight:600; cursor:pointer; background:#2C3E50; color:white; border-color:#2C3E50; transition:all .2s;">Dewasa</button>
+                        <button type="button" data-kat="lansia" onclick="pilihKat(this)" class="kat-btn" style="padding:12px; border:1px solid #e5e7eb; border-radius:16px; font-size:14px; font-weight:600; cursor:pointer; background:white; color:#374151; transition:all .2s;">Lansia</button>
                     </div>
-
+                    <input type="hidden" id="tas-kategori" value="dewasa"/>
                 </div>
 
                 {{-- Dimensi --}}
                 <div>
-
-                    <label class="block text-sm font-semibold text-navy mb-1">
-                        Dimensi Tas
-                        <span class="text-gray-400 font-normal text-xs">
-                            (cm) — opsional jika isi liter langsung
-                        </span>
+                    <label style="display:block; font-size:14px; font-weight:600; color:#2C3E50; margin-bottom:4px;">
+                        Dimensi Tas <span style="font-weight:400; font-size:12px; color:#9ca3af;">(cm) — opsional jika isi liter langsung</span>
                     </label>
-
-                    <div class="flex items-center gap-2">
-
-                        {{-- P --}}
-                        <div class="flex-1">
-
-                            <p class="text-xs text-gray-500 text-center mb-1">
-                                Panjang
-                            </p>
-
-                            <input
-                                type="number"
-
-                                x-model="$store.tasBuat.form.dim_p"
-
-                                @input="$store.tasBuat.hitungLiter()"
-
-                                placeholder="cm"
-                                min="1"
-                                max="200"
-                                step="0.5"
-
-                                class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm text-center text-gray-800 focus:outline-none focus:border-navy"
-                            />
-
+                    <div style="display:flex; align-items:flex-end; gap:8px;">
+                        <div style="flex:1; text-align:center;">
+                            <p style="font-size:12px; color:#6b7280; margin-bottom:4px;">Panjang</p>
+                            <input type="number" id="tas-p" placeholder="cm" min="1" max="200" step="0.5" oninput="hitungLiterModal()"
+                                style="width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:12px; font-size:13px; text-align:center; outline:none; box-sizing:border-box;"/>
                         </div>
-
-                        <span class="text-gray-400 mt-4 font-medium">×</span>
-
-                        {{-- L --}}
-                        <div class="flex-1">
-
-                            <p class="text-xs text-gray-500 text-center mb-1">
-                                Lebar
-                            </p>
-
-                            <input
-                                type="number"
-
-                                x-model="$store.tasBuat.form.dim_l"
-
-                                @input="$store.tasBuat.hitungLiter()"
-
-                                placeholder="cm"
-                                min="1"
-                                max="200"
-                                step="0.5"
-
-                                class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm text-center text-gray-800 focus:outline-none focus:border-navy"
-                            />
-
+                        <span style="color:#d1d5db; margin-bottom:10px; font-weight:500;">×</span>
+                        <div style="flex:1; text-align:center;">
+                            <p style="font-size:12px; color:#6b7280; margin-bottom:4px;">Lebar</p>
+                            <input type="number" id="tas-l" placeholder="cm" min="1" max="200" step="0.5" oninput="hitungLiterModal()"
+                                style="width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:12px; font-size:13px; text-align:center; outline:none; box-sizing:border-box;"/>
                         </div>
-
-                        <span class="text-gray-400 mt-4 font-medium">×</span>
-
-                        {{-- T --}}
-                        <div class="flex-1">
-
-                            <p class="text-xs text-gray-500 text-center mb-1">
-                                Tinggi
-                            </p>
-
-                            <input
-                                type="number"
-
-                                x-model="$store.tasBuat.form.dim_t"
-
-                                @input="$store.tasBuat.hitungLiter()"
-
-                                placeholder="cm"
-                                min="1"
-                                max="200"
-                                step="0.5"
-
-                                class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm text-center text-gray-800 focus:outline-none focus:border-navy"
-                            />
-
+                        <span style="color:#d1d5db; margin-bottom:10px; font-weight:500;">×</span>
+                        <div style="flex:1; text-align:center;">
+                            <p style="font-size:12px; color:#6b7280; margin-bottom:4px;">Tinggi</p>
+                            <input type="number" id="tas-t" placeholder="cm" min="1" max="200" step="0.5" oninput="hitungLiterModal()"
+                                style="width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:12px; font-size:13px; text-align:center; outline:none; box-sizing:border-box;"/>
                         </div>
-
                     </div>
 
-                    {{-- PREVIEW LITER --}}
-                    <div
-                        x-show="
-                            $store.tasBuat.form.dim_p &&
-                            $store.tasBuat.form.dim_l &&
-                            $store.tasBuat.form.dim_t
-                        "
-
-                        class="mt-2 rounded-xl px-3 py-2 flex items-center justify-between"
-
-                        style="background: rgba(44,62,80,0.06);"
-                    >
-
-                        <span class="text-xs text-gray-600">
-                            Kapasitas dari dimensi:
-                        </span>
-
-                        <span
-                            class="font-head font-bold text-navy text-sm"
-                            x-text="$store.tasBuat.form.liter + ' Liter'"
-                        ></span>
-
+                    {{-- Preview liter dari dimensi --}}
+                    <div id="preview-liter" style="display:none; margin-top:8px; background:rgba(44,62,80,0.06); border-radius:12px; padding:8px 12px; display:none; align-items:center; justify-content:space-between;">
+                        <span style="font-size:12px; color:#4b5563;">Kapasitas dari dimensi:</span>
+                        <span id="preview-liter-val" style="font-weight:700; color:#2C3E50; font-size:14px;"></span>
                     </div>
 
-                    {{-- INPUT LITER LANGSUNG --}}
-                    <div class="mt-3">
-
-                        <p class="text-xs text-gray-500 mb-1">
-                            Atau input liter langsung:
-                            <span class="text-gray-400">
-                                (dimensi dihitung otomatis)
-                            </span>
+                    {{-- Input liter langsung --}}
+                    <div style="margin-top:12px;">
+                        <p style="font-size:12px; color:#6b7280; margin-bottom:4px;">
+                            Atau input liter langsung: <span style="color:#9ca3af;">(dimensi dihitung otomatis)</span>
                         </p>
-
-                        <input
-                            type="number"
-
-                            x-model="$store.tasBuat.form.liter"
-
-                            @input="
-                                if($store.tasBuat.form.liter){
-                                    $store.tasBuat.form.dim_p = ''
-                                    $store.tasBuat.form.dim_l = ''
-                                    $store.tasBuat.form.dim_t = ''
-                                }
-                            "
-
-                            placeholder="Contoh: 50"
-
-                            min="1"
-                            max="500"
-                            step="0.1"
-
-                            class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm text-gray-800 focus:outline-none focus:border-navy"
-                        />
-
+                        <input type="number" id="tas-liter" placeholder="Contoh: 50" min="1" max="500" step="0.1"
+                            oninput="if(this.value){ document.getElementById('tas-p').value=''; document.getElementById('tas-l').value=''; document.getElementById('tas-t').value=''; document.getElementById('preview-liter').style.display='none'; }"
+                            style="width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:12px; font-size:13px; outline:none; box-sizing:border-box;"/>
                     </div>
-
                 </div>
 
             </div>
 
             {{-- ACTION --}}
-            <div class="flex gap-3 mt-6">
-
-                <button
-                    type="button"
-
-                    @click="$store.tasBuat.open=false"
-
-                    class="flex-1 py-3 border border-gray-200 text-gray-700 text-sm font-semibold rounded-2xl hover:bg-gray-50 transition-colors"
-                >
+            <div style="display:flex; gap:12px; margin-top:24px;">
+                <button type="button" onclick="tutupModalTas()"
+                    style="flex:1; padding:14px; border:1px solid #e5e7eb; background:white; color:#374151; font-size:14px; font-weight:600; border-radius:16px; cursor:pointer; transition:background .2s;"
+                    onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='white'">
                     Batal
                 </button>
-
-                <button
-                    type="submit"
-
-                    class="flex-1 py-3 text-sm font-semibold rounded-2xl transition-colors"
-
-                    style="background: #2C3E50; color: white;"
-                >
+                <button type="submit"
+                    style="flex:1; padding:14px; background:#2C3E50; color:white; font-size:14px; font-weight:600; border:none; border-radius:16px; cursor:pointer; transition:background .2s;"
+                    onmouseover="this.style.background='#1a252f'" onmouseout="this.style.background='#2C3E50'">
                     Buat Tas
                 </button>
-
             </div>
 
         </form>
-
     </div>
-
 </div>
-
-</template>
 
 @endsection
 
@@ -1070,19 +1391,32 @@ function createPlacedEl(p) {
     return el;
 }
 
-function startDragCard(e, itemId, namaItem, zonaSaran, rotated=false) {
+function startDragCard(e, itemId, namaItem, zonaSaran, rotated = false) {
+    // Guard: cek modal vanilla JS, bukan Alpine store
+    const modalEl = document.getElementById('modal-buat-tas');
+    if (modalEl && modalEl.style.display === 'flex') return;
+
     const pos = getPos(e);
     const baseCm = ITEM_CM[namaItem] || DEFAULT_CM;
     const cm = rotated ? {w: baseCm.h, h: baseCm.w} : baseCm;
     const px = {
         w: Math.max(10, Math.round(cm.w * PX_PER_CM)),
-        h: Math.max(8,  Math.round(cm.h * PX_PER_CM)),
+        h: Math.max(8, Math.round(cm.h * PX_PER_CM)),
     };
-    dragging = {itemId, namaItem, zonaSaran, px, isNew:true, placed:null, rotated, offX:px.w/2, offY:px.h/2};
+    
+    dragging = {itemId, namaItem, zonaSaran, px, isNew: true, placed: null, rotated, offX: px.w/2, offY: px.h/2};
+    
     let dg = document.getElementById('drag-ghost');
-    if (!dg) { dg = document.createElement('div'); dg.id='drag-ghost'; document.body.appendChild(dg); }
+    if (!dg) { 
+        dg = document.createElement('div'); 
+        dg.id = 'drag-ghost'; 
+        document.body.appendChild(dg); 
+    }
+    
     dg.innerHTML = makeSvg(namaItem, zonaSaran, px.w, px.h);
-    dg.style.cssText = 'position:fixed;z-index:99999;pointer-events:none;display:block;left:0;top:0';
+    
+    dg.style.cssText = 'position:fixed;z-index:9999;pointer-events:none;display:block;left:0;top:0';
+    
     moveGhost(pos.x, pos.y);
     bindMove();
 }
@@ -1147,8 +1481,11 @@ function onMove(e) {
     const snap = findSnap(zona, dragging.px, relX, relY, excl);
     const overflowH = dragging.px.h > ZONA_H[zona];
     if (gb) {
-        gb.style.cssText = `display:block;left:${snap.x}px;top:${snap.y}px;width:${dragging.px.w}px;height:${dragging.px.h}px;z-index:40;`;
-        gb.className = 'ghost-box' + (snap.valid && !overflowH ? '' : ' bad');
+        const zonaColor = zona==='sangat_penting' ? '#C0392B' : zona==='penting' ? '#E67E22' : '#27AE60';
+        const zonaRgb   = zona==='sangat_penting' ? '192,57,43' : zona==='penting' ? '230,126,34' : '39,174,96';
+        const isValid   = snap.valid && !overflowH;
+        gb.style.cssText = `display:block;left:${snap.x}px;top:${snap.y}px;width:${dragging.px.w}px;height:${dragging.px.h}px;z-index:40;border-radius:4px;pointer-events:none;position:absolute;border:2px dashed ${isValid ? zonaColor : '#aaa'};background:rgba(${isValid ? zonaRgb : '0,0,0'},.${isValid ? '12' : '04'});`;
+        gb.className = 'ghost-box' + (isValid ? '' : ' bad');
     }
 }
 
@@ -1229,34 +1566,109 @@ function showToast(msg) {
 }
 
 // ==========================================
-// 5. ALPINE STORE BUAT TAS
+// 5. MODAL BUAT TAS — Pure Vanilla JS
+// ==========================================
+function bukaModalTas() {
+    const el = document.getElementById('modal-buat-tas');
+    el.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    // reset form
+    document.getElementById('tas-nama').value   = '';
+    document.getElementById('tas-liter').value  = '';
+    document.getElementById('tas-p').value      = '';
+    document.getElementById('tas-l').value      = '';
+    document.getElementById('tas-t').value      = '';
+    document.getElementById('preview-liter').style.display = 'none';
+    // reset kategori ke dewasa
+    document.querySelectorAll('.kat-btn').forEach(b => {
+        const active = b.dataset.kat === 'dewasa';
+        b.style.background   = active ? '#2C3E50' : 'white';
+        b.style.color        = active ? 'white'   : '#374151';
+        b.style.borderColor  = active ? '#2C3E50' : '#e5e7eb';
+    });
+    document.getElementById('tas-kategori').value = 'dewasa';
+}
+
+function tutupModalTas() {
+    const el = document.getElementById('modal-buat-tas');
+    el.style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+function pilihKat(btn) {
+    document.querySelectorAll('.kat-btn').forEach(b => {
+        b.style.background  = 'white';
+        b.style.color       = '#374151';
+        b.style.borderColor = '#e5e7eb';
+    });
+    btn.style.background  = '#2C3E50';
+    btn.style.color       = 'white';
+    btn.style.borderColor = '#2C3E50';
+    document.getElementById('tas-kategori').value = btn.dataset.kat;
+}
+
+function hitungLiterModal() {
+    const p = parseFloat(document.getElementById('tas-p').value);
+    const l = parseFloat(document.getElementById('tas-l').value);
+    const t = parseFloat(document.getElementById('tas-t').value);
+    const prev = document.getElementById('preview-liter');
+    if (p > 0 && l > 0 && t > 0) {
+        const liter = parseFloat((p * l * t / 1000).toFixed(1));
+        document.getElementById('preview-liter-val').textContent = liter + ' Liter';
+        document.getElementById('tas-liter').value = '';
+        prev.style.display = 'flex';
+    } else {
+        prev.style.display = 'none';
+    }
+}
+
+function submitModalTas(e) {
+    e.preventDefault();
+    const nama = document.getElementById('tas-nama').value.trim();
+    const kat  = document.getElementById('tas-kategori').value;
+    let liter  = parseFloat(document.getElementById('tas-liter').value);
+    const p    = parseFloat(document.getElementById('tas-p').value);
+    const l    = parseFloat(document.getElementById('tas-l').value);
+    const t    = parseFloat(document.getElementById('tas-t').value);
+
+    const hasDim = p > 0 && l > 0 && t > 0;
+    if (hasDim && !liter) liter = parseFloat((p * l * t / 1000).toFixed(1));
+
+    if (!nama || !kat || !liter) {
+        alert('Lengkapi nama tas, kategori, dan kapasitas (liter).');
+        return;
+    }
+
+    const newTasObj = {
+        id:       'local_' + Date.now(),
+        nama_tas: nama,
+        kategori: kat,
+        liter:    liter,
+        dim_p:    hasDim ? p : 0,
+        dim_l:    hasDim ? l : 0,
+        dim_t:    hasDim ? t : 0,
+        items:    []
+    };
+
+    tutupModalTas();
+    window.dispatchEvent(new CustomEvent('tas-local-created', { detail: newTasObj }));
+}
+
+// Escape key untuk tutup modal
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') tutupModalTas();
+});
+
+// ==========================================
+// 6. ALPINE STORE (hanya untuk sisa referensi x-data)
 // ==========================================
 document.addEventListener('alpine:init', () => {
+    // Store tasBuat dikosongkan — modal kini dikelola vanilla JS di atas
     Alpine.store('tasBuat', {
         open: false,
-        form: {nama_tas:'', kategori:'dewasa', liter:'', dim_p:'', dim_l:'', dim_t:''},
-        hitungLiter() {
-            const p=parseFloat(this.form.dim_p), l=parseFloat(this.form.dim_l), t=parseFloat(this.form.dim_t);
-            if (p>0&&l>0&&t>0) this.form.liter = parseFloat((p*l*t/1000).toFixed(1));
-        },
-        async submit() {
-            if (!this.form.nama_tas || !this.form.kategori || !this.form.liter) return;
-            const hasDim = this.form.dim_p && this.form.dim_l && this.form.dim_t;
-            const newTasObj = {
-                id: 'local_'+Date.now(),
-                nama_tas: this.form.nama_tas,
-                kategori: this.form.kategori,
-                liter: parseFloat(this.form.liter),
-                // Simpan 0 jika tidak diisi — calcScale() akan reverse-calculate dari liter
-                dim_p: hasDim ? parseFloat(this.form.dim_p) : 0,
-                dim_l: hasDim ? parseFloat(this.form.dim_l) : 0,
-                dim_t: hasDim ? parseFloat(this.form.dim_t) : 0,
-                items: []
-            };
-            this.open = false;
-            this.form = {nama_tas:'', kategori:'dewasa', liter:'', dim_p:'', dim_l:'', dim_t:''};
-            window.dispatchEvent(new CustomEvent('tas-local-created', {detail: newTasObj}));
-        }
+        form: { nama_tas:'', kategori:'dewasa', liter:'', dim_p:'', dim_l:'', dim_t:'' },
+        hitungLiter() {},
+        async submit() {}
     });
 
     // ==========================================
@@ -1615,26 +2027,35 @@ document.addEventListener('alpine:init', () => {
         },
 
         initCardDelegation() {
-            this.$nextTick(() => {
-                const grid = document.getElementById('item-grid-blade');
-                if (!grid || grid._delegated) return;
-                grid._delegated = true;
-                const handler = (e) => {
-                    if (e.type==='mousedown' && e.button!==0) return;
-                    if (e.target.closest('button')) return;
-                    const card = e.target.closest('.icard');
-                    if (!card || card.classList.contains('used')) return;
-                    if (e.cancelable) e.preventDefault();
-                    const id   = card.dataset.itemId || card.dataset.id;
-                    const item = this.rekomendasi.find(r => String(r.id) === String(id));
-                    if (!item) return;
-                    const rotated = this.rotatedIds.includes(parseInt(id));
-                    startDragCard(e, item.id, item.nama_item, item.zona_saran, rotated);
-                };
-                grid.addEventListener('mousedown', handler);
-                grid.addEventListener('touchstart', handler, {passive:false});
-            });
-        },
+    this.$nextTick(() => {
+        const grid = document.getElementById('item-grid-blade');
+        if (!grid || grid._delegated) return;
+        grid._delegated = true;
+        
+        const handler = (e) => {
+            // Guard: jika modal vanilla JS terbuka, hentikan drag
+            const modalEl = document.getElementById('modal-buat-tas');
+            if (modalEl && modalEl.style.display === 'flex') return;
+            
+            if (e.type==='mousedown' && e.button!==0) return;
+            if (e.target.closest('button')) return;
+            
+            const card = e.target.closest('.icard');
+            if (!card || card.classList.contains('used')) return;
+            
+            if (e.cancelable) e.preventDefault();
+            
+            const id = card.dataset.itemId || card.dataset.id;
+            const item = this.rekomendasi.find(r => String(r.id) === String(id));
+            if (!item) return;
+            
+            const rotated = this.rotatedIds.includes(parseInt(id));
+            startDragCard(e, item.id, item.nama_item, item.zona_saran, rotated);
+        };
+        grid.addEventListener('mousedown', handler);
+        grid.addEventListener('touchstart', handler, {passive:false});
+    });
+},
 
         sortZona(zona) { sortZona(zona); this.recalcStats(); },
         sortAll()      { ['sangat_penting','penting','cukup_penting'].forEach(z=>sortZona(z)); this.recalcStats(); },
