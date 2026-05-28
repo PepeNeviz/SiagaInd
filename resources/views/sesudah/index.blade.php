@@ -14,6 +14,14 @@
     ========================================== */
 
     :root {
+        --h-teal:   #2D6A6A;
+        --h-sage:   #3E8E8E;
+        --h-mint:   #7FC7C7;
+        --h-cream:  #E8F6F3;
+        --h-dark:   #122B2B;
+        --h-muted:  #4A6B6B;
+        --h-teal-dk:#1f4848;
+        
         --c-teal-dark:      #2D6A6A;
         --c-teal-main:      #3E8E8E;
         --c-teal-light:     #7FC7C7;
@@ -22,50 +30,240 @@
         --c-light:          #EEEEEE;
     }
 
-    .after-hero {
-        background:
-            radial-gradient(circle at top left, rgba(62, 142, 142, 0.18), transparent 30%),
-            radial-gradient(circle at bottom right, rgba(45, 106, 106, 0.15), transparent 35%),
-            linear-gradient(135deg, #1b1b1b 0%, #232323 100%);
+    /* ══════════════════════
+       HERO SECTION
+    ══════════════════════ */
+    .hero-siaga {
+      position: relative;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      background: var(--h-cream);
+    }
+    
+    /* ambient glow top right */
+    .hero-siaga::before {
+      content: '';
+      position: absolute;
+      top: -120px; right: -100px;
+      width: 520px; height: 520px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(127, 199, 199, 0.4) 0%, transparent 68%);
+      pointer-events: none; z-index: 0;
+    }
+    
+    /* bottom wave fade */
+    .hero-siaga::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 72px;
+      background: var(--h-mint);
+      clip-path: ellipse(55% 100% at 50% 100%);
+      z-index: 0;
+      opacity: 0.30;
+    }
+    
+    .hero-siaga__inner {
+      position: relative; z-index: 2;
+      max-width: 1180px; width: 100%;
+      margin: 0 auto;
+      padding: 80px 48px;
+      display: grid;
+      grid-template-columns: 1fr 1.05fr;
+      gap: 40px;
+      align-items: center;
+    }
+    
+    /* ── LEFT TEXT ── */
+    .hero-siaga__text {
+      display: flex; flex-direction: column; gap: 22px;
+      animation: hEnterLeft 0.8s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    
+    .hero-siaga__eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(45, 106, 106, 0.12);
+      border: 1px solid rgba(45, 106, 106, 0.25);
+      border-radius: 99px;
+      padding: 6px 16px;
+      font-size: 12px; font-weight: 700;
+      color: var(--h-teal);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      width: fit-content;
+    }
+    
+    .hero-siaga__h1 {
+      font-size: clamp(34px, 4.2vw, 56px);
+      font-weight: 900;
+      color: var(--h-dark);
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+    }
+    .hero-siaga__h1 em {
+      font-style: normal;
+      color: var(--h-teal);
+      position: relative;
+    }
+    .hero-siaga__h1 em::after {
+      content: '';
+      position: absolute;
+      bottom: 2px; left: 0; right: 0;
+      height: 4px;
+      background: var(--h-mint);
+      border-radius: 99px;
+      z-index: -1;
+    }
+    
+    .hero-siaga__desc {
+      font-size: 15.5px;
+      color: var(--h-muted);
+      line-height: 1.7;
+      max-width: 400px;
+    }
+    
+    .hero-siaga__cta {
+      display: flex; gap: 12px; flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    
+    .hero-btn-main {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px;
+      background: var(--h-teal);
+      color: #fff;
+      border-radius: 14px;
+      font-size: 14px; font-weight: 700;
+      text-decoration: none;
+      border: none; cursor: pointer;
+      box-shadow: 0 6px 20px rgba(45, 106, 106, 0.35);
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    .hero-btn-main:hover {
+      background: var(--h-teal-dk);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(45, 106, 106, 0.42);
+      color: #fff;
+      text-decoration: none;
+    }
+    
+    .hero-btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px;
+      background: rgba(255,255,255,0.72);
+      color: var(--h-teal-dk);
+      border-radius: 14px;
+      font-size: 14px; font-weight: 700;
+      text-decoration: none;
+      border: 1.5px solid rgba(45, 106, 106, 0.28);
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      transition: background 0.2s, transform 0.15s;
+    }
+    .hero-btn-ghost:hover {
+      background: rgba(255,255,255,0.95);
+      transform: translateY(-2px);
+      text-decoration: none;
+      color: var(--h-teal-dk);
+    }
+    
+    /* ── RIGHT ILLUSTRATION ── */
+    .hero-siaga__scene {
+      position: relative;
+      height: 480px;
+      display: flex; align-items: center; justify-content: center;
+      animation: hEnterRight 0.85s cubic-bezier(0.22,1,0.36,1) 0.1s both;
+    }
+    
+    .hero-siaga__svg {
+      width: 100%; height: 100%;
+      max-width: 560px;
+      overflow: visible;
+    }
+    
+    /* ── FLOATING BADGES ── */
+    .h-badge {
+      position: absolute;
+      background: rgba(255,255,255,0.90);
+      backdrop-filter: blur(10px);
+      border-radius: 14px;
+      padding: 9px 15px;
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 4px 24px rgba(45, 106, 106, 0.16);
+      border: 1.5px solid rgba(127, 199, 199, 0.65);
+      white-space: nowrap;
+      z-index: 10;
+    }
+    .h-badge__icon {
+      width: 32px; height: 32px;
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; flex-shrink: 0;
+    }
+    .h-badge__text strong { display: block; font-size: 13px; font-weight: 800; color: var(--h-dark); }
+    .h-badge__text small  { display: block; font-size: 10px; color: var(--h-muted); margin-top: 1px; font-weight: 500; }
+    
+    .h-pulse {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--h-sage);
+      position: relative; flex-shrink: 0;
+    }
+    .h-pulse::after {
+      content: '';
+      position: absolute; inset: -3px;
+      border-radius: 50%;
+      border: 2px solid var(--h-sage);
+      animation: hPulse 1.8s ease-out infinite;
+      opacity: 0;
+    }
+    
+    .h-badge--gempa     { top: 38px;    right: -10px;  animation: hFloat 3.2s ease-in-out infinite; }
+    .h-badge--banjir    { top: 10px;    right: 175px;  animation: hFloat 3.8s ease-in-out 0.5s infinite; }
+    .h-badge--kebakaran { bottom: 148px; left: -8px;   animation: hFloat 3.5s ease-in-out 1.1s infinite; }
+    .h-badge--longsor   { bottom: 92px;  right: 0px;   animation: hFloat 3.0s ease-in-out 0.3s infinite; }
+    
+    /* ── KEYFRAMES ── */
+    @keyframes hFloat   { 0%,100%{transform:translateY(0)}   50%{transform:translateY(-8px)} }
+    @keyframes hPulse   { 0%{opacity:.7;transform:scale(1)}  100%{opacity:0;transform:scale(2)} }
+    @keyframes hEnterLeft  { from{opacity:0;transform:translateX(-32px)} to{opacity:1;transform:translateX(0)} }
+    @keyframes hEnterRight { from{opacity:0;transform:translateX(32px)}  to{opacity:1;transform:translateX(0)} }
+    
+    /* ── RESPONSIVE ── */
+    @media (max-width: 820px) {
+      .hero-siaga__inner { grid-template-columns: 1fr; padding: 60px 24px 60px; gap: 40px; }
+      .hero-siaga__h1 { font-size: 36px; }
+      .hero-siaga__scene { height: 320px; }
+      .h-badge--banjir    { display: none; }
+      .h-badge--kebakaran { bottom: 95px; left: -4px; }
+      .h-badge--longsor   { bottom: 48px; }
+    }
+
+    .rust-card {
+        background: #FFFFFF;
+        border: 1px solid #F3F4F6;
+        border-radius: 1rem;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+    }
+
+    .rust-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .injury-card {
+        cursor: pointer;
+        transition: all 0.2s ease;
         position: relative;
         overflow: hidden;
     }
 
-    .after-hero::before{
-        content:'';
-        position:absolute;
-        inset:0;
-        background-image:
-            linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
-        background-size:40px 40px;
-        opacity:.4;
-    }
-
-    .rust-card{
-        background:#EEEEEE;
-        border:1px solid rgba(0,0,0,.06);
-        box-shadow:
-            0 10px 30px rgba(0,0,0,.06),
-            inset 0 1px 0 rgba(255,255,255,.6);
-        transition:.25s ease;
-    }
-
-    .rust-card:hover{
-        transform:translateY(-5px);
-    }
-
-    .injury-card{
-        cursor:pointer;
-        transition:.2s ease;
-        position:relative;
-        overflow:hidden;
-    }
-
-    .injury-card:hover{
-        background:#fff;
-        transform:translateY(-5px);
-        box-shadow:0 15px 40px rgba(45, 106, 106, 0.12);
+    .injury-card:hover {
+        background: #FFFFFF;
+        transform: translateY(-4px);
+        box-shadow: 0 10px 15px -3px rgba(45, 106, 106, 0.1), 0 4px 6px -2px rgba(45, 106, 106, 0.05);
+        border-color: var(--c-teal-light);
     }
 
     .injury-icon{
@@ -94,28 +292,33 @@
         margin-top:.6rem;
     }
 
-    .supply-btn{
-        border:1px solid rgba(0,0,0,.08);
-        background:#fff;
-        transition:.2s ease;
-        cursor:pointer;
+    .supply-btn {
+        background: #FFFFFF;
+        border: 1px solid #F3F4F6;
+        border-radius: 1rem;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+        cursor: pointer;
     }
 
-    .supply-btn:hover{
-        transform:translateY(-5px);
-        border-color:var(--c-teal-main);
+    .supply-btn:hover {
+        transform: translateY(-4px);
+        border-color: var(--c-teal-main);
+        box-shadow: 0 10px 15px -3px rgba(45, 106, 106, 0.1), 0 4px 6px -2px rgba(45, 106, 106, 0.05);
     }
 
-    .mini-card{
-        background:white;
-        border:1px solid rgba(0,0,0,.06);
-        transition:.2s ease;
+    .mini-card {
+        background: #FFFFFF;
+        border: 1px solid #F3F4F6;
+        border-radius: 1rem;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
     }
 
-    .mini-card:hover{
-        transform:translateY(-5px);
-        border-color:var(--c-teal-main);
-        box-shadow:0 12px 30px rgba(0,0,0,.08);
+    .mini-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--c-teal-main);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     }
 
     .craft-layout{
@@ -582,27 +785,181 @@
 >
 
     {{-- HERO --}}
-    <section class="after-hero min-h-[55vh] flex items-center">
-        <div class="relative z-10 max-w-6xl mx-auto px-5 pt-28 md:pt-32 pb-24 w-full">
-
-            <div class="max-w-3xl">
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full dark-badge text-sm mb-7">
-                    <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                    Mode Pemulihan Pasca Bencana
-                </div>
-
-                <h1 class="font-head text-5xl md:text-7xl font-black text-white leading-[1.05]">
-                    Tetap Tenang.<br>
-                    <span class="text-[#EAD196]">Lanjut Bertahan.</span>
-                </h1>
-
-                <p class="text-white/65 max-w-xl mt-7 text-lg leading-relaxed">
-                    Penanganan luka, pencarian supply, tutorial survival, dan informasi caregiver
-                    untuk kondisi pasca bencana.
-                </p>
-            </div>
-
+    <section class="hero-siaga pt-24 md:pt-28 min-h-[calc(100vh-5rem)]">
+      <div class="hero-siaga__inner">
+     
+        {{-- ══ LEFT TEXT ══ --}}
+        <div class="hero-siaga__text">
+     
+          <div class="hero-siaga__eyebrow">
+             Mode Pemulihan Pasca Bencana
+          </div>
+     
+          <h1 class="hero-siaga__h1">
+            Tetap Tenang.<br/>
+            <em>Lanjut Bertahan.</em>
+          </h1>
+     
+          <p class="hero-siaga__desc">
+            Penanganan luka, pencarian supply, tutorial survival, dan informasi caregiver untuk kondisi pasca bencana.
+          </p>
+     
+          <div class="hero-siaga__cta">
+            <a href="#after-category-container" class="hero-btn-main">🏥 Panduan Pemulihan</a>
+            <a href="#supply" class="hero-btn-ghost">🛠️ Cari Supply</a>
+          </div>
+     
         </div>
+     
+        {{-- ══ RIGHT ILLUSTRATION ══ --}}
+        <div class="hero-siaga__scene">
+     
+          {{-- FLAT 2D SVG SCENE (TWILIGHT PALETTE) --}}
+          <svg class="hero-siaga__svg" viewBox="0 0 540 460" fill="none" xmlns="http://www.w3.org/2000/svg">
+     
+            {{-- BG --}}
+            <rect width="540" height="460" rx="24" fill="#0B1B1B"/>
+     
+            {{-- Moon --}}
+            <circle cx="438" cy="100" r="32" fill="#E8F6F3" opacity="0.9"/>
+            <circle cx="438" cy="100" r="44" fill="#E8F6F3" opacity="0.15"/>
+     
+            {{-- clouds --}}
+            <g opacity="0.25">
+              <ellipse cx="96" cy="78" rx="38" ry="20" fill="#7FC7C7"/>
+              <ellipse cx="74" cy="84" rx="22" ry="16" fill="#7FC7C7"/>
+              <ellipse cx="118" cy="86" rx="20" ry="14" fill="#7FC7C7"/>
+              <ellipse cx="96" cy="90" rx="42" ry="14" fill="#7FC7C7"/>
+            </g>
+            <g opacity="0.15">
+              <ellipse cx="318" cy="55" rx="28" ry="14" fill="#7FC7C7"/>
+              <ellipse cx="302" cy="60" rx="16" ry="11" fill="#7FC7C7"/>
+              <ellipse cx="334" cy="62" rx="14" ry="10" fill="#7FC7C7"/>
+              <ellipse cx="318" cy="66" rx="31" ry="10" fill="#7FC7C7"/>
+            </g>
+     
+            {{-- mountains --}}
+            <ellipse cx="90"  cy="320" rx="140" ry="95" fill="#1F3E3E" opacity="0.40"/>
+            <ellipse cx="470" cy="315" rx="130" ry="88" fill="#1F3E3E" opacity="0.40"/>
+            <ellipse cx="60"  cy="380" rx="170" ry="75" fill="#1F3E3E" opacity="0.55"/>
+            <ellipse cx="490" cy="375" rx="160" ry="70" fill="#1F3E3E" opacity="0.55"/>
+            <ellipse cx="270" cy="430" rx="330" ry="72" fill="#2D5353"/>
+     
+            {{-- ground --}}
+            <rect x="0" y="388" width="540" height="72" fill="#2D5353"/>
+            <ellipse cx="100" cy="388" rx="80"  ry="18" fill="#2D5353"/>
+            <ellipse cx="270" cy="386" rx="120" ry="20" fill="#2D5353"/>
+            <ellipse cx="430" cy="388" rx="90"  ry="18" fill="#2D5353"/>
+     
+            {{-- path --}}
+            <path d="M248 390 Q270 350 292 390 L296 460 L244 460 Z" fill="#122B2B" opacity="0.6"/>
+            <path d="M263 370 Q270 358 277 370 L279 390 L261 390 Z" fill="#122B2B" opacity="0.4"/>
+     
+            {{-- trees left --}}
+            <rect x="44" y="340" width="12" height="52" rx="5" fill="#0B1B1B"/>
+            <ellipse cx="50" cy="324" rx="28" ry="34" fill="#0B1B1B"/>
+            <ellipse cx="50" cy="316" rx="20" ry="24" fill="#122B2B"/>
+     
+            <rect x="98" y="354" width="10" height="38" rx="4" fill="#0B1B1B"/>
+            <ellipse cx="103" cy="340" rx="22" ry="28" fill="#0B1B1B"/>
+            <ellipse cx="103" cy="332" rx="16" ry="20" fill="#122B2B"/>
+     
+            <ellipse cx="160" cy="385" rx="20" ry="14" fill="#122B2B"/>
+            <ellipse cx="148" cy="388" rx="14" ry="11" fill="#0B1B1B" opacity="0.6"/>
+            <ellipse cx="172" cy="387" rx="13" ry="10" fill="#0B1B1B" opacity="0.6"/>
+     
+            {{-- trees right --}}
+            <rect x="434" y="342" width="12" height="50" rx="5" fill="#0B1B1B"/>
+            <ellipse cx="440" cy="326" rx="28" ry="34" fill="#0B1B1B"/>
+            <ellipse cx="440" cy="318" rx="20" ry="24" fill="#122B2B"/>
+     
+            <rect x="382" y="356" width="10" height="36" rx="4" fill="#0B1B1B"/>
+            <ellipse cx="387" cy="342" rx="22" ry="27" fill="#0B1B1B"/>
+            <ellipse cx="387" cy="335" rx="16" ry="19" fill="#122B2B"/>
+     
+            <ellipse cx="480" cy="386" rx="22" ry="14" fill="#122B2B"/>
+            <ellipse cx="468" cy="389" rx="14" ry="10" fill="#0B1B1B" opacity="0.55"/>
+     
+            {{-- house shadow --}}
+            <ellipse cx="270" cy="396" rx="95" ry="10" fill="#0B1B1B" opacity="0.4"/>
+     
+            {{-- house walls --}}
+            <rect x="184" y="294" width="172" height="100" rx="6" fill="#1F3E3E"/>
+            <rect x="318" y="294" width="38"  height="100" rx="0" fill="#122B2B" opacity="0.4"/>
+     
+            {{-- door --}}
+            <rect x="248" y="336" width="44" height="58" rx="5" fill="#122B2B"/>
+            <rect x="248" y="336" width="44" height="58" rx="5" fill="#0B1B1B" opacity="0.28"/>
+            <rect x="254" y="342" width="14" height="20" rx="3" fill="#0B1B1B" opacity="0.22"/>
+            <rect x="272" y="342" width="14" height="20" rx="3" fill="#0B1B1B" opacity="0.22"/>
+            <circle cx="268" cy="368" r="3.5" fill="#0B1B1B"/>
+            <circle cx="272" cy="368" r="3.5" fill="#0B1B1B"/>
+     
+            {{-- left window (lights on) --}}
+            <rect x="196" y="310" width="42" height="36" rx="5" fill="#FDE68A" opacity="0.85"/>
+            <rect x="196" y="310" width="42" height="36" rx="5" fill="#F59E0B" opacity="0.2"/>
+            <g stroke="#D97706" stroke-width="2.5" opacity="0.5">
+              <line x1="217" y1="310" x2="217" y2="346"/>
+              <line x1="196" y1="328" x2="238" y2="328"/>
+            </g>
+     
+            {{-- right window (lights off) --}}
+            <rect x="302" y="310" width="42" height="36" rx="5" fill="#122B2B" opacity="0.7"/>
+            <g stroke="#0B1B1B" stroke-width="2.5" opacity="0.5">
+              <line x1="323" y1="310" x2="323" y2="346"/>
+              <line x1="302" y1="328" x2="344" y2="328"/>
+            </g>
+     
+            {{-- roof --}}
+            <path d="M168 296 L270 230 L372 296 Z" fill="#122B2B"/>
+            <path d="M270 230 L372 296 L356 296 L270 240 Z" fill="#0B1B1B" opacity="0.3"/>
+            <path d="M220 262 L234 262 L234 220 L220 220 Z" fill="#0B1B1B"/>
+     
+            {{-- roof edge --}}
+            <path d="M164 298 L270 228 L376 298 L370 304 L270 238 L170 304 Z" fill="#091414"/>
+     
+            {{-- bushes --}}
+            <ellipse cx="178" cy="388" rx="26" ry="14" fill="#0B1B1B"/>
+            <ellipse cx="204" cy="392" rx="18" ry="10" fill="#122B2B"/>
+            <ellipse cx="362" cy="388" rx="26" ry="14" fill="#0B1B1B"/>
+            <ellipse cx="336" cy="392" rx="18" ry="10" fill="#122B2B"/>
+          </svg>
+     
+          {{-- FLOATING BADGES --}}
+          <div class="h-badge h-badge--gempa">
+            <div class="h-badge__icon" style="background:#FFEBEB; color:#C0392B;">🩸</div>
+            <div class="h-badge__text">
+              <strong>P3K Darurat</strong>
+              <small>Rawat Luka Cepat</small>
+            </div>
+          </div>
+     
+          <div class="h-badge h-badge--banjir">
+            <div class="h-badge__icon" style="background:#EBF5FF; color:#2980B9;">💧</div>
+            <div class="h-badge__text">
+              <strong>Cari Air Minum</strong>
+              <small>Filter Darurat</small>
+            </div>
+          </div>
+     
+          <div class="h-badge h-badge--kebakaran">
+            <div class="h-badge__icon" style="background:#E8F6F3; color:#16A085;">🏕️</div>
+            <div class="h-badge__text">
+              <strong>Bangun Bivak</strong>
+              <small>Tutorial Survival</small>
+            </div>
+          </div>
+     
+          <div class="h-badge h-badge--longsor">
+            <div class="h-badge__icon" style="background:#F4ECF7; color:#8E44AD;">🧠</div>
+            <div class="h-badge__text">
+              <strong>Pemulihan Mental</strong>
+              <small>Trauma Healing</small>
+            </div>
+          </div>
+     
+        </div>
+      </div>
     </section>
 
     {{-- JENIS LUKA --}}
@@ -623,7 +980,7 @@
                         Luka Luar
                     </p>
 
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
 
                         <template x-for="item in injuries.luar">
                             <button
@@ -647,7 +1004,7 @@
                         Luka Dalam
                     </p>
 
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
 
                         <template x-for="item in injuries.dalam">
                             <button
@@ -716,7 +1073,7 @@
                 </p>
             </div>
 
-            <div id="supply" class="grid md:grid-cols-3 gap-8">
+            <div id="supply" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-8">
 
                 <button
                     @click="openSupply('minum')"
@@ -810,7 +1167,7 @@
                     <button @click="openCraft(craft)" class="bg-white p-5 rounded-[22px] border border-gray-200 cursor-pointer transition-all hover:shadow-md hover:-translate-y-1 text-center w-full shadow-sm">
                         
                         {{-- Box Gambar Kotak --}}
-                        <div class="h-40 rounded-xl flex items-center justify-center text-5xl mb-4" style="background: var(--c-teal-bg);">
+                        <div class="h-48 rounded-xl flex items-center justify-center text-6xl mb-4" style="background: var(--c-teal-bg);">
                             <span x-text="craft.icon"></span>
                         </div>
                         
@@ -1197,33 +1554,32 @@ function sesudahPage(){
                     name:'Luka Sayat',
                     icon:'🩸',
                     desc:'Luka terbuka akibat benda tajam',
-                    detail:'Penanganan luka sayat memerlukan pembersihan menyeluruh dan balutan steril untuk mencegah infeksi. Lakukan penekanan untuk menghentikan pendarahan.',
-                    tags:['Balut','Bersihkan', 'Tekan'],
+                    detail:'Penanganan luka sayat memerlukan pembersihan menyeluruh. Gunakan air bersih mengalir. Jangan gunakan antiseptik (betadine) langsung pada luka terbuka karena merusak jaringan.',
+                    tags:['Air Bersih','Balut', 'Tekan'],
                     steps: [
                         'Cuci tangan dengan sabun bersih',
+                        'Bilas luka dengan air bersih yang mengalir secara menyeluruh',
                         'Tekan luka dengan kain bersih untuk menghentikan darah',
-                        'Bilas dengan air bersih yang mengalir',
-                        'Oleskan antiseptik (betadine jika tersedia)',
+                        'Gunakan salep antibiotik ringan (opsional) di sekitar luka',
                         'Balut dengan kain steril'
                     ],
-                    // Ikon dinamis tiap langkah
-                    stepVisuals: ['🧼', '🩸', '🚰', '🩹', '🤕']
+                    stepVisuals: ['🧼', '🚰', '🩸', '💊', '🤕']
                 },
                 {
                     id:'luka_lecet',
                     name:'Luka Lecet',
                     icon:'🩹',
                     desc:'Gesekan pada kulit',
-                    detail:'Luka lecet (abrasi) adalah luka superfisial akibat gesekan. Fokus pada pembersihan dan pencegahan infeksi untuk penyembuhan optimal.',
-                    tags:['Antiseptik','Bersih'],
+                    detail:'Luka lecet (abrasi) adalah luka superfisial akibat gesekan. Fokus pada pembersihan dan pencegahan infeksi menggunakan sabun ringan, bukan yodium keras.',
+                    tags:['Sabun Ringan','Bersih'],
                     steps: [
-                        'Bilas area lecet dengan air bersih',
-                        'Singkirkan kotoran atau debu dengan lembut',
-                        'Aplikasikan antiseptik (povidon iodine)',
-                        'Tutup dengan kain kasa jika diperlukan',
+                        'Bilas area lecet dengan air bersih mengalir',
+                        'Singkirkan kotoran atau debu dengan lembut menggunakan sabun ringan',
+                        'Oleskan salep antibiotik ringan jika tersedia',
+                        'Tutup dengan kain kasa jika diperlukan atau di area yang mudah kotor',
                         'Jangan digosok, biarkan kering alami'
                     ],
-                    stepVisuals: ['🚰', '🧹', '🩹', '🤕', '🌬️']
+                    stepVisuals: ['🚰', '🧼', '💊', '🩹', '🌬️']
                 },
                 {
                     id:'luka_tusuk',
@@ -1250,10 +1606,10 @@ function sesudahPage(){
                     tags:['Air Dingin','Segera'],
                     steps: [
                         'Segera jauhkan dari sumber panas',
-                        'Dinginkan area luka dengan air dingin 10-15 menit',
+                        'Dinginkan area luka dengan air dingin mengalir 10-15 menit',
                         'Jangan menggosok atau memberikan es langsung',
                         'Keluarkan perhiasan/gelang dari area luka',
-                        'Tutup dengan perban steril (jangan pasta gigi)'
+                        'Tutup dengan perban steril secara longgar (jangan pasta gigi)'
                     ],
                     stepVisuals: ['🏃', '🚰', '🧊', '💍', '🩹']
                 }
@@ -1265,12 +1621,12 @@ function sesudahPage(){
                     name:'Patah Tulang',
                     icon:'🦴',
                     desc:'Stabilkan area tubuh',
-                    detail:'Patah tulang memerlukan imobilisasi segera untuk mencegah kerusakan lebih lanjut. Buat bidai darurat dari bahan di sekitar untuk menstabilkan anggota yang terluka.',
+                    detail:'Patah tulang memerlukan imobilisasi segera untuk mencegah kerusakan lebih lanjut. Buat bidai darurat dan ingat untuk JANGAN mengikat tepat di area patah.',
                     tags:['Bidai','Imobilisasi','Medis'],
                     steps: [
-                        'Immobilisasi area yang dicurigai patah',
-                        'Buat bidai dari ranting, papan, atau kain tebal',
-                        'Terikat dengan tali atau kain untuk stabilisasi',
+                        'Immobilisasi area yang dicurigai patah (jangan coba diluruskan)',
+                        'Buat bidai dari ranting, papan, atau benda kaku',
+                        'Ikat bidai HARUS di atas dan di bawah area patah (bukan tepat di titik patah)',
                         'Kompres dengan air dingin jika ada pembengkakan',
                         'Segera bawa ke pusat medis'
                     ],
@@ -1281,48 +1637,48 @@ function sesudahPage(){
                     name:'Cedera Kepala',
                     icon:'🧠',
                     desc:'Pantau kesadaran',
-                    detail:'Cedera kepala dapat mengancam jiwa. Monitor kesadaran dan cari tanda peringatan seperti mual, pusing, atau perubahan perilaku. Segera minta bantuan medis.',
+                    detail:'Cedera kepala dapat mengancam jiwa. JANGAN ubah posisi korban (jangan dimiringkan) jika curiga cedera leher/tulang belakang kecuali korban tersedak muntah.',
                     tags:['BAHAYA','Monitor','Medis'],
                     steps: [
-                        'Letakkan korban dalam posisi recovery (miring)',
-                        'Monitor kesadaran dan responsif',
+                        'JANGAN pindahkan atau miringkan jika curiga cedera leher/tulang belakang',
+                        'Monitor kesadaran dan responsif secara ketat',
                         'Cek adanya perdarahan dari telinga/hidung',
-                        'Jangan biarkan tidur jika cedera serius',
+                        'Jika perlu tidur, bangunkan dan cek setiap beberapa jam',
                         'Hubungi medis darurat segera'
                     ],
-                    stepVisuals: ['🛌', '👀', '🩸', '🚫', '🚑']
+                    stepVisuals: ['🚫', '👀', '🩸', '⏰', '🚑']
                 },
                 {
                     id:'sesak_nafas',
                     name:'Sesak Nafas',
                     icon:'🫁',
-                    desc:'Pastikan jalan napas',
-                    detail:'Sesak napas adalah kondisi gawat darurat. Pastikan jalan napas terbuka dan lakukan CPR jika korban tidak bernapas. Hubungi ambulans segera.',
-                    tags:['CPR','DARURAT','Medis'],
+                    desc:'Posisikan duduk setengah bersandar',
+                    detail:'Sesak napas (seperti asma atau panik) membutuhkan ruang paru-paru untuk mengembang. Jangan baringkan rata atau lakukan CPR kecuali henti napas.',
+                    tags:['Duduk Bersandar','Tenang','Inhaler'],
                     steps: [
-                        'Buka jalan napas dengan posisi kepala terdorong ke belakang',
-                        'Buka mulut untuk cek sumbatan',
-                        'Lakukan CPR jika tidak bernapas (30 kompresi:2 napas)',
-                        'Letakkan dalam posisi pemulihan saat sadar',
-                        'Hubungi ambulans dan pantau napas'
+                        'Posisikan korban duduk setengah bersandar (High Fowler / W-position)',
+                        'Longgarkan pakaian yang ketat di area dada dan leher',
+                        'Bantu gunakan inhaler jika mereka memiliki riwayat asma',
+                        'Tenangkan korban, ajak bernapas perlahan bersama',
+                        'Hubungi ambulans jika tidak membaik'
                     ],
-                    stepVisuals: ['😮‍💨', '🔍', '❤️', '🛌', '🚑']
+                    stepVisuals: ['🪑', '👕', '🌬️', '🤝', '🚑']
                 },
                 {
                     id:'pingsan',
                     name:'Pingsan',
                     icon:'😵',
-                    desc:'Cek respon tubuh',
-                    detail:'Korban pingsan butuh monitoring ketat. Letakkan dalam posisi pemulihan, cek responsif, dan segera hubungi medis jika tidak sadar lama.',
-                    tags:['Recovery','Monitor','Medis'],
+                    desc:'Baringkan dan angkat kaki',
+                    detail:'Pingsan (sinkop) terjadi karena kurangnya darah ke otak. Segera baringkan telentang dan angkat kaki (Shock Position). Hanya gunakan posisi miring jika muntah.',
+                    tags:['Angkat Kaki','Shock Position','Monitor'],
                     steps: [
-                        'Letakkan dalam posisi pemulihan (miring)',
+                        'Baringkan telentang, angkat kaki lebih tinggi dari jantung (Shock Position)',
+                        'HANYA miringkan (Recovery Position) jika korban muntah',
                         'Cek responsif dengan panggil dan sentuh ringan',
-                        'Monitor napas dan denyut nadi',
-                        'Jangan memberi minum selama belum sadar sepenuhnya',
-                        'Hubungi medis jika belum sadar dalam 5 menit'
+                        'Longgarkan pakaian yang ketat',
+                        'Hubungi medis jika belum sadar lebih dari 1 menit'
                     ],
-                    stepVisuals: ['🛌', '👋', '👀', '🚫', '🚑']
+                    stepVisuals: ['🦵', '🤮', '👋', '👕', '🚑']
                 }
             ]
         },
@@ -1388,7 +1744,7 @@ function sesudahPage(){
                     { d: 'Langkah 1: Lipat kain membentuk segitiga.', i: '📐' },
                     { d: 'Langkah 2: Tekuk lengan sekitar 90 derajat dan posisikan telapak tangan sedikit lebih tinggi dari siku.', i: '💪' },
                     { d: 'Langkah 3: Masukkan lengan ke kain hingga siku tertutup dan tangan berada di tengah.', i: '🪢' },
-                    { d: 'Langkah 3: Ikat dua ujung kain ke leher.', i: '🪢' }
+                    { d: 'Langkah 4: Ikat dua ujung kain ke leher.', i: '🪢' }
                 ]
             }
         ],
@@ -1396,19 +1752,66 @@ function sesudahPage(){
         craftingItems:[
             {
                 title:'Bidai Darurat',
-                icon:'🪵',
+                icon:'🩹',
                 materials:[
-                    { name: 'Kayu', role: 'Penyangga', icon: '👕', swappable: true, options: [{n: 'Kayu', i: '👕'}, {n: 'Bambu', i: '🛌'}, {n: 'Tongkat', i: '🧕'}, {n: 'Karton Tebal', i: '🧕'}] },
-                    { name: 'Perban', role: 'Pengikat', icon: '👕', swappable: true, options: [{n: 'Perban', i: '👕'}, {n: 'Tali', i: '🧵'}, {n: 'Kain', i: '🟩'}, {n: 'Syal', i: '�'}] },
-                    { name: 'Kain Lembut', role: 'Bantalan Tambahan', icon: '👕', swappable: true, options: [{n: 'Kain Lembut', i: '👕'}, {n: 'kapas', i: '🧵'}, {n: 'Handuk', i: '🟩'}, {n: 'Baju Lipat', i: ''}] }
+                    { name: 'Kayu Lurus', role: 'Penyangga', icon: '🪵', swappable: true, options: [{n: 'Kayu Lurus', i: '🪵'}, {n: 'Bambu', i: '🎋'}, {n: 'Tongkat', i: '🦯'}, {n: 'Papan/Karton', i: '📦'}] },
+                    { name: 'Kain Baju', role: 'Pengikat', icon: '👕', swappable: true, options: [{n: 'Kain Baju', i: '👕'}, {n: 'Perban', i: '🩹'}, {n: 'Tali', i: '🧵'}, {n: 'Syal', i: '🧣'}] },
+                    { name: 'Kain Lembut', role: 'Bantalan Tambahan', icon: '🧦', swappable: true, options: [{n: 'Kain Lembut', i: '🧦'}, {n: 'Handuk', i: '🛁'}, {n: 'Baju Lipat', i: '👕'}, {n: 'Kapas', i: '☁️'}] }
                 ],
                 steps: [
-                    { d: 'Periksa cedera, apakah terluka atau patah. Jika posisi terlihat tidak normal jangan paksa diluruskan.', i: '🪵' },
-                    { d: 'Posisikan bidai, harus hingga melewati area cedera dan menopang atas bawah sendi cedera.', i: '🦵' },
-                    { d: 'Tambahkan bantalan di antara kulit dan bidai.', i: '🪢' },
-                    { d: 'Tempelkan bidai ke bagian tubuh yang cedera.', i: '🪢' },
-                    { d: 'Ikat perlahan agar stabil dan jangan terlalu kencang.', i: '🪢' },
-                    { d: 'Periksa sirkulasi agar tidak terganggu.', i: '🪢' }
+                    { d: 'Periksa cedera, apakah terluka atau patah. JANGAN mencoba meluruskan bagian yang terlihat patah atau bengkok.', i: '🛑' },
+                    { d: 'Siapkan 2 penyangga keras (kayu/bambu) yang panjangnya melewati persendian di atas dan di bawah area patah.', i: '🪵' },
+                    { d: 'Sisipkan bantalan (kain lembut/baju) di antara kulit dan penyangga keras agar tidak melukai kulit.', i: '👕' },
+                    { d: 'Tempatkan penyangga keras di sisi kiri dan kanan dari tulang yang patah.', i: '🦵' },
+                    { d: 'Ikat penyangga HARUS di atas dan di bawah titik patah. JANGAN mengikat tepat di area patah.', i: '🪢' },
+                    { d: 'Ikat cukup erat agar stabil, tapi periksa sirkulasi ujung jari.', i: '✋' }
+                ]
+            },
+            {
+                title:'Cairan Pembersih',
+                icon:'🧪',
+                materials:[
+                    { name: 'Air Mineral Segel', role: 'Cairan Steril', icon: '💧', swappable: true, options: [{n: 'Air Botol Segel', i: '💧'}, {n: 'Air Hujan Bersih', i: '🌧️'}, {n: 'Air Kelapa Muda', i: '🥥'}] },
+                    { name: 'Botol Plastik', role: 'Penyemprot', icon: '🧴', swappable: true, options: [{n: 'Botol Plastik', i: '🧴'}, {n: 'Plastik Kiloan', i: '🛍️'}] }
+                ],
+                steps: [
+                    { d: 'Gunakan HANYA air mineral kemasan yang segelnya belum rusak. Jangan gunakan air genangan atau banjir.', i: '💧' },
+                    { d: 'Jika tidak ada, tadah air hujan bersih secara langsung menggunakan wadah.', i: '🌧️' },
+                    { d: 'Dalam kondisi darurat di alam bebas, air kelapa muda bisa digunakan untuk membersihkan kotoran dari luka.', i: '🥥' },
+                    { d: 'Tuang air ke dalam botol plastik bersih, lalu lubangi kecil bagian tutupnya.', i: '🧴' },
+                    { d: 'Semprotkan air dengan tekanan ke arah luka terbuka (flushing) agar kotoran/kerikil terdorong keluar. JANGAN menggosok luka.', i: '🌊' }
+                ]
+            },
+            {
+                title:'Perban Darurat',
+                icon:'🩺',
+                materials:[
+                    { name: 'Pembalut Wanita', role: 'Penyerap Darah', icon: '🩸', swappable: true, options: [{n: 'Pembalut Wanita', i: '🩸'}, {n: 'Tampon', i: '🩸'}, {n: 'Kain Katun Bersih', i: '👕'}] },
+                    { name: 'Baju Kaos Dalam', role: 'Kain Pengikat', icon: '🎽', swappable: true, options: [{n: 'Baju Kaos Dalam', i: '🎽'}, {n: 'Lakban (Duct Tape)', i: '🏷️'}, {n: 'Kain Panjang', i: '🎗️'}] },
+                    { name: 'Plastik Bersih', role: 'Pelindung (Opsional)', icon: '🛍️', swappable: true, options: [{n: 'Plastik Bersih', i: '🛍️'}, {n: 'Jas Hujan', i: '🧥'}] }
+                ],
+                steps: [
+                    { d: 'Gunakan pembalut wanita sebagai bantalan trauma (trauma pad) yang sangat efektif menyerap pendarahan berat.', i: '🩸' },
+                    { d: 'Tempelkan bagian dalam penyerap tepat pada luka. Jika luka tusuk dalam, tampon dapat digunakan perlahan untuk menyumbat pendarahan.', i: '🩹' },
+                    { d: 'Robek baju kaos dalam katun (yang tidak berlumpur) menjadi pita panjang sebagai pengikat bantalan.', i: '✂️' },
+                    { d: 'Ikat dengan kencang tepat di atas bantalan pembalut untuk memberi tekanan (pressure) agar darah berhenti.', i: '🪢' },
+                    { d: 'Jika robekan kain kurang panjang, gunakan lakban/duct tape untuk menahan pembalut. Untuk luka dada tembus, gunakan plastik lalu lakban 3 sisinya.', i: '🏷️' }
+                ]
+            },
+            {
+                title:'Tandu Darurat',
+                icon:'🛌',
+                materials:[
+                    { name: 'Batang Pohon Tebal', role: 'Rangka Penyangga', icon: '🪵', swappable: true, options: [{n: 'Batang Pohon', i: '🪵'}, {n: 'Pipa Paralon', i: '🦯'}, {n: 'Pipa Besi Ringan', i: '🔩'}] },
+                    { name: 'Jaket Tebal (2x)', role: 'Kain Penahan', icon: '🧥', swappable: true, options: [{n: 'Jaket Tebal', i: '🧥'}, {n: 'Sarung Kuat', i: '🥻'}, {n: 'Terpal / Tenda', i: '⛺'}] }
+                ],
+                steps: [
+                    { d: 'Cari DUA tiang penyangga yang lurus dan kokoh sepanjang minimal 2 meter (sesuaikan tinggi korban).', i: '🪵' },
+                    { d: 'Siapkan 2 atau 3 jaket tebal ber-resleting kuat, atau 2 kain sarung utuh.', i: '🧥' },
+                    { d: 'Metode Jaket: Balik bagian luar jaket ke dalam. Masukkan 2 tiang ke dalam kedua lengan jaket pertama, lalu resletingkan.', i: '🤐' },
+                    { d: 'Ulangi langkah tersebut pada jaket kedua (dan ketiga) dengan posisi berhadapan agar area tubuh korban tertopang sempurna.', i: '🥼' },
+                    { d: 'Metode Sarung: Masukkan kedua tiang melintasi lubang dua sarung secara sejajar.', i: '🥻' },
+                    { d: 'Tarik kain hingga tegang. Tiang akan mengunci lipatan kain saat diberi beban. Uji coba dengan tubuh sehat sebelum mengangkat korban terluka.', i: '🏋️' }
                 ]
             }
         ],

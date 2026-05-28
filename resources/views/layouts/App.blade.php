@@ -231,7 +231,7 @@
             transition: all var(--t-med);
         }
         .footer-social:hover { transform: translateY(-4px); background: var(--c-teal); color: white; }
-    </style>
+    </style> 
 
     @stack('styles')
 </head>
@@ -312,7 +312,7 @@
                 border-top: 1px solid rgba(255,255,255,0.15);">
 
         <div class="absolute inset-0 w-full h-full pointer-events-none z-0">
-            <img src="{{ asset('images/Footer_bg.png') }}" alt="Footer Background" class="w-full h-full object-cover object-bottom block opacity-40">
+            <img src="{{ asset('images/Footer_bg.png') }}" alt="Footer Background" class="w-full h-full object-cover object-top block opacity-40">
         </div>
 
         <div class="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-[1.2fr_2fr] gap-12 px-6 sm:px-8 lg:px-12 pb-12 text-white">

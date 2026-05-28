@@ -420,17 +420,14 @@
                 {{-- 5. FOOTER (Warna terintegrasi) --}}
                 <div class="px-6 md:px-12 py-5 border-t flex flex-wrap items-center justify-center md:justify-between gap-4 shrink-0" style="background: #FAFAFA; border-color: var(--c-light);">
                     
-                    <div class="grid grid-cols-6 sm:flex sm:flex-wrap sm:justify-center gap-2 w-full">
+                    <div class="flex flex-wrap justify-center gap-2 w-full">
                         <template x-for="(step, index) in (questions[currentDisasterName] || [])">
                             <button @click="goQuestion(index)"
-                                class="h-9 md:h-10 rounded-xl flex items-center justify-center text-sm font-bold transition-all duration-300 shadow-sm border"
-                                {{-- Jika aktif: padding dilebarkan. Jika tidak: lebarnya dikunci kotak (w-9) --}}
-                                :class="currentStep === index ? 'px-3.5 md:px-4' : 'w-9 md:w-10 px-0'"
+                                class="h-9 md:h-10 px-3.5 md:px-4 rounded-xl flex flex-shrink-0 items-center justify-center text-sm font-bold transition-all duration-300 shadow-sm border"
                                 :style="currentStep === index ? 'background: var(--c-dark-red); color: white; border-color: var(--c-dark-red);' : 'background: white; color: var(--c-red); border-color: var(--c-beige);'">
                                 
-                                {{-- Ikon FontAwesome (Hanya muncul jika tombol sedang aktif) --}}
-                                <i x-show="currentStep === index" 
-                                   :class="step.navIcon" 
+                                {{-- Ikon FontAwesome (Selalu Muncul) --}}
+                                <i :class="step.navIcon" 
                                    class="mr-1.5 md:mr-2 text-[11px] md:text-[13px]"></i>
                                 
                                 {{-- Angka --}}

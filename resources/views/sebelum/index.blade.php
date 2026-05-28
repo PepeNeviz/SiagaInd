@@ -435,31 +435,6 @@ button:focus, input:focus, select:focus {
     background: #84AE92;
 }
 
-#item-grid-blade {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-}
-
-@media (max-width: 640px) {
-    .item-scroll-container {
-        height: 500px;
-    }
-    
-    #item-grid-blade {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-    }
-    
-    .icard {
-        padding: 10px 8px 8px;
-        min-height: 110px;
-    }
-    
-    .icard:active {
-        transform: scale(1.1);
-    }
-}
 
 /* Touch-friendly improvements untuk mobile */
 @media (hover: none) and (pointer: coarse) {
@@ -941,7 +916,7 @@ body.modal-open { overflow: hidden !important; }
         
         {{-- KIRI: ONLY THE BAG (55%) --}}
         <div class="flex flex-col h-full justify-center items-center overflow-hidden w-full min-w-0">
-          <div class="w-full max-w-full overflow-hidden flex justify-center items-center transform scale-[0.70] xs:scale-[0.80] sm:scale-[0.85] lg:scale-100 origin-center">
+          <div class="w-full max-w-full overflow-hidden flex justify-center items-center transform scale-[0.80] md:scale-100 lg:scale-[1.1] 2xl:scale-[1.2] origin-center md:origin-top">
             <div id="bag-wrap" class="flex-shrink-0">
               <svg id="bag-svg" viewBox="0 0 260 340" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <ellipse cx="130" cy="334" rx="88" ry="8" fill="#e2ddd6"/>
@@ -972,7 +947,7 @@ body.modal-open { overflow: hidden !important; }
         </div>
 
         {{-- KANAN: DAFTAR ELEMEN ITEM (45%) --}}
-        <div class="flex flex-col h-full overflow-hidden w-full min-w-0 pr-1 pl-0.5">
+        <div class="flex flex-col h-full overflow-hidden w-full min-w-0 pr-3 pl-1">
           
           <div class="flex items-center justify-between mb-2 px-1">
             <h3 class="font-head font-bold text-navy text-sm sm:text-base lg:text-lg whitespace-nowrap overflow-hidden text-ellipsis truncate w-full">Daftar Item</h3>
@@ -986,7 +961,7 @@ body.modal-open { overflow: hidden !important; }
           </div>
 
           <!-- Item Grid with Internal Scroll (Strictly 2 Cols on mobile) -->
-          <div class="item-scroll-container flex-1 overflow-y-auto slim-scroll pr-1 pl-1 pb-4">
+          <div class="item-scroll-container flex-1 overflow-y-auto slim-scroll px-1 pb-4">
             <div class="grid grid-cols-2 gap-2 w-full" id="item-grid-blade">
               <template x-for="item in filteredRekomendasi" :key="item.id">
                 
@@ -995,7 +970,7 @@ body.modal-open { overflow: hidden !important; }
                      :class="{'used': usedIds.includes(item.id)}"
                      draggable="true"
                      @dragstart="window.startDragCard(event, item.id, item.nama_item, item.zona_saran, rotatedIds.includes(item.id))"
-                     class="icard w-full h-full relative z-10 cursor-pointer select-none transition-all duration-200 bg-white rounded-xl border border-gray-100 p-2 shadow-sm"
+                     class="icard overflow-hidden w-full min-w-0 h-full min-h-[130px] relative z-10 cursor-pointer select-none transition-all duration-200 bg-white rounded-xl border border-gray-100 p-2 sm:p-3 shadow-sm flex flex-col items-center justify-center"
                      @click="if(!usedIds.includes(item.id)) { 
                          $el.classList.add('scale-90', 'opacity-75');
                          setTimeout(() => $el.classList.remove('scale-90', 'opacity-75'), 200);
@@ -1011,12 +986,12 @@ body.modal-open { overflow: hidden !important; }
                   </button>
 
                   {{-- Dimensi Mini Preview --}}
-                  <div draggable="false" class="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden relative mx-auto">
+                  <div draggable="false" class="w-16 h-16 max-w-full overflow-hidden transform scale-[0.8] sm:scale-100 origin-center bg-gray-100 rounded-xl flex items-center justify-center relative mx-auto mb-1">
                     <div :style="getPreviewStyle(item)" class="rounded-sm opacity-60 border border-gray-300 bg-gray-300 transition-all duration-200"></div>
                   </div>
 
-                  <p class="text-[9px] sm:text-[10px] font-semibold text-navy text-center leading-tight mt-1" x-text="item.nama_item"></p>
-                  <span class="text-[8px] sm:text-[9px] text-gray-400 block text-center mt-0.5" x-text="getDimHint(item)"></span>
+                  <p class="text-[11px] sm:text-xs font-bold text-navy text-center leading-tight mt-1" x-text="item.nama_item"></p>
+                  <span class="text-[9px] sm:text-[10px] text-gray-400 block text-center mt-0.5" x-text="getDimHint(item)"></span>
                   <div class="flex justify-center mt-1">
                     <span class="zdot" :class="item.zona_saran==='sangat_penting'?'da':item.zona_saran==='penting'?'db':'dc'"></span>
                   </div>

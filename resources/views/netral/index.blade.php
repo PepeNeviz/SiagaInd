@@ -250,7 +250,7 @@
                 @click="$dispatch('open-crafting', { type: 'Survival', item: '{{ $craft[1] }}', icon: '{{ $craft[0] }}' })"
                 class="info-main-card reveal p-5 rounded-2xl border cursor-pointer transition-all hover:shadow-md hover:-translate-y-1"
                 style="background: var(--color-surface); border-color: var(--color-border);">
-                <div class="preview-box h-40 rounded-xl flex items-center justify-center text-5xl mb-4" style="background: rgba(var(--color-text-muted-rgb, 128,128,128), 0.1);">
+                <div class="preview-box h-48 rounded-xl flex items-center justify-center text-6xl mb-4" style="background: rgba(var(--color-text-muted-rgb, 128,128,128), 0.1);">
                     {{ $craft[0] }}
                 </div>
                 <h3 class="text-sm font-bold" style="color: var(--color-text-primary);">{{ $craft[1] }}</h3>
@@ -274,16 +274,16 @@
 
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             @foreach([
-                ['🩹', 'Bidai Darurat', 'Bidai Darurat'],
-                ['🧪', 'Cairan P3K', 'cairan-p3k'],
+                ['🩹', 'Bidai Darurat', 'bidai'],
+                ['🧪', 'Cairan Pembersih', 'cairan-pembersih'],
                 ['🩺', 'Perban Darurat', 'perban-darurat'],
-                ['💊', 'Kit Obat Medis', 'kit-obat']
+                ['🛌', 'Tandu Darurat', 'tandu']
             ] as $care)
             <button 
                 @click="$dispatch('open-crafting', { type: 'Caregiver', item: '{{ $care[1] }}', icon: '{{ $care[0] }}' })"
                 class="info-main-card reveal p-5 rounded-2xl border cursor-pointer transition-all hover:shadow-md hover:-translate-y-1"
                 style="background: var(--color-surface); border-color: var(--color-border);">
-                <div class="preview-box h-40 rounded-xl flex items-center justify-center text-5xl mb-4" style="background: rgba(var(--color-text-muted-rgb, 128,128,128), 0.1);">
+                <div class="preview-box h-48 rounded-xl flex items-center justify-center text-6xl mb-4" style="background: rgba(var(--color-text-muted-rgb, 128,128,128), 0.1);">
                     {{ $care[0] }}
                 </div>
                 <h3 class="text-sm font-bold" style="color: var(--color-text-primary);">{{ $care[1] }}</h3>
@@ -469,15 +469,12 @@
 
         {{-- FOOTER 1: Khusus muncul saat fase 'saat' --}}
         <div x-show="fase === 'saat'" class="border-t border-slate-200 px-6 py-4 bg-slate-50 rounded-b-[24px] md:rounded-b-[32px] flex flex-col items-center justify-center">
-            <div class="grid grid-cols-6 sm:flex sm:flex-wrap sm:justify-center gap-2 w-full">
+            <div class="flex flex-wrap justify-center gap-2 w-full">
                 <template x-for="(item, index) in getSteps()" :key="index">
                     <button @click="currentStep = index" 
-                            :class="currentStep === index ? 'bg-slate-800 text-white shadow-sm px-3 sm:px-4' : 'bg-slate-200 text-slate-500 hover:bg-slate-300 w-9 sm:w-10 px-0'"
-                            class="h-9 sm:h-10 rounded-xl flex items-center justify-center text-xs font-black transition-all duration-300 mx-auto">
-                        <span x-show="currentStep === index" class="flex items-center justify-center gap-1.5 text-[11px]">
-                            <i :class="item.navIcon" class="text-[10px]"></i><span x-text="index+1"></span>
-                        </span>
-                        <span x-show="currentStep !== index" x-text="index+1"></span>
+                            :class="currentStep === index ? 'bg-slate-800 text-white shadow-sm' : 'bg-slate-200 text-slate-500 hover:bg-slate-300'"
+                            class="h-9 sm:h-10 px-3 sm:px-4 rounded-xl flex flex-shrink-0 items-center justify-center text-xs font-black transition-all duration-300 gap-1.5">
+                        <i :class="item.navIcon" class="text-[10px]"></i><span x-text="index+1"></span>
                     </button>
                 </template>
             </div>
@@ -1284,114 +1281,184 @@
             if (this.touchEndX > this.touchStartX + 50) this.prevStep();
         },
 
-        switchToolIcon() {
-
-            if(this.toolIcons.length <= 1) return;
-
-            this.currentToolIconIndex++;
-
-            if(this.currentToolIconIndex >= this.toolIcons.length) {
-
-                this.currentToolIconIndex = 0;
+                switchToolIcon() {
+            if (this.toolIcons && this.toolIcons.length > 0) {
+                this.currentToolIconIndex = (this.currentToolIconIndex + 1) % this.toolIcons.length;
+                this.toolIcon = this.toolIcons[this.currentToolIconIndex].icon;
+                this.toolName = this.toolIcons[this.currentToolIconIndex].name;
             }
-
-            this.toolIcon = this.toolIcons[this.currentToolIconIndex].icon;
-
-            this.toolName = this.toolIcons[this.currentToolIconIndex].name;
         },
 
         closeModal() {
-
             this.open = false;
-
             document.body.classList.remove('modal-open');
         }
     }
 }
 
-    function craftingModal() {
-    return {
-        open: false, item: '', icon: '', currentView: 'selection', currentStep: 1, materials: [],
-        touchStartX: 0, touchEndX: 0,
-        
-        init() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('openTutorial') === 'filter-air') {
-                this.$nextTick(() => {
-                    this.openModal({item: 'Filter Air'});
-                });
+function craftingModal() {
+    const craftingData = {
+        'Filter Air': {
+            icon: '🧴',
+            materials: [
+                { name: 'Botol Plastik', role: 'Wadah Filter', icon: '🧴', swappable: true, options: [{n: 'Botol Plastik', i: '🧴'}, {n: 'Botol Kaca', i: '🫙'}, {n: 'Wadah Bambu', i: '🎋'}, {n: 'Kaleng Tinggi', i: '🥫'}] },
+                { name: 'Kain Bersih', role: 'Kain Penyaring', icon: '🟩', swappable: true, options: [{n: 'Kain Bersih', i: '🟩'}, {n: 'Tisu Tebal', i: '🧻'}, {n: 'Kapas', i: '🌸'}, {n: 'Kaos Bekas', i: '👕'}] },
+                { name: 'Arang Kayu', role: 'Penyaring', icon: '🔥', swappable: true, options: [{n: 'Arang Kayu', i: '🔥'}, {n: 'Arang Tempurung Kelapa', i: '🥥'}, {n: 'Arang Bambu', i: '🎋'}, {n: 'Arang Kayu Keras', i: '🪵'}] },
+                { name: 'Pasir Bersih', role: 'Penyaring Halus', icon: '🌾', swappable: true, options: [{n: 'Pasir Bersih', i: '🌾'}, {n: 'Pasir Sungai', i: '🏞️'}, {n: 'Pasir Bangunan', i: '🏗️'}, {n: 'Pasir Pantai', i: '🏖️'}] },
+                { name: 'Batu Kerikil', role: 'Penyaring Kasar', icon: '🪨', swappable: true, options: [{n: 'Batu Kerikil', i: '🪨'}, {n: 'Batu Kali', i: '🪨'}, {n: 'Pecahan Bata', i: '🧱'}, {n: 'Kerikil Sungai', i: '🪨'}] },
+                { name: 'Gelas', role: 'Wadah Penampung', icon: '🫗', swappable: true, options: [{n: 'Gelas', i: '🫗'}, {n: 'Botol', i: '🫙'}, {n: 'Baskom', i: '🎋'}, {n: 'Kaleng Bersih', i: '🥫'}] }
+            ],
+            instructions: {
+                1: 'Siapkan dan bersihkan semua bahan yang telah dipilih.',
+                2: 'Potong bagian bawah dan balik botol.',
+                3: 'Taruh kain di mulut botol agar bahan tidak keluar.',
+                4: 'Masukkan bahan mulai dari kerikil, pasir, arang, dan kain.',
+                5: 'Tuang air kotor perlahan ke dalam filter.',
+                6: 'Buang 1-2 hasil penyaringan awal.',
+                7: 'Rebus kembali air jika untuk diminum.'
             }
         },
 
-        craftingData: {
-
-            'Filter Air': {
-                icon: '🧴',
-                materials: [
-                    { name: 'Botol Plastik', role: 'Wadah Filter', icon: '🧴', swappable: true, options: [{n: 'Botol Plastik', i: '🧴'}, {n: 'Botol Kaca', i: '🫙'}, {n: 'Wadah Bambu', i: '🎋'}, {n: 'Kaleng Tinggi', i: '🥫'}] },
-                    { name: 'Kain Bersih', role: 'Kain Penyaring', icon: '🟩', swappable: true, options: [{n: 'Kain Bersih', i: '🟩'}, {n: 'Tisu Tebal', i: '🧻'}, {n: 'Kapas', i: '🌸'}, {n: 'Kaos Bekas', i: '👕'}] },
-                    { name: 'Arang Kayu', role: 'Penyaring', icon: '🔥', swappable: true, options: [{n: 'Arang Kayu', i: '🔥'}, {n: 'Arang Tempurung Kelapa', i: '🥥'}, {n: 'Arang Bambu', i: '🎋'}, {n: 'Arang Kayu Keras', i: '🪵'}] },
-                    { name: 'Pasir Bersih', role: 'Penyaring Halus', icon: '🌾', swappable: true, options: [{n: 'Pasir Bersih', i: '🌾'}, {n: 'Pasir Sungai', i: '🏞️'}, {n: 'Pasir Bangunan', i: '🏗️'}, {n: 'Pasir Pantai', i: '🏖️'}] },
-                    { name: 'Batu Kerikil', role: 'Penyaring Kasar', icon: '🪨', swappable: true, options: [{n: 'Batu Kerikil', i: '🪨'}, {n: 'Batu Kali', i: '🪨'}, {n: 'Pecahan Bata', i: '🧱'}, {n: 'Kerikil Sungai', i: '🪨'}] },
-                    { name: 'Gelas', role: 'Wadah Penampung', icon: '🫗', swappable: true, options: [{n: 'Gelas', i: '🫗'}, {n: 'Botol', i: '🫙'}, {n: 'Baskom', i: '🎋'}, {n: 'Kaleng Bersih', i: '🥫'}] }
-                ],
-                instructions: {
-                    1: 'Siapkan dan bersihkan semua bahan yang telah dipilih.',
-                    2: 'Potong bagian bawah dan balik botol.',
-                    3: 'Taruh kain di mulut botol agar bahan tidak keluar.',
-                    4: 'Masukkan bahan mulai dari kerikil, pasir, arang, dan kain.',
-                    5: 'Tuang air kotor perlahan ke dalam filter.',
-                    6: 'Buang 1-2 hasil penyaringan awal.',
-                    7: 'Rebus kembali air jika untuk diminum.'
-                }
-            },
-
-            'Pisau': {
-                icon: '🧴',
-                materials: [
-                    { name: 'Batu', role: 'Bahan Utama', icon: '🧴', swappable: true, options: [{n: 'Batu', i: '🧴'}, {n: 'Logam Pecah', i: '🫙'}, {n: 'Plastik Keras', i: '🎋'}] },
-                    { name: 'Tali', role: 'Pengikat', icon: '🟩', swappable: true, options: [{n: 'Tali', i: '🟩'}, {n: 'Lakban', i: '🧻'}, {n: 'Serat Tanaman', i: '🌸'}, {n: 'Kaos Bekas', i: '👕'}] },
-                    { name: 'Kayu', role: 'Pegangan', icon: '🔥', swappable: true, options: [{n: 'Kayu', i: '🔥'}, {n: 'Ranting Tebal', i: '🥥'}, {n: 'Bambu', i: '🎋'}, {n: 'Pipa Kecil', i: '🪵'}] }
-                ],
-                instructions: {
-                    1: 'Cari bahan yang paling mudah untuk dibentuk/ditajamkan.',
-                    2: 'Tajamkan ujung atau pinggiran bahan dengan menggesek atau memukulkannya ke batu maupun benda lain.',
-                    3: 'Siapkan pengangan sepanjang tangan, lalu posisikan bahan menyesuaikan dengan pegangan.',
-                    4: 'Ikat bahan ke pegangan dan pastikan kuat.',
-                }
-            },
-
-            'Bidai Darurat': {
-                icon: '🩹',
-                materials: [
-                    { name: 'Kayu', role: 'Penyangga', icon: '👕', swappable: true, options: [{n: 'Kayu', i: '👕'}, {n: 'Bambu', i: '🛌'}, {n: 'Tongkat', i: '🧕'}, {n: 'Karton Tebal', i: '🧕'}] },
-                    { name: 'Perban', role: 'Pengikat', icon: '👕', swappable: true, options: [{n: 'Perban', i: '👕'}, {n: 'Tali', i: '🧵'}, {n: 'Kain', i: '🟩'}, {n: 'Syal', i: '�'}] },
-                    { name: 'Kain Lembut', role: 'Bantalan Tambahan', icon: '👕', swappable: true, options: [{n: 'Kain Lembut', i: '👕'}, {n: 'kapas', i: '🧵'}, {n: 'Handuk', i: '🟩'}, {n: 'Baju Lipat', i: ''}] }
-                ],
-                instructions: {
-                    1: 'Periksa cedera, apakah terluka atau patah. Jika posisi terlihat tidak normal jangan paksa diluruskan.',
-                    2: 'Posisikan bidai, harus hingga melewati area cedera dan menopang atas bawah sendi cedera.',
-                    3: 'Tambahkan bantalan di antara kulit dan bidai.',
-                    4: 'Tempelkan bidai ke bagian tubuh yang cedera.',
-                    5: 'Ikat perlahan agar stabil dan jangan terlalu kencang.',
-                    6: 'Periksa sirkulasi agar tidak terganggu.',
-                }
-            },
-
-            // Anda bisa menambah item Caregiver lain dengan format di atas
+        'Pisau': {
+            icon: '🔪',
+            materials: [
+                { name: 'Batu', role: 'Bahan Utama', icon: '🪨', swappable: true, options: [{n: 'Batu', i: '🪨'}, {n: 'Logam Pecah', i: '🔗'}, {n: 'Plastik Keras', i: '🧴'}] },
+                { name: 'Tali', role: 'Pengikat', icon: '🧵', swappable: true, options: [{n: 'Tali', i: '🧵'}, {n: 'Lakban', i: '🏷️'}, {n: 'Serat Tanaman', i: '🌿'}, {n: 'Kaos Bekas', i: '👕'}] },
+                { name: 'Kayu', role: 'Pegangan', icon: '🪵', swappable: true, options: [{n: 'Kayu', i: '🪵'}, {n: 'Ranting Tebal', i: '🌳'}, {n: 'Bambu', i: '🎋'}, {n: 'Pipa Kecil', i: '🦯'}] }
+            ],
+            instructions: {
+                1: 'Cari bahan yang paling mudah untuk dibentuk/ditajamkan.',
+                2: 'Tajamkan ujung atau pinggiran bahan dengan menggesek atau memukulkannya ke batu maupun benda lain.',
+                3: 'Siapkan pengangan sepanjang tangan, lalu posisikan bahan menyesuaikan dengan pegangan.',
+                4: 'Ikat bahan ke pegangan dan pastikan kuat.'
+            }
         },
+        
+        'Korek Darurat': {
+            icon: '🔥',
+            materials: [
+                { name: 'Baterai Bekas', role: 'Sumber Listrik', icon: '🔋', swappable: true, options: [{n: 'Baterai AA/AAA', i: '🔋'}, {n: 'Baterai Jam', i: '⌚'}, {n: 'Baterai Remote', i: '📱'}] },
+                { name: 'Kertas Timah', role: 'Konduktor', icon: '🍬', swappable: true, options: [{n: 'Bungkus Permen/Rokok', i: '🍬'}, {n: 'Aluminium Foil', i: '🌯'}, {n: 'Bungkus Obat', i: '💊'}] },
+                { name: 'Tisu Kering', role: 'Pemantik (Tinder)', icon: '🧻', swappable: true, options: [{n: 'Tisu Kering', i: '🧻'}, {n: 'Kapas', i: '☁️'}, {n: 'Serabut Kelapa', i: '🥥'}, {n: 'Benang Pakaian', i: '🧵'}] }
+            ],
+            instructions: {
+                1: 'Gunting atau robek kertas timah (aluminium foil) memanjang sekitar 10 cm.',
+                2: 'Bentuk bagian tengah foil menjadi sangat tipis (sekitar 2mm) seperti bentuk jam pasir.',
+                3: 'Siapkan bahan mudah terbakar (tinder) seperti tisu tepat di bawah titik tengah foil.',
+                4: 'Tempelkan satu ujung foil ke kutub positif (+) baterai, dan tahan ujung lainnya.',
+                5: 'Sentuhkan ujung kedua foil ke kutub negatif (-). Bagian tengah akan seketika memerah dan menyulut api. Tiup perlahan.'
+            }
+        },
+        
+        'Kompas Sederhana': {
+            icon: '🧭',
+            materials: [
+                { name: 'Jarum / Kawat', role: 'Jarum Magnetik', icon: '🪡', swappable: true, options: [{n: 'Jarum Jahit', i: '🪡'}, {n: 'Peniti', i: '🧷'}, {n: 'Paperclip', i: '📎'}, {n: 'Silet Cukur', i: '🪒'}] },
+                { name: 'Magnet / Rambut', role: 'Alat Magnetisasi', icon: '🧲', swappable: true, options: [{n: 'Magnet', i: '🧲'}, {n: 'Kain Sutra', i: '🧣'}, {n: 'Rambut', i: '👱'}, {n: 'Magnet Speaker', i: '🔊'}] },
+                { name: 'Daun Kering', role: 'Benda Terapung', icon: '🍂', swappable: true, options: [{n: 'Daun Kering', i: '🍂'}, {n: 'Styrofoam', i: '🥡'}, {n: 'Gabus Botol', i: '🍾'}] },
+                { name: 'Genangan Air', role: 'Wadah Air', icon: '💧', swappable: true, options: [{n: 'Genangan Air', i: '💧'}, {n: 'Mangkuk/Gelas Air', i: '🥣'}, {n: 'Tempurung Kelapa', i: '🥥'}] }
+            ],
+            instructions: {
+                1: 'Buat jarum menjadi magnet dengan menggesekkannya ke arah yang SAMA (jangan bolak-balik) sebanyak 50x menggunakan magnet atau rambut.',
+                2: 'Letakkan daun kering atau styrofoam perlahan di atas permukaan air yang tenang agar mengapung.',
+                3: 'Taruh jarum yang sudah dimagnetisasi dengan sangat hati-hati di atas daun tersebut.',
+                4: 'Tunggu beberapa detik. Jarum akan berputar dan berhenti saat sejajar dengan kutub magnet bumi.',
+                5: 'Ujung jarum akan menunjuk ke arah Utara-Selatan.'
+            }
+        },
+
+        'Bidai Darurat': {
+            icon: '🩹',
+            materials: [
+                { name: 'Kayu Lurus', role: 'Penyangga', icon: '🪵', swappable: true, options: [{n: 'Kayu Lurus', i: '🪵'}, {n: 'Bambu', i: '🎋'}, {n: 'Tongkat', i: '🦯'}, {n: 'Papan/Karton', i: '📦'}] },
+                { name: 'Kain Baju', role: 'Pengikat', icon: '👕', swappable: true, options: [{n: 'Kain Baju', i: '👕'}, {n: 'Perban', i: '🩹'}, {n: 'Tali', i: '🧵'}, {n: 'Syal', i: '🧣'}] },
+                { name: 'Kain Lembut', role: 'Bantalan Tambahan', icon: '🧦', swappable: true, options: [{n: 'Kain Lembut', i: '🧦'}, {n: 'Handuk', i: '🛁'}, {n: 'Baju Lipat', i: '👕'}, {n: 'Kapas', i: '☁️'}] }
+            ],
+            instructions: {
+                1: 'Periksa cedera, apakah terluka atau patah. JANGAN mencoba meluruskan bagian yang terlihat patah atau bengkok.',
+                2: 'Siapkan 2 penyangga keras (kayu/bambu) yang panjangnya melewati persendian di atas dan di bawah area patah.',
+                3: 'Sisipkan bantalan (kain lembut/baju) di antara kulit dan penyangga keras agar tidak melukai kulit.',
+                4: 'Tempatkan penyangga keras di sisi kiri dan kanan dari tulang yang patah.',
+                5: 'Ikat penyangga HARUS di atas dan di bawah titik patah. JANGAN mengikat tepat di area patah.',
+                6: 'Ikat cukup erat agar stabil, tapi periksa sirkulasi ujung jari.'
+            }
+        },
+        
+        'Cairan Pembersih': {
+            icon: '🧪',
+            materials: [
+                { name: 'Air Mineral Segel', role: 'Cairan Steril', icon: '💧', swappable: true, options: [{n: 'Air Botol Segel', i: '💧'}, {n: 'Air Hujan Bersih', i: '🌧️'}, {n: 'Air Kelapa Muda', i: '🥥'}] },
+                { name: 'Botol Plastik', role: 'Penyemprot', icon: '🧴', swappable: true, options: [{n: 'Botol Plastik', i: '🧴'}, {n: 'Plastik Kiloan', i: '🛍️'}] }
+            ],
+            instructions: {
+                1: 'Gunakan HANYA air mineral kemasan yang segelnya belum rusak. Jangan gunakan air genangan atau banjir.',
+                2: 'Jika tidak ada, tadah air hujan bersih secara langsung menggunakan wadah.',
+                3: 'Dalam kondisi darurat di alam bebas, air kelapa muda bisa digunakan untuk membersihkan kotoran dari luka.',
+                4: 'Tuang air ke dalam botol plastik bersih, lalu lubangi kecil bagian tutupnya.',
+                5: 'Semprotkan air dengan tekanan ke arah luka terbuka (flushing) agar kotoran/kerikil terdorong keluar. JANGAN menggosok luka.'
+            }
+        },
+        
+        'Perban Darurat': {
+            icon: '🩺',
+            materials: [
+                { name: 'Pembalut Wanita', role: 'Penyerap Darah', icon: '🩸', swappable: true, options: [{n: 'Pembalut Wanita', i: '🩸'}, {n: 'Tampon', i: '🩸'}, {n: 'Kain Katun Bersih', i: '👕'}] },
+                { name: 'Baju Kaos Dalam', role: 'Kain Pengikat', icon: '🎽', swappable: true, options: [{n: 'Baju Kaos Dalam', i: '🎽'}, {n: 'Lakban (Duct Tape)', i: '🏷️'}, {n: 'Kain Panjang', i: '🎗️'}] },
+                { name: 'Plastik Bersih', role: 'Pelindung (Opsional)', icon: '🛍️', swappable: true, options: [{n: 'Plastik Bersih', i: '🛍️'}, {n: 'Jas Hujan', i: '🧥'}] }
+            ],
+            instructions: {
+                1: 'Gunakan pembalut wanita sebagai bantalan trauma (trauma pad) yang sangat efektif menyerap pendarahan berat.',
+                2: 'Tempelkan bagian dalam penyerap tepat pada luka. Jika luka tusuk dalam, tampon dapat digunakan perlahan untuk menyumbat pendarahan di rongga.',
+                3: 'Robek baju kaos dalam katun (yang tidak berlumpur) menjadi pita panjang sebagai pengikat bantalan.',
+                4: 'Ikat dengan kencang tepat di atas bantalan pembalut untuk memberi tekanan (pressure) agar darah berhenti.',
+                5: 'Jika robekan kain kurang panjang, gunakan lakban/duct tape untuk menahan pembalut. Untuk luka dada tembus, gunakan plastik lalu lakban 3 sisinya.'
+            }
+        },
+        
+        'Tandu Darurat': {
+            icon: '🛌',
+            materials: [
+                { name: 'Batang Pohon Tebal', role: 'Rangka Penyangga', icon: '🪵', swappable: true, options: [{n: 'Batang Pohon', i: '🪵'}, {n: 'Pipa Paralon', i: '🦯'}, {n: 'Pipa Besi Ringan', i: '🔩'}] },
+                { name: 'Jaket Tebal (2x)', role: 'Kain Penahan', icon: '🧥', swappable: true, options: [{n: 'Jaket Tebal', i: '🧥'}, {n: 'Sarung Kuat', i: '🥻'}, {n: 'Terpal / Tenda', i: '⛺'}] }
+            ],
+            instructions: {
+                1: 'Cari DUA tiang penyangga yang lurus dan kokoh sepanjang minimal 2 meter (sesuaikan tinggi korban).',
+                2: 'Siapkan 2 atau 3 jaket tebal ber-resleting kuat, atau 2 kain sarung utuh.',
+                3: 'Metode Jaket: Balik bagian luar jaket ke dalam. Masukkan 2 tiang ke dalam kedua lengan jaket pertama, lalu resletingkan.',
+                4: 'Ulangi langkah tersebut pada jaket kedua (dan ketiga) dengan posisi berhadapan agar area tubuh korban tertopang sempurna.',
+                5: 'Metode Sarung: Masukkan kedua tiang melintasi lubang dua sarung secara sejajar.',
+                6: 'Tarik kain hingga tegang. Tiang akan mengunci lipatan kain saat diberi beban. Uji coba dengan tubuh sehat sebelum mengangkat korban terluka.'
+            }
+        }
+    };
+
+    return {
+        open: false,
+        item: '',
+        icon: '',
+        materials: [],
+        currentView: 'selection',
+        currentStep: 1,
+        touchStartX: 0,
+        touchEndX: 0,
 
         openModal(data) {
             this.item = data.item;
-            this.icon = this.craftingData[data.item].icon;
-            this.materials = JSON.parse(JSON.stringify(this.craftingData[data.item].materials));
+            if (craftingData[data.item]) {
+                this.icon = craftingData[data.item].icon;
+                this.materials = JSON.parse(JSON.stringify(craftingData[data.item].materials));
+            } else {
+                this.icon = '🛠️';
+                this.materials = [];
+            }
             this.currentView = 'selection';
             this.currentStep = 1;
             this.open = true;
+            document.body.classList.add('modal-open');
         },
 
         getInstruction() {
-            return this.craftingData[this.item]?.instructions[this.currentStep] || 'Lakukan langkah ini.';
+            return craftingData[this.item]?.instructions[this.currentStep] || 'Lakukan langkah ini.';
         },
 
         switchMaterial(idx) {
@@ -1403,11 +1470,15 @@
         },
 
         nextStep() { 
-            if (this.currentStep < Object.keys(this.craftingData[this.item].instructions).length) this.currentStep++; 
+            if (craftingData[this.item] && this.currentStep < Object.keys(craftingData[this.item].instructions).length) {
+                this.currentStep++; 
+            }
         },
 
         prevStep() { 
-            if (this.currentStep > 1) this.currentStep--; 
+            if (this.currentStep > 1) {
+                this.currentStep--; 
+            }
         },
 
         handleSwipe() {
@@ -1415,9 +1486,11 @@
             if (this.touchEndX > this.touchStartX + 50) this.prevStep();
         },
 
-        closeModal() { this.open = false; document.body.classList.remove('modal-open'); }
+        closeModal() { 
+            this.open = false; 
+            document.body.classList.remove('modal-open'); 
+        }
     }
 }
-    
 </script>
 @endpush
