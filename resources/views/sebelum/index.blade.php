@@ -515,7 +515,7 @@ body.modal-open { overflow: hidden !important; }
 --}}
 
 <section class="hero-siaga">
-  <div class="hero-siaga__inner">
+  <div class="hero-siaga__inner pt-28 md:pt-32">
  
     {{-- ══ LEFT TEXT ══ --}}
     <div class="hero-siaga__text">
@@ -821,7 +821,7 @@ body.modal-open { overflow: hidden !important; }
       HEADER TAS
   ========================================== --}}
   <div class="mb-6">
-    <span class="inline-block px-3 py-1 bg-orange-100 text-orange-600 text-xs font-bold rounded-full uppercase tracking-widest mb-3">
+    <span class="inline-block px-3 py-1 text-[var(--c-teal-dk)] text-xs font-bold rounded-full uppercase tracking-widest mb-3" style="background: var(--c-sage-lt);">
       Sebelum Bencana
     </span>
 
@@ -847,8 +847,9 @@ body.modal-open { overflow: hidden !important; }
       <button @click="setAktif(tas.id)"
               class="tas-tab px-4 py-2 rounded-full text-sm font-semibold border flex items-center gap-2 transition-all"
               :class="activeTasId === tas.id
-                ? 'bg-[#2C3E50] text-white border-[#2C3E50]'
-                : 'bg-white text-gray-700 border-gray-200 hover:border-[#2C3E50] hover:text-[#2C3E50]'">
+                ? 'text-white'
+                : 'bg-white text-gray-700 border-gray-200 hover:border-[var(--c-teal-dk)] hover:text-[var(--c-teal-dk)]'"
+              :style="activeTasId === tas.id ? 'background: var(--c-teal-dk); border-color: var(--c-teal-dk);' : ''">
         <span x-text="tas.nama_tas"></span>
         <span class="text-xs opacity-60" x-text="tas.liter + 'L'"></span>
         <span @click.stop="hapusTas(tas.id)"
@@ -863,9 +864,9 @@ body.modal-open { overflow: hidden !important; }
   </div>
 
   {{-- Tombol Tas Baru --}}
-  <button onclick="bukaModalTas()"
+  <button @click="$store.tasBuat.open = true; document.body.classList.add('modal-open')"
           class="flex-shrink-0 px-4 py-2 text-sm font-semibold rounded-full flex items-center gap-2 transition-colors"
-          style="background: #2C3E50; color: white;">
+          style="background: var(--c-teal-dk); color: white;">
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
     </svg>
@@ -890,8 +891,9 @@ body.modal-open { overflow: hidden !important; }
       <button @click="updateKategori(kat)"
               class="px-2 py-2 border rounded-xl text-xs font-semibold capitalize transition-colors"
               :class="activeTas.kategori===kat
-                ? 'bg-[#2C3E50] text-white border-[#2C3E50]'
-                : 'bg-white text-gray-700 border-gray-200 hover:border-[#2C3E50] hover:text-[#2C3E50]'">
+                ? 'text-white'
+                : 'bg-white text-gray-700 border-gray-200 hover:border-[var(--c-teal-dk)] hover:text-[var(--c-teal-dk)]'"
+              :style="activeTas.kategori===kat ? 'background: var(--c-teal-dk); border-color: var(--c-teal-dk);' : ''">
         <span x-text="kat==='anak'?'Anak':kat.charAt(0).toUpperCase()+kat.slice(1)"></span>
       </button>
     </template>
@@ -1013,7 +1015,7 @@ body.modal-open { overflow: hidden !important; }
         {{-- Rotate Button --}}
         <button x-show="!usedIds.includes(item.id)"
           @click.stop="toggleRotate(item.id)"
-          :class="rotatedIds.includes(item.id) ? 'bg-orange-100 text-orange-500' : 'bg-gray-100 text-gray-400'"
+          :class="rotatedIds.includes(item.id) ? 'text-[var(--c-teal-dk)] bg-[var(--c-sage-lt)]' : 'bg-gray-100 text-gray-400'"
           class="absolute top-1.5 right-1.5 w-5 h-5 rounded-full flex items-center justify-center text-xs hover:opacity-80 transition-all"
           title="Rotate item">
           🔄
@@ -1068,111 +1070,109 @@ body.modal-open { overflow: hidden !important; }
 
 <div id="drag-ghost"></div>
 
-{{-- ══════ MODAL BUAT TAS — Pure Vanilla JS, TANPA Alpine ══════ --}}
-{{-- Diletakkan di sini (bukan teleport) agar tidak ada race condition --}}
-<div
-    id="modal-buat-tas"
-    style="display:none; position:fixed; inset:0; z-index:999999; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; padding:16px;"
-    onclick="if(event.target===this) tutupModalTas()"
->
-    <div style="background:white; border-radius:20px; width:100%; max-width:480px; max-height:90vh; overflow-y:auto; padding:32px 24px 24px; position:relative;" onclick="event.stopPropagation()">
+{{-- ══════ MODAL BUAT TAS — Alpine JS ══════ --}}
+<template x-teleport="body">
+    <div
+        x-show="$store.tasBuat.open"
+        style="display:none;"
+        class="fixed inset-0 z-[9000] flex items-center justify-center p-4"
+    >
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="$store.tasBuat.tutup()"></div>
+        <div class="bg-white rounded-[24px] md:rounded-[32px] w-full max-w-[480px] max-h-[90vh] overflow-y-auto p-6 md:p-8 relative z-10" @click.stop>
+            
+            {{-- HEADER --}}
+            <div class="flex items-start justify-between mb-6">
+                <h3 class="font-head font-bold text-navy" style="font-size:28px; color: var(--c-teal-xdk);">Buat Tas Baru</h3>
+                <button type="button" @click="$store.tasBuat.tutup()"
+                    class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-colors bg-gray-100 hover:bg-gray-200">
+                    <svg width="20" height="20" fill="none" stroke="#6b7280" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
 
-        {{-- HEADER --}}
-        <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:24px;">
-            <h3 class="font-head font-bold text-navy" style="font-size:28px;">Buat Tas Baru</h3>
-            <button type="button" onclick="tutupModalTas()"
-                style="width:40px; height:40px; border-radius:50%; background:#f3f4f6; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .2s;"
-                onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">
-                <svg width="20" height="20" fill="none" stroke="#6b7280" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-            </button>
+            <form @submit.prevent="$store.tasBuat.submit()">
+                <div class="flex flex-col gap-5">
+                    {{-- Nama Tas --}}
+                    <div>
+                        <label class="block text-[14px] font-semibold mb-2" style="color: var(--c-teal-xdk);">Nama Tas</label>
+                        <input type="text" x-model="$store.tasBuat.form.nama" placeholder="Contoh: Tas Keluarga" required
+                            class="w-full px-4 py-3 border border-gray-200 rounded-2xl text-[14px] text-gray-800 outline-none focus:border-[var(--c-teal-dk)]"/>
+                    </div>
+
+                    {{-- Kategori --}}
+                    <div>
+                        <label class="block text-[14px] font-semibold mb-2" style="color: var(--c-teal-xdk);">Kategori</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <template x-for="k in ['anak','remaja','dewasa','lansia']" :key="k">
+                                <button type="button" @click="$store.tasBuat.form.kategori = k"
+                                    class="p-3 border rounded-2xl text-[14px] font-semibold capitalize transition-all"
+                                    :class="$store.tasBuat.form.kategori === k ? 'text-white' : 'bg-white text-gray-700 border-gray-200'"
+                                    :style="$store.tasBuat.form.kategori === k ? 'background: var(--c-teal-dk); border-color: var(--c-teal-dk);' : ''"
+                                    x-text="k">
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+
+                    {{-- Dimensi --}}
+                    <div>
+                        <label class="block text-[14px] font-semibold mb-1" style="color: var(--c-teal-xdk);">
+                            Dimensi Tas <span class="font-normal text-[12px] text-gray-400">(cm) — opsional jika isi liter langsung</span>
+                        </label>
+                        <div class="flex items-end gap-2">
+                            <div class="flex-1 text-center">
+                                <p class="text-[12px] text-gray-500 mb-1">Panjang</p>
+                                <input type="number" x-model="$store.tasBuat.form.p" @input="$store.tasBuat.hitungLiter()" placeholder="cm" min="1" max="200" step="0.5"
+                                    class="w-full py-2 px-3 border border-gray-200 rounded-xl text-[13px] text-center outline-none"/>
+                            </div>
+                            <span class="text-gray-300 mb-2 font-medium">×</span>
+                            <div class="flex-1 text-center">
+                                <p class="text-[12px] text-gray-500 mb-1">Lebar</p>
+                                <input type="number" x-model="$store.tasBuat.form.l" @input="$store.tasBuat.hitungLiter()" placeholder="cm" min="1" max="200" step="0.5"
+                                    class="w-full py-2 px-3 border border-gray-200 rounded-xl text-[13px] text-center outline-none"/>
+                            </div>
+                            <span class="text-gray-300 mb-2 font-medium">×</span>
+                            <div class="flex-1 text-center">
+                                <p class="text-[12px] text-gray-500 mb-1">Tinggi</p>
+                                <input type="number" x-model="$store.tasBuat.form.t" @input="$store.tasBuat.hitungLiter()" placeholder="cm" min="1" max="200" step="0.5"
+                                    class="w-full py-2 px-3 border border-gray-200 rounded-xl text-[13px] text-center outline-none"/>
+                            </div>
+                        </div>
+
+                        {{-- Preview liter dari dimensi --}}
+                        <div x-show="$store.tasBuat.previewLiter > 0" class="mt-2 bg-gray-50 rounded-xl px-3 py-2 flex items-center justify-between">
+                            <span class="text-[12px] text-gray-600">Kapasitas dari dimensi:</span>
+                            <span class="font-bold text-[14px]" style="color: var(--c-teal-xdk);" x-text="$store.tasBuat.previewLiter + ' Liter'"></span>
+                        </div>
+
+                        {{-- Input liter langsung --}}
+                        <div class="mt-3">
+                            <p class="text-[12px] text-gray-500 mb-1">
+                                Atau input liter langsung: <span class="text-gray-400">(dimensi dihitung otomatis)</span>
+                            </p>
+                            <input type="number" x-model="$store.tasBuat.form.liter" @input="$store.tasBuat.resetDimensi()" placeholder="Contoh: 50" min="1" max="500" step="0.1"
+                                class="w-full px-3 py-2 border border-gray-200 rounded-xl text-[13px] outline-none"/>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- ACTION --}}
+                <div class="flex gap-3 mt-6">
+                    <button type="button" @click="$store.tasBuat.tutup()"
+                        class="flex-1 p-3.5 border border-gray-200 bg-white text-gray-700 text-[14px] font-semibold rounded-2xl hover:bg-gray-50 transition-colors">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="flex-1 p-3.5 text-white text-[14px] font-semibold rounded-2xl transition-colors"
+                        style="background: var(--c-teal-dk);">
+                        Buat Tas
+                    </button>
+                </div>
+            </form>
         </div>
-
-        <form id="form-buat-tas" onsubmit="submitModalTas(event)">
-            <div style="display:flex; flex-direction:column; gap:20px;">
-
-                {{-- Nama Tas --}}
-                <div>
-                    <label style="display:block; font-size:14px; font-weight:600; color:#2C3E50; margin-bottom:8px;">Nama Tas</label>
-                    <input type="text" id="tas-nama" placeholder="Contoh: Tas Keluarga" required
-                        style="width:100%; padding:12px 16px; border:1px solid #e5e7eb; border-radius:16px; font-size:14px; color:#1f2937; outline:none; box-sizing:border-box;"
-                        onfocus="this.style.borderColor='#2C3E50'" onblur="this.style.borderColor='#e5e7eb'"/>
-                </div>
-
-                {{-- Kategori --}}
-                <div>
-                    <label style="display:block; font-size:14px; font-weight:600; color:#2C3E50; margin-bottom:8px;">Kategori</label>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;" id="kat-grid">
-                        <button type="button" data-kat="anak"   onclick="pilihKat(this)" class="kat-btn" style="padding:12px; border:1px solid #e5e7eb; border-radius:16px; font-size:14px; font-weight:600; cursor:pointer; background:white; color:#374151; transition:all .2s;">Anak-Anak</button>
-                        <button type="button" data-kat="remaja" onclick="pilihKat(this)" class="kat-btn" style="padding:12px; border:1px solid #e5e7eb; border-radius:16px; font-size:14px; font-weight:600; cursor:pointer; background:white; color:#374151; transition:all .2s;">Remaja</button>
-                        <button type="button" data-kat="dewasa" onclick="pilihKat(this)" class="kat-btn" style="padding:12px; border:1px solid #e5e7eb; border-radius:16px; font-size:14px; font-weight:600; cursor:pointer; background:#2C3E50; color:white; border-color:#2C3E50; transition:all .2s;">Dewasa</button>
-                        <button type="button" data-kat="lansia" onclick="pilihKat(this)" class="kat-btn" style="padding:12px; border:1px solid #e5e7eb; border-radius:16px; font-size:14px; font-weight:600; cursor:pointer; background:white; color:#374151; transition:all .2s;">Lansia</button>
-                    </div>
-                    <input type="hidden" id="tas-kategori" value="dewasa"/>
-                </div>
-
-                {{-- Dimensi --}}
-                <div>
-                    <label style="display:block; font-size:14px; font-weight:600; color:#2C3E50; margin-bottom:4px;">
-                        Dimensi Tas <span style="font-weight:400; font-size:12px; color:#9ca3af;">(cm) — opsional jika isi liter langsung</span>
-                    </label>
-                    <div style="display:flex; align-items:flex-end; gap:8px;">
-                        <div style="flex:1; text-align:center;">
-                            <p style="font-size:12px; color:#6b7280; margin-bottom:4px;">Panjang</p>
-                            <input type="number" id="tas-p" placeholder="cm" min="1" max="200" step="0.5" oninput="hitungLiterModal()"
-                                style="width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:12px; font-size:13px; text-align:center; outline:none; box-sizing:border-box;"/>
-                        </div>
-                        <span style="color:#d1d5db; margin-bottom:10px; font-weight:500;">×</span>
-                        <div style="flex:1; text-align:center;">
-                            <p style="font-size:12px; color:#6b7280; margin-bottom:4px;">Lebar</p>
-                            <input type="number" id="tas-l" placeholder="cm" min="1" max="200" step="0.5" oninput="hitungLiterModal()"
-                                style="width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:12px; font-size:13px; text-align:center; outline:none; box-sizing:border-box;"/>
-                        </div>
-                        <span style="color:#d1d5db; margin-bottom:10px; font-weight:500;">×</span>
-                        <div style="flex:1; text-align:center;">
-                            <p style="font-size:12px; color:#6b7280; margin-bottom:4px;">Tinggi</p>
-                            <input type="number" id="tas-t" placeholder="cm" min="1" max="200" step="0.5" oninput="hitungLiterModal()"
-                                style="width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:12px; font-size:13px; text-align:center; outline:none; box-sizing:border-box;"/>
-                        </div>
-                    </div>
-
-                    {{-- Preview liter dari dimensi --}}
-                    <div id="preview-liter" style="display:none; margin-top:8px; background:rgba(44,62,80,0.06); border-radius:12px; padding:8px 12px; display:none; align-items:center; justify-content:space-between;">
-                        <span style="font-size:12px; color:#4b5563;">Kapasitas dari dimensi:</span>
-                        <span id="preview-liter-val" style="font-weight:700; color:#2C3E50; font-size:14px;"></span>
-                    </div>
-
-                    {{-- Input liter langsung --}}
-                    <div style="margin-top:12px;">
-                        <p style="font-size:12px; color:#6b7280; margin-bottom:4px;">
-                            Atau input liter langsung: <span style="color:#9ca3af;">(dimensi dihitung otomatis)</span>
-                        </p>
-                        <input type="number" id="tas-liter" placeholder="Contoh: 50" min="1" max="500" step="0.1"
-                            oninput="if(this.value){ document.getElementById('tas-p').value=''; document.getElementById('tas-l').value=''; document.getElementById('tas-t').value=''; document.getElementById('preview-liter').style.display='none'; }"
-                            style="width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:12px; font-size:13px; outline:none; box-sizing:border-box;"/>
-                    </div>
-                </div>
-
-            </div>
-
-            {{-- ACTION --}}
-            <div style="display:flex; gap:12px; margin-top:24px;">
-                <button type="button" onclick="tutupModalTas()"
-                    style="flex:1; padding:14px; border:1px solid #e5e7eb; background:white; color:#374151; font-size:14px; font-weight:600; border-radius:16px; cursor:pointer; transition:background .2s;"
-                    onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='white'">
-                    Batal
-                </button>
-                <button type="submit"
-                    style="flex:1; padding:14px; background:#2C3E50; color:white; font-size:14px; font-weight:600; border:none; border-radius:16px; cursor:pointer; transition:background .2s;"
-                    onmouseover="this.style.background='#1a252f'" onmouseout="this.style.background='#2C3E50'">
-                    Buat Tas
-                </button>
-            </div>
-
-        </form>
     </div>
-</div>
+</template>
 
 @endsection
 
@@ -1566,109 +1566,66 @@ function showToast(msg) {
 }
 
 // ==========================================
-// 5. MODAL BUAT TAS — Pure Vanilla JS
-// ==========================================
-function bukaModalTas() {
-    const el = document.getElementById('modal-buat-tas');
-    el.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-    // reset form
-    document.getElementById('tas-nama').value   = '';
-    document.getElementById('tas-liter').value  = '';
-    document.getElementById('tas-p').value      = '';
-    document.getElementById('tas-l').value      = '';
-    document.getElementById('tas-t').value      = '';
-    document.getElementById('preview-liter').style.display = 'none';
-    // reset kategori ke dewasa
-    document.querySelectorAll('.kat-btn').forEach(b => {
-        const active = b.dataset.kat === 'dewasa';
-        b.style.background   = active ? '#2C3E50' : 'white';
-        b.style.color        = active ? 'white'   : '#374151';
-        b.style.borderColor  = active ? '#2C3E50' : '#e5e7eb';
-    });
-    document.getElementById('tas-kategori').value = 'dewasa';
-}
-
-function tutupModalTas() {
-    const el = document.getElementById('modal-buat-tas');
-    el.style.display = 'none';
-    document.body.style.overflow = '';
-}
-
-function pilihKat(btn) {
-    document.querySelectorAll('.kat-btn').forEach(b => {
-        b.style.background  = 'white';
-        b.style.color       = '#374151';
-        b.style.borderColor = '#e5e7eb';
-    });
-    btn.style.background  = '#2C3E50';
-    btn.style.color       = 'white';
-    btn.style.borderColor = '#2C3E50';
-    document.getElementById('tas-kategori').value = btn.dataset.kat;
-}
-
-function hitungLiterModal() {
-    const p = parseFloat(document.getElementById('tas-p').value);
-    const l = parseFloat(document.getElementById('tas-l').value);
-    const t = parseFloat(document.getElementById('tas-t').value);
-    const prev = document.getElementById('preview-liter');
-    if (p > 0 && l > 0 && t > 0) {
-        const liter = parseFloat((p * l * t / 1000).toFixed(1));
-        document.getElementById('preview-liter-val').textContent = liter + ' Liter';
-        document.getElementById('tas-liter').value = '';
-        prev.style.display = 'flex';
-    } else {
-        prev.style.display = 'none';
-    }
-}
-
-function submitModalTas(e) {
-    e.preventDefault();
-    const nama = document.getElementById('tas-nama').value.trim();
-    const kat  = document.getElementById('tas-kategori').value;
-    let liter  = parseFloat(document.getElementById('tas-liter').value);
-    const p    = parseFloat(document.getElementById('tas-p').value);
-    const l    = parseFloat(document.getElementById('tas-l').value);
-    const t    = parseFloat(document.getElementById('tas-t').value);
-
-    const hasDim = p > 0 && l > 0 && t > 0;
-    if (hasDim && !liter) liter = parseFloat((p * l * t / 1000).toFixed(1));
-
-    if (!nama || !kat || !liter) {
-        alert('Lengkapi nama tas, kategori, dan kapasitas (liter).');
-        return;
-    }
-
-    const newTasObj = {
-        id:       'local_' + Date.now(),
-        nama_tas: nama,
-        kategori: kat,
-        liter:    liter,
-        dim_p:    hasDim ? p : 0,
-        dim_l:    hasDim ? l : 0,
-        dim_t:    hasDim ? t : 0,
-        items:    []
-    };
-
-    tutupModalTas();
-    window.dispatchEvent(new CustomEvent('tas-local-created', { detail: newTasObj }));
-}
-
-// Escape key untuk tutup modal
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') tutupModalTas();
-});
-
-// ==========================================
-// 6. ALPINE STORE (hanya untuk sisa referensi x-data)
+// 6. ALPINE STORE
 // ==========================================
 document.addEventListener('alpine:init', () => {
-    // Store tasBuat dikosongkan — modal kini dikelola vanilla JS di atas
     Alpine.store('tasBuat', {
         open: false,
-        form: { nama_tas:'', kategori:'dewasa', liter:'', dim_p:'', dim_l:'', dim_t:'' },
-        hitungLiter() {},
-        async submit() {}
+        form: { nama: '', kategori: 'dewasa', liter: '', p: '', l: '', t: '' },
+        previewLiter: 0,
+        tutup() {
+            this.open = false;
+            document.body.classList.remove('modal-open');
+            this.form = { nama: '', kategori: 'dewasa', liter: '', p: '', l: '', t: '' };
+            this.previewLiter = 0;
+        },
+        hitungLiter() {
+            const p = parseFloat(this.form.p);
+            const l = parseFloat(this.form.l);
+            const t = parseFloat(this.form.t);
+            if (p > 0 && l > 0 && t > 0) {
+                this.previewLiter = parseFloat((p * l * t / 1000).toFixed(1));
+                this.form.liter = '';
+            } else {
+                this.previewLiter = 0;
+            }
+        },
+        resetDimensi() {
+            if (this.form.liter) {
+                this.form.p = ''; this.form.l = ''; this.form.t = '';
+                this.previewLiter = 0;
+            }
+        },
+        submit() {
+            const nama = this.form.nama.trim();
+            const kat = this.form.kategori;
+            let liter = parseFloat(this.form.liter);
+            const p = parseFloat(this.form.p);
+            const l = parseFloat(this.form.l);
+            const t = parseFloat(this.form.t);
+
+            const hasDim = p > 0 && l > 0 && t > 0;
+            if (hasDim && !liter) liter = this.previewLiter;
+
+            if (!nama || !kat || !liter) {
+                alert('Lengkapi nama tas, kategori, dan kapasitas (liter).');
+                return;
+            }
+
+            const newTasObj = {
+                id:       'local_' + Date.now(),
+                nama_tas: nama,
+                kategori: kat,
+                liter:    liter,
+                dim_p:    hasDim ? p : 0,
+                dim_l:    hasDim ? l : 0,
+                dim_t:    hasDim ? t : 0,
+                items:    []
+            };
+
+            this.tutup();
+            window.dispatchEvent(new CustomEvent('tas-local-created', { detail: newTasObj }));
+        }
     });
 
     // ==========================================

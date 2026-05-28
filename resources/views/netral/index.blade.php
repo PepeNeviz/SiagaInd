@@ -399,11 +399,15 @@
     x-cloak
     @open-tutorial.window="openModal($event.detail.bencana)"
     @keydown.escape.window="closeModal()"
-    class="modal-overlay"
-    @click.self="closeModal()">
-    <div class="modal-box modal-box-lg flex flex-col justify-between" @click.stop>
+    class="modal-overlay">
+
+    {{-- 1. Backdrop Khas Sesudah/Saat (Blur gelap) --}}
+    <div class="modal-backdrop" @click="closeModal()"></div>
+
+    {{-- 2. Box Modal dengan border-radius 24px/32px dan max-w-4xl --}}
+    <div class="modal-box w-full max-w-4xl bg-white rounded-[24px] md:rounded-[32px] flex flex-col justify-between overflow-hidden relative mx-auto" @click.stop>
         
-        <div class="modal-header border-b border-slate-100 flex items-center justify-between px-6 py-4 bg-white rounded-t-2xl relative">
+        <div class="modal-header border-b border-slate-100 flex items-center justify-between px-6 py-4 bg-white relative">
             <div class="modal-title flex items-center gap-2 text-slate-800 font-bold text-lg">
                 <i class="fa-solid fa-graduation-cap text-teal-600"></i>
                 <span x-text="bencana"></span>
@@ -424,7 +428,8 @@
             
             {{-- KONDISI 1: JIKA FASE "SAAT" (KUIS / DECISION TREE INTERAKTIF) --}}
             <template x-if="fase === 'saat'">
-                <div class="w-full flex flex-col items-center flex-1 py-0"> <div class="flex items-center justify-center gap-6 mb-2 w-full select-none">
+                <div class="w-full flex flex-col items-center flex-1 py-0"> 
+                    <div class="flex items-center justify-center gap-6 mb-2 w-full select-none">
                         <button @click="prevStep()" class="w-9 h-9 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-800 transition-all">
                             <i class="fa-solid fa-chevron-left text-sm"></i>
                         </button>
@@ -439,7 +444,8 @@
                         
                         <button @click="lokasi = 'dalam'" 
                                 :class="lokasi === 'dalam' ? 'border-sky-500 bg-sky-50/30 ring-2 ring-sky-500/20' : 'border-slate-200 bg-white hover:bg-slate-50'"
-                                class="relative rounded-xl border p-6 flex flex-col items-center text-center transition-all duration-200 group min-h-[340px]"> <div class="absolute top-4 right-4 flex items-center gap-1">
+                                class="relative rounded-xl border p-6 flex flex-col items-center text-center transition-all duration-200 group min-h-[340px]"> 
+                            <div class="absolute top-4 right-4 flex items-center gap-1">
                                 <span class="text-[10px] font-bold text-slate-400 group-hover:text-slate-600">Dalam ruangan</span>
                                 <span :class="lokasi === 'dalam' ? 'bg-sky-500' : 'bg-slate-200'" class="w-2 h-2 rounded-full inline-block"></span>
                             </div>
@@ -447,11 +453,13 @@
                             <div class="w-full h-56 rounded-lg overflow-hidden mt-6 mb-4 shadow-sm border border-slate-100">
                                 <img src="/images/tutorial-gempa.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Dalam Ruangan">
                             </div>
-                            <span class="text-base font-extrabold text-slate-700 tracking-wide mt-auto">Lindungi Kepala</span> </button>
+                            <span class="text-base font-extrabold text-slate-700 tracking-wide mt-auto">Lindungi Kepala</span> 
+                        </button>
 
                         <button @click="lokasi = 'luar'" 
                                 :class="lokasi === 'luar' ? 'border-teal-500 bg-teal-50/30 ring-2 ring-teal-500/20' : 'border-slate-200 bg-white hover:bg-slate-50'"
-                                class="relative rounded-xl border p-6 flex flex-col items-center text-center transition-all duration-200 group min-h-[340px]"> <div class="absolute top-4 right-4 flex items-center gap-1">
+                                class="relative rounded-xl border p-6 flex flex-col items-center text-center transition-all duration-200 group min-h-[340px]"> 
+                            <div class="absolute top-4 right-4 flex items-center gap-1">
                                 <span class="text-[10px] font-bold text-slate-400 group-hover:text-slate-600">Luar ruangan</span>
                                 <span :class="lokasi === 'luar' ? 'bg-teal-500' : 'bg-slate-200'" class="w-2 h-2 rounded-full inline-block"></span>
                             </div>
@@ -459,7 +467,8 @@
                             <div class="w-full h-56 rounded-lg overflow-hidden mt-6 mb-4 shadow-sm border border-slate-100">
                                 <img src="/images/tutorial-gempa.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Luar Ruangan">
                             </div>
-                            <span class="text-base font-extrabold text-slate-700 tracking-wide mt-auto">Jauhi Benda Rawan</span> </button>
+                            <span class="text-base font-extrabold text-slate-700 tracking-wide mt-auto">Jauhi Benda Rawan</span> 
+                        </button>
 
                     </div>
 
@@ -530,7 +539,7 @@
         </div>
         
         {{-- FOOTER 2: Dikasih x-show agar HANYA muncul saat BUKAN fase 'saat' (Sebelum & Sesudah) --}}
-        <div x-show="fase !== 'saat'" class="border-t border-slate-100 px-6 py-3 bg-slate-50/50 rounded-b-2xl flex items-center justify-center">
+        <div x-show="fase !== 'saat'" class="border-t border-slate-100 px-6 py-3 bg-slate-50/50 rounded-b-[24px] md:rounded-b-[32px] flex items-center justify-center">
             <div class="flex items-center justify-center gap-2 flex-wrap">
                 {{-- Looping angka berdasarkan jumlah langkah yang ada --}}
                 <template x-for="(item, index) in getSteps()" :key="index">
