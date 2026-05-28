@@ -175,7 +175,8 @@
             <h2 class="font-head text-3xl font-bold" style="color: var(--color-text-primary);">Tutorial Bencana</h2>
             <p class="mt-2" style="color: var(--color-text-muted);">Klik untuk melihat panduan lengkap sebelum, saat, dan sesudah bencana</p>
         </div>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {{-- Ganti grid jadi flex-wrap dan justify-center --}}
+        <div class="flex flex-wrap justify-center gap-4">
             @php
             $bencana = [
                 ['nama'=>'Gempa Bumi','icon'=>'🌍','ada'=>true],
@@ -185,16 +186,16 @@
                 ['nama'=>'Tanah Longsor','icon'=>'⛰️','ada'=>false],
                 ['nama'=>'Kebakaran','icon'=>'🔥','ada'=>true],
                 ['nama'=>'Angin Puting','icon'=>'🌪️','ada'=>false],
-                ['nama'=>'Kekeringan','icon'=>'☀️','ada'=>false],
             ];
             @endphp
             @foreach($bencana as $b)
             <button
-                class="tutorial-item reveal"
+                {{-- Tambahin class w-[calc...] buat ngatur lebar persis kayak grid-cols --}}
+                class="tutorial-item reveal w-[calc(50%-8px)] sm:w-[calc(33.33%-11px)] md:w-[calc(25%-12px)] flex flex-col items-center"
                 @if($b['ada']) @click="$dispatch('open-tutorial', { bencana: '{{ $b['nama'] }}' })" @else disabled @endif
             >
                 <div class="text-4xl mb-3">{{ $b['icon'] }}</div>
-                <p class="font-head font-semibold text-sm" style="color: var(--color-text-primary);">{{ $b['nama'] }}</p>
+                <p class="font-head font-semibold text-sm text-center" style="color: var(--color-text-primary);">{{ $b['nama'] }}</p>
                 <span class="tag {{ $b['ada'] ? 'tag-available' : 'tag-soon' }}">{{ $b['ada'] ? 'Tersedia' : 'Segera' }}</span>
             </button>
             @endforeach
