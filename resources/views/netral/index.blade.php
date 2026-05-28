@@ -215,7 +215,7 @@
             ['🪢', 'Kain Penyangga Tangan', 'Kain untuk menopang tangan saat cedera.'],
             ['🥫', 'Membalut Luka', 'Cara membalut luka dengan kain.'],
             ['🧭', 'Jam Matahari', 'Estimasi penunjuk waktu darurat dengan memanfaatkan bayangan dari sinar matahari.'],
-            ['☀️', 'Baca Jam Matahari', '.']
+            ['☀️', 'Menentukan Keamanan Air', 'Cara menentukan apakah air aman digunakan.']
         ] as $info)
         <div @click="$dispatch('open-info', { type: 'Survive', item: '{{ $info[1] }}' })" 
              class="info-main-card reveal cursor-pointer p-5 rounded-2xl border" 
@@ -244,7 +244,7 @@
                 ['🧴', 'Filter Air', 'air-bersih'],
                 ['🪝', 'Pisau', 'pisau'],
                 ['🔥', 'Korek Darurat', 'korek-api'],
-                ['🧭', 'Kompas Sederha', 'kompas']
+                ['🧭', 'Lampu Minyak', 'kompas']
             ] as $craft)
             <button 
                 @click="$dispatch('open-crafting', { type: 'Survival', item: '{{ $craft[1] }}', icon: '{{ $craft[0] }}' })"
@@ -1180,6 +1180,49 @@
                 },
 
             ]
+        },
+
+        'Menentukan Keamanan Air': {
+
+            toolIcons: [
+
+                { icon: '🧭' }
+
+            ],
+
+            steps: [
+
+                {
+                    type: 'icon',
+                    icon: '☀️',
+                    description: 'Utamakan air kemasan jika masih tersedia.'
+                },
+
+                {
+                    type: 'icon',
+                    icon: '🪵',
+                    description: 'Cari air yang mengalir seperti sungai kecil atau mata air.'
+                },
+
+                {
+                    type: 'icon',
+                    icon: '🧭',
+                    description: 'Tampung air hujan dan pastikan tidak terkontaminasi.'
+                },
+
+                {
+                    type: 'icon',
+                    icon: '🧭',
+                    description: 'Hindari air yang berbau, berwarna, terkontaminasi, atau berada dekat daerah yang tercemar.'
+                },
+
+                {
+                    type: 'icon',
+                    icon: '🧭',
+                    description: 'Usahakan saring dan rebus air, jangan minum air dari pantai karena mengandung garam tinggi'
+                }
+
+            ]
         }
 
     };
@@ -1350,20 +1393,18 @@ function craftingModal() {
             }
         },
         
-        'Kompas Sederhana': {
+        'Lampu Minyak': {
             icon: '🧭',
             materials: [
-                { name: 'Jarum / Kawat', role: 'Jarum Magnetik', icon: '🪡', swappable: true, options: [{n: 'Jarum Jahit', i: '🪡'}, {n: 'Peniti', i: '🧷'}, {n: 'Paperclip', i: '📎'}, {n: 'Silet Cukur', i: '🪒'}] },
-                { name: 'Magnet / Rambut', role: 'Alat Magnetisasi', icon: '🧲', swappable: true, options: [{n: 'Magnet', i: '🧲'}, {n: 'Kain Sutra', i: '🧣'}, {n: 'Rambut', i: '👱'}, {n: 'Magnet Speaker', i: '🔊'}] },
-                { name: 'Daun Kering', role: 'Benda Terapung', icon: '🍂', swappable: true, options: [{n: 'Daun Kering', i: '🍂'}, {n: 'Styrofoam', i: '🥡'}, {n: 'Gabus Botol', i: '🍾'}] },
-                { name: 'Genangan Air', role: 'Wadah Air', icon: '💧', swappable: true, options: [{n: 'Genangan Air', i: '💧'}, {n: 'Mangkuk/Gelas Air', i: '🥣'}, {n: 'Tempurung Kelapa', i: '🥥'}] }
+                { name: 'Minyak Goreng', role: 'Minyak', icon: '🪡', swappable: true, options: [{n: 'Minyak Goreng', i: '🪡'}, {n: 'Minyak Bekas', i: '🧷'}] },
+                { name: 'Tisu', role: 'Sumbu', icon: '🧲', swappable: true, options: [{n: 'Tisu', i: '🧲'}, {n: 'Kapas', i: '🧣'}, {n: 'Kain Perca', i: '👱'}] },
+                { name: 'Mangkuk Kecil', role: 'Wadah', icon: '💧', swappable: true, options: [{n: 'Mangkuk Kecil', i: '🥣'}, {n: 'Gelas', i: '🥣'}, {n: 'Kaleng Belah', i: '🥥'}] }
             ],
             instructions: {
-                1: 'Buat jarum menjadi magnet dengan menggesekkannya ke arah yang SAMA (jangan bolak-balik) sebanyak 50x menggunakan magnet atau rambut.',
-                2: 'Letakkan daun kering atau styrofoam perlahan di atas permukaan air yang tenang agar mengapung.',
-                3: 'Taruh jarum yang sudah dimagnetisasi dengan sangat hati-hati di atas daun tersebut.',
-                4: 'Tunggu beberapa detik. Jarum akan berputar dan berhenti saat sejajar dengan kutub magnet bumi.',
-                5: 'Ujung jarum akan menunjuk ke arah Utara-Selatan.'
+                1: 'Gulung tisu memanjang hingga menjadi padat (sumbu)',
+                2: 'Tuang minyak goreng ke dalam mangkuk kecil.',
+                3: 'Celupkan seluruh sumbu hingga basah ke dalam minyak, sisakan ujungnya sedikit di atas.',
+                4: 'Bakar ujung tisu.'
             }
         },
 

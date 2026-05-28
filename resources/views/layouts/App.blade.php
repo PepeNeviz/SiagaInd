@@ -331,10 +331,10 @@
                     Platform edukasi kesiapsiagaan bencana dengan visual interaktif, tutorial survival, caregiver, dan panduan kondisi darurat.
                 </p>
                 <div class="flex items-center gap-2 mt-2">
-                    <a href="#" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all bg-white/10 text-white hover:bg-white/20 active:scale-95 text-base"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all bg-white/10 text-white hover:bg-white/20 active:scale-95 text-base"><i class="fa-brands fa-twitter"></i></a>
-                    <a href="#" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all bg-white/10 text-white hover:bg-white/20 active:scale-95 text-base"><i class="fa-brands fa-youtube"></i></a>
-                    <a href="#" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all bg-white/10 text-white hover:bg-white/20 active:scale-95 text-base"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://github.com/PepeNeviz/SiagaInd" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all bg-white/10 text-white hover:bg-white/20 active:scale-95 text-base"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://www.instagram.com/pepenevis/" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all bg-white/10 text-white hover:bg-white/20 active:scale-95 text-base"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://www.instagram.com/rhhdes/" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all bg-white/10 text-white hover:bg-white/20 active:scale-95 text-base"><i class="fa-brands fa-instagram"></i></a>
+                    <p class="w-9 h-9 rounded-xl flex items-center justify-center transition-all bg-white/10 text-white hover:bg-white/20 active:scale-95 text-base"><i class="fa-brands fa-youtube"></i></p>
                 </div>
             </div>
 
@@ -343,30 +343,30 @@
                 <div>
                     <div class="text-white font-bold text-base sm:text-lg mb-3 tracking-wide relative after:content-[''] after:block after:w-8 after:h-0.5 after:bg-white/30 after:mt-1">Navigasi</div>
                     <div class="flex flex-col gap-2 text-[13px] sm:text-[14px]">
-                        <a href="{{ route('netral') }}" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Beranda</a>
-                        <a href="{{ route('sebelum') }}" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Mitigasi</a>
-                        <a href="{{ route('saat') }}" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Darurat</a>
-                        <a href="{{ route('sesudah') }}" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Recovery</a>
+                        <a href="{{ route('netral') }}" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Netral</a>
+                        <a href="{{ route('sebelum') }}" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Sebelum</a>
+                        <a href="{{ route('saat') }}" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Saat</a>
+                        <a href="{{ route('sesudah') }}" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Sesudah</a>
                     </div>
                 </div>
 
                 <div>
                     <div class="text-white font-bold text-base sm:text-lg mb-3 tracking-wide relative after:content-[''] after:block after:w-8 after:h-0.5 after:bg-white/30 after:mt-1">Bantuan</div>
                     <div class="flex flex-col gap-2 text-[13px] sm:text-[14px]">
-                        <a href="#" class="text-white/80 hover:text-white font-medium transition-colors w-max block">FAQ</a>
-                        <a href="#" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Kontak</a>
-                        <a href="#" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Panduan</a>
-                        <a href="#" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Darurat</a>
+                        <p class="text-white/80 hover:text-white font-medium transition-colors w-max block">FAQ</p>
+                        <p class="text-white/80 hover:text-white font-medium transition-colors w-max block">Kontak</p>
+                        <p class="text-white/80 hover:text-white font-medium transition-colors w-max block">Panduan</p>
+                        <p class="text-white/80 hover:text-white font-medium transition-colors w-max block">Darurat</p>
                     </div>
                 </div>
 
                 <div>
                     <div class="text-white font-bold text-base sm:text-lg mb-3 tracking-wide relative after:content-[''] after:block after:w-8 after:h-0.5 after:bg-white/30 after:mt-1">Lainnya</div>
                     <div class="flex flex-col gap-2 text-[13px] sm:text-[14px]">
-                        <a href="#" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Tentang Kami</a>
-                        <a href="#" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Kebijakan Privasi</a>
-                        <a href="#" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Syarat & Ketentuan</a>
-                        <a href="#" class="text-white/80 hover:text-white font-medium transition-colors w-max block">Peta Situs</a>
+                        <p class="text-white/80 hover:text-white font-medium transition-colors w-max block">Tentang Kami</p>
+                        <p class="text-white/80 hover:text-white font-medium transition-colors w-max block">Kebijakan Privasi</p>
+                        <p class="text-white/80 hover:text-white font-medium transition-colors w-max block">Syarat & Ketentuan</p>
+                        <p class="text-white/80 hover:text-white font-medium transition-colors w-max block">Peta Situs</p>
                     </div>
                 </div>
 
@@ -379,11 +379,11 @@
                     © 2026 SiagaInd. All rights reserved. <span class="opacity-60 block sm:inline sm:ml-1">| Made for TECHNOVA 1.0</span>
                 </div>
                 <div class="flex flex-wrap justify-center items-center gap-4 text-xs font-semibold text-white/80">
-                    <a href="#" class="hover:underline hover:text-white transition-all">Privacy</a>
+                    <p class="hover:underline hover:text-white transition-all">Privacy</p>
                     <span class="w-1 h-1 rounded-full bg-current opacity-40 hidden sm:inline-block"></span>
-                    <a href="#" class="hover:underline hover:text-white transition-all">Terms</a>
+                    <p class="hover:underline hover:text-white transition-all">Terms</p>
                     <span class="w-1 h-1 rounded-full bg-current opacity-40 hidden sm:inline-block"></span>
-                    <a href="#" class="hover:underline hover:text-white transition-all">Contact</a>
+                    <p class="hover:underline hover:text-white transition-all">Contact</p>
                 </div>
             </div>
         </div>
