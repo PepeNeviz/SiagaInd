@@ -20,14 +20,12 @@
         --c-teal-bg:        #E8F6F3;
         
         --c-light:          #EEEEEE;
-        --c-dark-red:       #7D0A0A;
-        --c-red:            #BF3131;
     }
 
     .after-hero {
         background:
-            radial-gradient(circle at top left, rgba(191,49,49,.18), transparent 30%),
-            radial-gradient(circle at bottom right, rgba(125,10,10,.15), transparent 35%),
+            radial-gradient(circle at top left, rgba(62, 142, 142, 0.18), transparent 30%),
+            radial-gradient(circle at bottom right, rgba(45, 106, 106, 0.15), transparent 35%),
             linear-gradient(135deg, #1b1b1b 0%, #232323 100%);
         position: relative;
         overflow: hidden;
@@ -67,7 +65,7 @@
     .injury-card:hover{
         background:#fff;
         transform:translateY(-5px);
-        box-shadow:0 15px 40px rgba(125,10,10,.12);
+        box-shadow:0 15px 40px rgba(45, 106, 106, 0.12);
     }
 
     .injury-icon{
@@ -105,7 +103,7 @@
 
     .supply-btn:hover{
         transform:translateY(-5px);
-        border-color:#BF3131;
+        border-color:var(--c-teal-main);
     }
 
     .mini-card{
@@ -116,7 +114,7 @@
 
     .mini-card:hover{
         transform:translateY(-5px);
-        border-color:#BF3131;
+        border-color:var(--c-teal-main);
         box-shadow:0 12px 30px rgba(0,0,0,.08);
     }
 
@@ -140,8 +138,8 @@
     }
 
     .material-box{
-        border:1px dashed #BF3131;
-        background:#fff7f7;
+        border:1px dashed var(--c-teal-main);
+        background:var(--c-teal-bg);
         border-radius:16px;
         padding:1rem;
         text-align:center;
@@ -155,7 +153,7 @@
         width:22px;
         height:22px;
         border-radius:999px;
-        background:#BF3131;
+        background:var(--c-teal-main);
         color:white;
         font-size:.7rem;
         display:flex;
@@ -178,63 +176,11 @@
     }
 
     .pagination-btn:hover{
-        background:#BF3131;
+        background:var(--c-teal-main);
         color:white;
     }
 
-    .modal-bg{
-        background:rgba(0,0,0,.6);
-        backdrop-filter:blur(10px);
-    }
 
-    .modal-overlay {
-        position: fixed !important;
-        inset: 0 !important;
-        background-color: rgba(0, 0, 0, 0.6) !important;
-        backdrop-filter: blur(10px) !important;
-        z-index: 50 !important;
-        padding: 20px !important;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .modal-box {
-        position: relative;
-        z-index: 51;
-        width: 100% !important;
-        max-width: 860px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        background: var(--c-light);
-        border-radius: 28px;
-        overflow: hidden;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        transform: none !important;
-        margin: 0 auto !important;
-    }
-
-    .modal-box {
-        position: relative;
-        z-index: 51;
-        width: 100% !important;
-        max-width: 860px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        background: var(--c-light);
-        border-radius: 28px;
-        overflow: hidden;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        transform: none !important;
-        margin: 0 auto !important;
-    }
-
-    .modal-backdrop {
-        position: absolute;
-        inset: 0;
-        background: transparent;
-        cursor: pointer;
-    }
 
     /* =========================================
         INJURY MODAL STYLING - TEAL PALETTE
@@ -637,7 +583,7 @@
 
     {{-- HERO --}}
     <section class="after-hero min-h-[55vh] flex items-center">
-        <div class="relative z-10 max-w-6xl mx-auto px-5 py-24 w-full">
+        <div class="relative z-10 max-w-6xl mx-auto px-5 pt-28 md:pt-32 pb-24 w-full">
 
             <div class="max-w-3xl">
                 <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full dark-badge text-sm mb-7">
@@ -893,10 +839,10 @@
             x-transition:leave="transition ease-in duration-150"
             x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
-            class="modal-overlay"
+            class="fixed inset-0 z-[9000] flex items-center justify-center p-4"
         >
             <div
-                class="modal-backdrop"
+                class="absolute inset-0 bg-black/50 backdrop-blur-sm"
                 @click="modal = false"
             ></div>
 
@@ -904,7 +850,7 @@
             <template x-if="currentInjuryType === 'injury'">
                 
                 {{-- min-h diatur agar boxnya punya ruang luas untuk visual mode --}}
-                <div class="modal-box relative overflow-hidden bg-white" style="min-height: 85vh; md:min-height: 600px;">
+                <div class="w-full max-w-4xl bg-white rounded-[24px] md:rounded-[32px] overflow-hidden flex flex-col relative z-10" style="min-height: 85vh; max-height: 90vh;">
                     
                     {{-- ==========================================
                          TOGGLE SWITCH & TOMBOL TUTUP (Posisi Tetap)
@@ -1088,7 +1034,7 @@
 
             <!-- INFO MODAL (Ukuran dan Layout Fix 100% Netral) -->
             <template x-if="currentInjuryType === 'info'">
-                <div @click.stop class="bg-white rounded-2xl w-full max-w-2xl p-6 relative shadow-2xl flex flex-col mx-auto z-51">
+                <div @click.stop class="bg-white rounded-[24px] md:rounded-[32px] w-full max-w-2xl p-6 md:p-8 shadow-2xl flex flex-col relative z-10 max-h-[90vh] overflow-y-auto mx-auto">
 
                     {{-- 1. Navigasi Angka Atas --}}
                     <div class="flex justify-center gap-2 mb-6">
@@ -1152,7 +1098,7 @@
             </template>
 
             <template x-if="currentInjuryType === 'craft'">
-                <div @click.stop class="bg-white rounded-2xl w-full max-w-2xl p-6 relative shadow-2xl flex flex-col transition-all z-51 mx-auto">
+                <div @click.stop class="bg-white rounded-[24px] md:rounded-[32px] w-full max-w-2xl p-6 md:p-8 shadow-2xl flex flex-col transition-all relative z-10 max-h-[90vh] overflow-y-auto mx-auto">
                     
                     {{-- ==========================================
                          VIEW 1: SELECTION BAHAN
