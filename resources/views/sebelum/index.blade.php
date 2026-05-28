@@ -508,7 +508,7 @@ body.modal-open { overflow: hidden !important; }
  
       <div class="hero-siaga__cta">
         <a href="{{ route('sebelum') }}#bencana-section" class="hero-btn-main">📖 Pelajari Bencana</a>
-        <a href="{{ route('sebelum') }}#bag-wrap" class="hero-btn-ghost">🎒 Cek Tas Siaga</a>
+        <a href="{{ route('sebelum') }}#bag-wrap" class="hero-btn-ghost"><i class="fa-solid fa-backpack text-green-600"></i> Cek Tas Siaga</a>
       </div>
  
     </div>
@@ -728,7 +728,7 @@ body.modal-open { overflow: hidden !important; }
  
       {{-- FLOATING BADGES --}}
       <div class="h-badge h-badge--gempa">
-        <div class="h-badge__icon" style="background:rgba(90,130,126,0.12);">🌍</div>
+        <div class="h-badge__icon" style="background:rgba(90,130,126,0.12);"><i class="fa-solid fa-earth-asia text-blue-600"></i></div>
         <div class="h-badge__text">
           <strong>Gempa Bumi</strong>
           <small>Skala VI — Waspada</small>
@@ -737,7 +737,7 @@ body.modal-open { overflow: hidden !important; }
       </div>
  
       <div class="h-badge h-badge--banjir">
-        <div class="h-badge__icon" style="background:rgba(132,174,146,0.14);">🌊</div>
+        <div class="h-badge__icon" style="background:rgba(132,174,146,0.14);"><i class="fa-solid fa-water text-teal-600"></i></div>
         <div class="h-badge__text">
           <strong>Banjir</strong>
           <small>Siaga I</small>
@@ -746,7 +746,7 @@ body.modal-open { overflow: hidden !important; }
       </div>
  
       <div class="h-badge h-badge--kebakaran">
-        <div class="h-badge__icon" style="background:rgba(185,212,170,0.2);">🔥</div>
+        <div class="h-badge__icon" style="background:rgba(185,212,170,0.2);"><i class="fa-solid fa-fire text-red-500"></i></div>
         <div class="h-badge__text">
           <strong>Kebakaran</strong>
           <small>+13 titik aktif</small>
@@ -755,7 +755,7 @@ body.modal-open { overflow: hidden !important; }
       </div>
  
       <div class="h-badge h-badge--longsor">
-        <div class="h-badge__icon" style="background:rgba(90,130,126,0.12);">⛰️</div>
+        <div class="h-badge__icon" style="background:rgba(90,130,126,0.12);"><i class="fa-solid fa-mountain text-amber-700"></i></div>
         <div class="h-badge__text">
           <strong>Longsor</strong>
           <small>Risiko Tinggi</small>
@@ -774,19 +774,42 @@ body.modal-open { overflow: hidden !important; }
 
 
     
-    {{-- SECTION INFORMASI BENCANA --}}
-    <div id="bencana-section" class="mb-12">
-        <div id="category-container" class="flex justify-center gap-3 mb-10">
-            <button data-category="gempa"   class="category-btn disaster-btn active">Gempa Bumi</button>
-            <button data-category="banjir"  class="category-btn disaster-btn">Banjir</button>
-            <button data-category="longsor" class="category-btn disaster-btn">Longsor</button>
+{{-- SECTION INFORMASI BENCANA (SEBELUM) --}}
+<section id="bencana-section" class="py-20">
+    <div class="max-w-6xl mx-auto px-4">
+        
+        {{-- HEADER (Tetap di kiri bang, udah aman!) --}}
+        <div class="mb-10 text-left">
+            <span class="inline-block px-3 py-1 text-teal-600 text-xs font-bold rounded-full uppercase tracking-widest mb-3" style="color: #2D6A6A;">
+                Panduan Mitigasi
+            </span>
+            <h2 class="text-4xl font-extrabold" style="color: #2D6A6A;">
+                Informasi Sebelum Bencana
+            </h2>
+            <p class="text-gray-600 mt-2 text-sm">
+                Langkah-langkah kesiapsiagaan penting untuk mengurangi risiko dan melindungi diri sebelum bencana alam terjadi.
+            </p>
         </div>
-        <div id="content-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full"></div>
+
+        {{-- FILTER KATEGORI (Hanya tombol yang di tengah) --}}
+        <div id="category-container" class="flex justify-center gap-3 mb-10 flex-wrap">
+            <button data-category="gempa" class="category-btn disaster-btn active">Gempa Bumi</button>
+            <button data-category="banjir" class="category-btn disaster-btn">Banjir</button>
+            <button data-category="kebakaran" class="category-btn disaster-btn">Kebakaran</button>
+            <button data-category="tsunami" class="category-btn disaster-btn">Tsunami</button>
+        </div>
+
+        {{-- KONTEN INFORMASI --}}
+        <div id="content-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full mb-10"></div>
+
+        {{-- NAVIGASI STEP --}}
         <div id="step-container" class="flex justify-center gap-3 mt-8">
             <button class="step-btn active" data-page="0">1</button>
             <button class="step-btn" data-page="1">2</button>
         </div>
+        
     </div>
+</section>
 
 
   {{-- =========================================
@@ -906,8 +929,8 @@ body.modal-open { overflow: hidden !important; }
 
       {{-- [TOP] Bag Info / Dimensions (Centered) --}}
       <div class="bg-navy/5 w-full max-w-lg mx-auto rounded-xl px-4 py-2 flex flex-wrap justify-center items-center gap-x-4 gap-y-1 text-xs text-navy font-medium">
-        <span>📐 Tas: <strong x-text="bagCm.p + ' × ' + bagCm.t + ' cm'"></strong></span>
-        <span>📦 Zona: <strong x-text="bagCm.p + ' × ' + bagCm.zh + ' cm'"></strong> per area</span>
+        <span><i class="fa-solid fa-ruler-combined text-gray-500"></i> Tas: <strong x-text="bagCm.p + ' × ' + bagCm.t + ' cm'"></strong></span>
+        <span><i class="fa-solid fa-box-open text-amber-600"></i> Zona: <strong x-text="bagCm.p + ' × ' + bagCm.zh + ' cm'"></strong> per area</span>
         <span class="text-gray-400 font-normal">skala: <span x-text="pxPerCm + ' px/cm'"></span></span>
       </div>
 
@@ -1051,7 +1074,7 @@ body.modal-open { overflow: hidden !important; }
   {{-- EMPTY STATE TAS --}}
   <template x-if="!activeTas">
     <div class="text-center py-24">
-      <div class="text-7xl mb-4">🎒</div>
+      <div class="text-7xl mb-4"><i class="fa-solid fa-backpack text-green-600"></i></div>
       <h3 class="font-head font-bold text-navy text-2xl mb-2">Belum ada tas siaga</h3>
       <p class="text-gray-500 mb-6">Buat tas pertamamu untuk mulai menyusun perlengkapan darurat.</p>
       <button onclick="bukaModalTas()" class="px-6 py-3 bg-navy text-white font-semibold rounded-full hover:opacity-90">Buat Tas Sekarang</button>
@@ -1185,16 +1208,33 @@ if ('serviceWorker' in navigator) {
 // ==========================================
 const fullData = {
     gempa: [
-        {title: "1. Kenali Risiko", desc: "Pastikan rumah aman."}, {title: "2. Amankan Area", desc: "Ikat furnitur."}, {title: "3. Jalur Evakuasi", desc: "Cek titik kumpul."},
-        {title: "4. Simulasi", desc: "Latihan rutin."}, {title: "5. P3K", desc: "Siapkan obat."}, {title: "6. Kontak", desc: "Nomor darurat."}
+        {title: "1. Kenali Risiko", desc: "Pastikan struktur rumah kuat & aman."}, 
+        {title: "2. Amankan Area", desc: "Ikat furnitur berat ke dinding."}, 
+        {title: "3. Jalur Evakuasi", desc: "Tentukan titik kumpul keluarga."},
+        {title: "4. Simulasi", desc: "Lakukan latihan evakuasi rutin."}, 
+        {title: "5. Tas Siaga", desc: "Siapkan tas P3K, makanan, dan senter."}, 
+        {title: "6. Kontak Darurat", desc: "Simpan nomor penting di HP/kertas."}
     ],
     banjir: [
-        {title: "1. Cek Drainase", desc: "Bersihkan sampah."}, {title: "2. Simpan Dokumen", desc: "Plastik kedap air."}, {title: "3. Pahami Jalur", desc: "Lokasi pengungsian."},
-        {title: "4. Listrik", desc: "Matikan saklar."}, {title: "5. Barang", desc: "Pindah ke tinggi."}, {title: "6. Info", desc: "Pantau cuaca."}
+        {title: "1. Cek Drainase", desc: "Bersihkan selokan dari tumpukan sampah."}, 
+        {title: "2. Simpan Dokumen", desc: "Bungkus surat penting di plastik kedap air."}, 
+        {title: "3. Pahami Jalur", desc: "Ketahui letak posko pengungsian terdekat."},
+        {title: "4. Posisi Barang", desc: "Pindahkan alat elektronik ke tempat tinggi."}, 
+        {title: "5. Siaga Listrik", desc: "Ketahui letak saklar utama untuk dimatikan."}, 
+        {title: "6. Pantau Info", desc: "Selalu cek perkiraan cuaca lokal."}
     ],
-    longsor: [
-        {title: "1. Cek Retakan", desc: "Waspadai tebing."}, {title: "2. Penghijauan", desc: "Tanam pohon."}, {title: "3. Tanggap Bunyi", desc: "Evakuasi segera."},
-        {title: "4. Saluran", desc: "Jangan gali lereng."}, {title: "5. Area", desc: "Hindari bawah tebing."}, {title: "6. Evakuasi", desc: "Cari tempat aman."}
+    kebakaran: [
+        {title: "1. Siapkan APAR", desc: "Sediakan alat pemadam atau karung goni."}, 
+        {title: "2. Cek Listrik", desc: "Hindari stop kontak bertumpuk/kabel terkelupas."}, 
+        {title: "3. Bahan Mudah Terbakar", desc: "Jauhkan barang mudah terbakar dari kompor."},
+        {title: "4. Detektor Asap", desc: "Pasang dan cek baterai secara berkala."}, 
+        {title: "5. Rute Keluar", desc: "Pastikan pintu atau jendela tidak terhalang barang."}
+    ],
+    tsunami: [
+        {title: "1. Kenali Tanda Alam", desc: "Gempa sangat kuat atau air laut surut tiba-tiba."}, 
+        {title: "2. Peta Evakuasi", desc: "Hafalkan jalur lari ke dataran yang lebih tinggi."}, 
+        {title: "3. Tas Siaga Bencana", desc: "Siapkan tas darurat yang mudah dibawa lari."},
+        {title: "4. Sistem Peringatan", desc: "Ketahui suara sirine bahaya di daerahmu."}
     ]
 };
 

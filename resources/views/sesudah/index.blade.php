@@ -806,7 +806,7 @@
      
           <div class="hero-siaga__cta">
             <a href="#after-category-container" class="hero-btn-main">🏥 Panduan Pemulihan</a>
-            <a href="#supply" class="hero-btn-ghost">🛠️ Cari Supply</a>
+            <a href="#supply" class="hero-btn-ghost"><i class="fa-solid fa-screwdriver-wrench text-gray-600"></i> Cari Supply</a>
           </div>
      
         </div>
@@ -927,7 +927,7 @@
      
           {{-- FLOATING BADGES --}}
           <div class="h-badge h-badge--gempa">
-            <div class="h-badge__icon" style="background:#FFEBEB; color:#C0392B;">🩸</div>
+            <div class="h-badge__icon" style="background:#FFEBEB; color:#C0392B;"><i class="fa-solid fa-droplet text-red-600"></i></div>
             <div class="h-badge__text">
               <strong>P3K Darurat</strong>
               <small>Rawat Luka Cepat</small>
@@ -935,7 +935,7 @@
           </div>
      
           <div class="h-badge h-badge--banjir">
-            <div class="h-badge__icon" style="background:#EBF5FF; color:#2980B9;">💧</div>
+            <div class="h-badge__icon" style="background:#EBF5FF; color:#2980B9;"><i class="fa-solid fa-droplet text-blue-500"></i></div>
             <div class="h-badge__text">
               <strong>Cari Air Minum</strong>
               <small>Filter Darurat</small>
@@ -951,7 +951,7 @@
           </div>
      
           <div class="h-badge h-badge--longsor">
-            <div class="h-badge__icon" style="background:#F4ECF7; color:#8E44AD;">🧠</div>
+            <div class="h-badge__icon" style="background:#F4ECF7; color:#8E44AD;"><i class="fa-solid fa-brain text-pink-300"></i></div>
             <div class="h-badge__text">
               <strong>Pemulihan Mental</strong>
               <small>Trauma Healing</small>
@@ -987,7 +987,7 @@
                                 @click="openCaregiver(item)"
                                 class="injury-card rust-card rounded-[28px] p-6 text-center"
                             >
-                                <div class="injury-icon" x-text="item.icon"></div>
+                                <div class="injury-icon" x-html="item.icon"></div>
 
                                 <h3 class="mt-5 font-bold text-sm" x-text="item.name"></h3>
 
@@ -1011,7 +1011,7 @@
                                 @click="openCaregiver(item)"
                                 class="injury-card rust-card rounded-[28px] p-6 text-center"
                             >
-                                <div class="injury-icon" x-text="item.icon"></div>
+                                <div class="injury-icon" x-html="item.icon"></div>
 
                                 <h3 class="mt-5 font-bold text-sm" x-text="item.name"></h3>
 
@@ -1047,7 +1047,8 @@
             <div id="after-category-container" class="flex justify-center gap-3 mb-10 flex-wrap">
                 <button data-category="gempa" class="after-category-btn disaster-btn active">Gempa Bumi</button>
                 <button data-category="banjir" class="after-category-btn disaster-btn">Banjir</button>
-                <button data-category="longsor" class="after-category-btn disaster-btn">Longsor</button>
+                <button data-category="kebakaran" class="after-category-btn disaster-btn">Kebakaran</button>
+                <button data-category="tsunami" class="after-category-btn disaster-btn">Tsunami</button>
             </div>
 
             {{-- KONTEN INFORMASI --}}
@@ -1079,7 +1080,7 @@
                     @click="openSupply('minum')"
                     class="supply-btn rounded-[28px] p-10 text-center"
                 >
-                    <div class="text-6xl mb-5">💧</div>
+                    <div class="text-6xl mb-5"><i class="fa-solid fa-droplet text-blue-500"></i></div>
 
                     <h3 class="font-bold text-xl mb-3">Minum</h3>
 
@@ -1091,7 +1092,7 @@
                 <a href="#informasi-section"
                     class="supply-btn rounded-[28px] p-10 text-center block"
                 >
-                    <div class="text-6xl mb-5">🩹</div>
+                    <div class="text-6xl mb-5"><i class="fa-solid fa-band-aid text-orange-300"></i></div>
 
                     <h3 class="font-bold text-xl mb-3">P3K</h3>
 
@@ -1103,7 +1104,7 @@
                 <a href="#crafting-section"
                     class="supply-btn rounded-[28px] p-10 text-center block"
                 >
-                    <div class="text-6xl mb-5">🛠️</div>
+                    <div class="text-6xl mb-5"><i class="fa-solid fa-screwdriver-wrench text-gray-600"></i></div>
 
                     <h3 class="font-bold text-xl mb-3">Alat</h3>
 
@@ -1137,7 +1138,7 @@
                         
                         {{-- Box Gambar Lebar --}}
                         <div class="h-48 rounded-xl flex items-center justify-center text-6xl mb-4" style="background: var(--c-teal-bg);">
-                            <span x-text="item.icon"></span>
+                            <span x-html="item.icon"></span>
                         </div>
                         
                         {{-- Teks Rata Kiri --}}
@@ -1168,7 +1169,7 @@
                         
                         {{-- Box Gambar Kotak --}}
                         <div class="h-48 rounded-xl flex items-center justify-center text-6xl mb-4" style="background: var(--c-teal-bg);">
-                            <span x-text="craft.icon"></span>
+                            <span x-html="craft.icon"></span>
                         </div>
                         
                         {{-- Teks Rata Tengah --}}
@@ -1252,7 +1253,7 @@
                         <div class="flex items-center justify-center mb-6 mt-20 md:mt-16">
                             {{-- Ukuran box h-64 dan max-w-[450px] persis Netral --}}
                             <div class="h-64 w-full max-w-[450px] rounded-2xl flex items-center justify-center border border-black/5 shadow-inner transition-all duration-300" style="background: var(--c-teal-bg);">
-                                <div class="text-[100px] drop-shadow-sm transition-transform duration-300" x-text="(modalData.stepVisuals && modalData.stepVisuals[injuryStepIndex]) ? modalData.stepVisuals[injuryStepIndex] : modalData.icon"></div>
+                                <div class="text-[100px] drop-shadow-sm transition-transform duration-300" x-html="(modalData.stepVisuals && modalData.stepVisuals[injuryStepIndex]) ? modalData.stepVisuals[injuryStepIndex] : modalData.icon"></div>
                             </div>
                         </div>
 
@@ -1344,7 +1345,7 @@
                         </div>
 
                         <div class="injury-modal-right hidden md:flex">
-                            <div class="injury-modal-icon" x-text="modalData.icon"></div>
+                            <div class="injury-modal-icon" x-html="modalData.icon"></div>
                         </div>
 
                     </div>
@@ -1379,7 +1380,7 @@
 
                         {{-- Ukuran box h-64 dan max-w-[450px] persis Netral --}}
                         <div class="h-64 w-full max-w-[450px] rounded-2xl flex items-center justify-center border border-black/5 shadow-inner" style="background: var(--c-teal-bg);">
-                            <div class="text-[100px]" x-text="modalData.steps[injuryStepIndex].i"></div>
+                            <div class="text-[100px]" x-html="modalData.steps[injuryStepIndex].i"></div>
                         </div>
 
                         <button @click="if(injuryStepIndex < modalData.steps.length - 1) injuryStepIndex++"
@@ -1398,12 +1399,36 @@
                     {{-- 4. Footer --}}
                     <div class="flex justify-between items-center mt-auto pt-4 border-t border-gray-100">
                         
-                        {{-- Kotak ikon bahan di kiri bawah --}}
-                        <div class="flex items-center px-3 py-1.5 rounded-lg border border-gray-100 bg-white shadow-sm">
-                            <div class="text-xl" x-text="modalData.toolIcon"></div>
-                        </div>
+                        {{-- Kotak ikon bahan di kiri bawah (Diperbarui dengan Fitur Switch) --}}
+                        <template x-if="modalData.tools && modalData.tools.length > 0">
+                            <div @click="if(modalData.tools.length > 1) currentToolIndex = (currentToolIndex + 1) % modalData.tools.length" 
+                                 class="flex items-center gap-3 transition-all"
+                                 :class="modalData.tools.length > 1 ? 'cursor-pointer hover:opacity-80 active:scale-95' : ''">
+                                 
+                                <div class="relative w-11 h-11 rounded-xl border border-gray-200 bg-[#F8F9FA] flex items-center justify-center text-2xl shadow-sm">
+                                    <span x-html="modalData.tools[currentToolIndex].icon"></span>
+                                    
+                                    {{-- Badge Switch (Hanya muncul jika alat > 1) --}}
+                                    <div x-show="modalData.tools.length > 1" 
+                                         class="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full flex items-center justify-center text-white shadow-sm border-2 border-white"
+                                         style="background-color: var(--c-teal-main);">
+                                        <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] font-bold text-gray-400 tracking-wider">TOOL</span>
+                                    <span class="text-xs font-bold text-[#111]" x-text="modalData.tools[currentToolIndex].name"></span>
+                                </div>
+                            </div>
+                        </template>
+                        <template x-if="!modalData.tools || modalData.tools.length === 0">
+                            <div></div> {{-- Spacer kosong kalau gaada tool --}}
+                        </template>
 
-                        {{-- Tombol Done ukuran kecil (h-9 px-8 text-xs) ala Netral --}}
+                        {{-- Tombol Done ukuran kecil --}}
                         <button @click="modal = false"
                                 :disabled="injuryStepIndex !== modalData.steps.length - 1"
                                 :class="injuryStepIndex === modalData.steps.length - 1 ? 'hover:opacity-90' : 'bg-gray-300 cursor-not-allowed'"
@@ -1432,7 +1457,7 @@
                         <div class="flex gap-5 flex-wrap md:flex-nowrap">
                             <div class="flex flex-col gap-3 flex-shrink-0 w-full md:w-[160px] self-center">
                                 <div class="bg-gray-50 rounded-xl border flex flex-col items-center justify-center gap-2 py-6">
-                                    <div class="text-6xl drop-shadow-sm" x-text="modalData.icon"></div>
+                                    <div class="text-6xl drop-shadow-sm" x-html="modalData.icon"></div>
                                     <div class="font-bold text-xs text-center text-gray-600 px-2" style="color: var(--c-teal-dark);" x-text="modalData.title"></div>
                                 </div>
                             </div>
@@ -1442,7 +1467,7 @@
                                 <div class="grid grid-cols-2 gap-2">
                                     <template x-for="(m, idx) in craftingMaterials" :key="idx">
                                         <div class="border p-3 rounded-xl relative flex flex-col items-center justify-center bg-white shadow-sm min-h-[90px]">
-                                            <div class="text-3xl drop-shadow-sm mb-1" x-text="m.icon"></div>
+                                            <div class="text-3xl drop-shadow-sm mb-1" x-html="m.icon"></div>
                                             <span class="text-[10px] font-bold text-center leading-tight text-gray-700" x-text="m.name"></span>
                                             <span class="text-[9px] font-semibold uppercase tracking-wide text-gray-400 mt-0.5" x-text="m.role || 'Bahan'"></span>
                                             
@@ -1484,7 +1509,7 @@
                             <button @click="injuryStepIndex--" x-show="injuryStepIndex > 0" class="absolute -left-12 md:-left-16 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border shadow-sm flex items-center justify-center text-gray-400 hover:text-[var(--c-teal-dark)] hidden md:flex transition-colors z-10">◀</button>
                             
                             <div class="w-full h-full rounded-2xl flex items-center justify-center border border-black/5 shadow-inner" style="background: var(--c-teal-bg);">
-                                <div class="text-[110px] drop-shadow-sm transition-transform duration-300" x-text="modalData.steps[injuryStepIndex].i"></div>
+                                <div class="text-[110px] drop-shadow-sm transition-transform duration-300" x-html="modalData.steps[injuryStepIndex].i"></div>
                             </div>
 
                             {{-- Arrow Kanan (Desktop Only) --}}
@@ -1499,7 +1524,7 @@
                         <div class="flex gap-3 mb-5 justify-center">
                             <template x-for="m in craftingMaterials">
                                 <div class="flex flex-col items-center justify-center bg-gray-50 p-1.5 w-[65px] rounded-lg border border-gray-100">
-                                    <div class="text-xl mb-0.5" x-text="m.icon"></div>
+                                    <div class="text-xl mb-0.5" x-html="m.icon"></div>
                                     <span class="text-[8px] font-bold text-center leading-tight text-gray-600" x-text="m.name"></span>
                                 </div>
                             </template>
@@ -1540,6 +1565,7 @@ function sesudahPage(){
         currentInjuryType: null,
         injuryViewMode: 'visual',
         injuryStepIndex: 0,
+        currentToolIndex: 0,
         
         touchStartX: 0,
         touchStartY: 0,
@@ -1552,7 +1578,7 @@ function sesudahPage(){
                 {
                     id:'luka_sayat',
                     name:'Luka Sayat',
-                    icon:'🩸',
+                    icon:'<i class="fa-solid fa-droplet text-red-600"></i>',
                     desc:'Luka terbuka akibat benda tajam',
                     detail:'Penanganan luka sayat memerlukan pembersihan menyeluruh. Gunakan air bersih mengalir. Jangan gunakan antiseptik (betadine) langsung pada luka terbuka karena merusak jaringan.',
                     tags:['Air Bersih','Balut', 'Tekan'],
@@ -1563,12 +1589,12 @@ function sesudahPage(){
                         'Gunakan salep antibiotik ringan (opsional) di sekitar luka',
                         'Balut dengan kain steril'
                     ],
-                    stepVisuals: ['🧼', '🚰', '🩸', '💊', '🤕']
+                    stepVisuals: ['🧼', '<i class="fa-solid fa-faucet-drip text-blue-400"></i>', '<i class="fa-solid fa-droplet text-red-600"></i>', '<i class="fa-solid fa-pills text-red-500"></i>', '<i class="fa-solid fa-head-side-medical text-orange-400"></i>']
                 },
                 {
                     id:'luka_lecet',
                     name:'Luka Lecet',
-                    icon:'🩹',
+                    icon:'<i class="fa-solid fa-band-aid text-orange-300"></i>',
                     desc:'Gesekan pada kulit',
                     detail:'Luka lecet (abrasi) adalah luka superfisial akibat gesekan. Fokus pada pembersihan dan pencegahan infeksi menggunakan sabun ringan, bukan yodium keras.',
                     tags:['Sabun Ringan','Bersih'],
@@ -1579,12 +1605,12 @@ function sesudahPage(){
                         'Tutup dengan kain kasa jika diperlukan atau di area yang mudah kotor',
                         'Jangan digosok, biarkan kering alami'
                     ],
-                    stepVisuals: ['🚰', '🧼', '💊', '🩹', '🌬️']
+                    stepVisuals: ['<i class="fa-solid fa-faucet-drip text-blue-400"></i>', '🧼', '<i class="fa-solid fa-pills text-red-500"></i>', '<i class="fa-solid fa-band-aid text-orange-300"></i>', '🌬️']
                 },
                 {
                     id:'luka_tusuk',
                     name:'Luka Tusuk',
-                    icon:'⚠️',
+                    icon:'<i class="fa-solid fa-triangle-exclamation text-amber-500"></i>',
                     desc:'Jangan cabut benda tertancap',
                     detail:'Luka tusuk sangat berbahaya karena dapat menembus organ dalam. JANGAN PERNAH MENCABUT benda asing. Segera minta bantuan medis profesional.',
                     tags:['DARURAT','Medis'],
@@ -1595,12 +1621,12 @@ function sesudahPage(){
                         'Letakkan korban dalam posisi nyaman',
                         'Monitor kondisi sampai bantuan datang'
                     ],
-                    stepVisuals: ['🚫', '🎗️', '🚑', '🛌', '👀']
+                    stepVisuals: ['🚫', '<i class="fa-solid fa-ribbon text-yellow-500"></i>', '<i class="fa-solid fa-truck-medical text-red-500"></i>', '<i class="fa-solid fa-bed text-blue-400"></i>', '👀']
                 },
                 {
                     id:'luka_bakar',
                     name:'Luka Bakar',
-                    icon:'🔥',
+                    icon:'<i class="fa-solid fa-fire text-red-500"></i>',
                     desc:'Dinginkan area luka',
                     detail:'Penanganan luka bakar harus segera. Pendinginan dengan air dingin sangat penting untuk mengurangi kedalaman luka dan menghilangkan rasa sakit.',
                     tags:['Air Dingin','Segera'],
@@ -1611,7 +1637,7 @@ function sesudahPage(){
                         'Keluarkan perhiasan/gelang dari area luka',
                         'Tutup dengan perban steril secara longgar (jangan pasta gigi)'
                     ],
-                    stepVisuals: ['🏃', '🚰', '🧊', '💍', '🩹']
+                    stepVisuals: ['<i class="fa-solid fa-person-running text-green-500"></i>', '<i class="fa-solid fa-faucet-drip text-blue-400"></i>', '🧊', '💍', '<i class="fa-solid fa-band-aid text-orange-300"></i>']
                 }
             ],
 
@@ -1619,7 +1645,7 @@ function sesudahPage(){
                 {
                     id:'patah_tulang',
                     name:'Patah Tulang',
-                    icon:'🦴',
+                    icon:'<i class="fa-solid fa-bone text-gray-300 drop-shadow-md"></i>',
                     desc:'Stabilkan area tubuh',
                     detail:'Patah tulang memerlukan imobilisasi segera untuk mencegah kerusakan lebih lanjut. Buat bidai darurat dan ingat untuk JANGAN mengikat tepat di area patah.',
                     tags:['Bidai','Imobilisasi','Medis'],
@@ -1630,12 +1656,12 @@ function sesudahPage(){
                         'Kompres dengan air dingin jika ada pembengkakan',
                         'Segera bawa ke pusat medis'
                     ],
-                    stepVisuals: ['🛑', '🪵', '🪢', '🧊', '🚑']
+                    stepVisuals: ['<i class="fa-solid fa-ban text-red-600"></i>', '<i class="fa-solid fa-tree text-amber-900"></i>', '<i class="fa-solid fa-compress text-gray-400"></i>', '🧊', '<i class="fa-solid fa-truck-medical text-red-500"></i>']
                 },
                 {
                     id:'cedera_kepala',
                     name:'Cedera Kepala',
-                    icon:'🧠',
+                    icon:'<i class="fa-solid fa-brain text-pink-300"></i>',
                     desc:'Pantau kesadaran',
                     detail:'Cedera kepala dapat mengancam jiwa. JANGAN ubah posisi korban (jangan dimiringkan) jika curiga cedera leher/tulang belakang kecuali korban tersedak muntah.',
                     tags:['BAHAYA','Monitor','Medis'],
@@ -1646,12 +1672,12 @@ function sesudahPage(){
                         'Jika perlu tidur, bangunkan dan cek setiap beberapa jam',
                         'Hubungi medis darurat segera'
                     ],
-                    stepVisuals: ['🚫', '👀', '🩸', '⏰', '🚑']
+                    stepVisuals: ['🚫', '👀', '<i class="fa-solid fa-droplet text-red-600"></i>', '⏰', '<i class="fa-solid fa-truck-medical text-red-500"></i>']
                 },
                 {
                     id:'sesak_nafas',
                     name:'Sesak Nafas',
-                    icon:'🫁',
+                    icon:'<i class="fa-solid fa-lungs text-pink-400"></i>',
                     desc:'Posisikan duduk setengah bersandar',
                     detail:'Sesak napas (seperti asma atau panik) membutuhkan ruang paru-paru untuk mengembang. Jangan baringkan rata atau lakukan CPR kecuali henti napas.',
                     tags:['Duduk Bersandar','Tenang','Inhaler'],
@@ -1662,7 +1688,7 @@ function sesudahPage(){
                         'Tenangkan korban, ajak bernapas perlahan bersama',
                         'Hubungi ambulans jika tidak membaik'
                     ],
-                    stepVisuals: ['🪑', '👕', '🌬️', '🤝', '🚑']
+                    stepVisuals: ['🪑', '<i class="fa-solid fa-shirt text-blue-400"></i>', '🌬️', '<i class="fa-solid fa-handshake text-yellow-600"></i>', '<i class="fa-solid fa-truck-medical text-red-500"></i>']
                 },
                 {
                     id:'pingsan',
@@ -1678,7 +1704,7 @@ function sesudahPage(){
                         'Longgarkan pakaian yang ketat',
                         'Hubungi medis jika belum sadar lebih dari 1 menit'
                     ],
-                    stepVisuals: ['🦵', '🤮', '👋', '👕', '🚑']
+                    stepVisuals: ['🦵', '🤮', '👋', '<i class="fa-solid fa-shirt text-blue-400"></i>', '<i class="fa-solid fa-truck-medical text-red-500"></i>']
                 }
             ]
         },
@@ -1686,17 +1712,17 @@ function sesudahPage(){
         afterTutorials:[
             {
                 title:'Waspada Gempa Susulan',
-                icon:'🌍',
+                icon:'<i class="fa-solid fa-earth-asia text-blue-600"></i>',
                 desc:'Periksa bangunan sebelum kembali masuk.'
             },
             {
                 title:'Periksa Kebocoran Gas',
-                icon:'🔥',
+                icon:'<i class="fa-solid fa-fire text-red-500"></i>',
                 desc:'Jangan nyalakan api sebelum aman.'
             },
             {
                 title:'Cari Informasi Resmi',
-                icon:'📻',
+                icon:'<i class="fa-solid fa-radio text-gray-700"></i>',
                 desc:'Pantau BNPB dan BMKG.'
             }
         ],
@@ -1704,47 +1730,60 @@ function sesudahPage(){
         infoItems:[
             {
                 title:'CPR Dasar',
-                icon:'❤️',
+                icon:'<i class="fa-solid fa-heart-pulse text-red-500"></i>',
                 desc:'Cara bantuan napas darurat.',
-                toolIcon: '🫁',
+                tools: [
+                    { name: 'Tangan', icon: '<i class="fa-solid fa-hand text-yellow-300"></i>' }
+                ],
                 steps: [
-                    { d: 'Langkah 1: Pastikan lingkungan aman dan cek kesadaran korban.', i: '🗣️' },
-                    { d: 'Langkah 2: Lakukan 30 kompresi dada bagian tengah dengan cepat.', i: '❤️' },
+                    { d: 'Langkah 1: Pastikan lingkungan aman dan cek kesadaran korban.', i: '<i class="fa-solid fa-head-side-cough text-blue-500"></i>' },
+                    { d: 'Langkah 2: Lakukan 30 kompresi dada bagian tengah dengan cepat.', i: '<i class="fa-solid fa-heart-pulse text-red-500"></i>' },
                     { d: 'Langkah 3: Berikan 2 napas buatan, lalu ulangi siklus kompresi.', i: '😮‍💨' }
                 ]
             },
             {
-                title:'Membalut Luka',
-                icon:'🩹',
+                title: 'Membalut Luka',
+                icon: '<i class="fa-solid fa-bandage text-orange-300"></i>',
                 desc:'Teknik balut dasar.',
-                toolIcon: '🩹',
+                tools: [
+                    { name: 'Kasa', icon: '<i class="fa-solid fa-compress text-gray-400"></i>' },
+                    { name: 'Kain Bersih', icon: '<i class="fa-solid fa-shirt text-blue-400"></i>' }
+                ],
                 steps: [
-                    { d: 'Langkah 1: Bersihkan area luka dengan air mengalir atau antiseptik.', i: '🚰' },
-                    { d: 'Langkah 2: Letakkan kasa steril tepat di atas luka terbuka.', i: '🩹' },
-                    { d: 'Langkah 3: Balut perlahan, pastikan tidak terlalu ketat.', i: '🎗️' }
+                    { d: 'Langkah 1: Bersihkan area luka dengan air mengalir atau antiseptik.', i: '<i class="fa-solid fa-faucet-drip text-blue-400"></i>' },
+                    { d: 'Langkah 2: Letakkan kasa steril tepat di atas luka terbuka.', i: '<i class="fa-solid fa-band-aid text-orange-300"></i>' },
+                    { d: 'Langkah 3: Balut perlahan, pastikan tidak terlalu ketat.', i: '<i class="fa-solid fa-ribbon text-yellow-500"></i>' }
                 ]
             },
             {
                 title:'Patah Tulang',
-                icon:'🦴',
+                icon:'<i class="fa-solid fa-bone text-gray-300 drop-shadow-md"></i>',
                 desc:'Cara imobilisasi.',
-                toolIcon: '🪵',
+                tools: [
+                    { name: 'Bidai / Kayu', icon: '<i class="fa-solid fa-tree text-amber-900"></i>' },
+                    { name: 'Karton Tebal', icon: '<i class="fa-solid fa-box-open text-amber-600"></i>' },
+                    { name: 'Bambu', icon: '<i class="fa-solid fa-seedling text-green-500"></i>' }
+                ],
                 steps: [
-                    { d: 'Langkah 1: Tenangkan korban dan jangan mencoba meluruskan tulang.', i: '🛑' },
-                    { d: 'Langkah 2: Siapkan bidai di sisi kiri dan kanan tulang yang patah.', i: '🪵' },
-                    { d: 'Langkah 3: Ikat bidai dengan kain secara menyilang, pastikan ikatan kuat.', i: '🪢' }
+                    { d: 'Langkah 1: Tenangkan korban dan jangan mencoba meluruskan tulang.', i: '<i class="fa-solid fa-ban text-red-600"></i>' },
+                    { d: 'Langkah 2: Siapkan bidai di sisi kiri dan kanan tulang yang patah.', i: '<i class="fa-solid fa-tree text-amber-900"></i>' },
+                    { d: 'Langkah 3: Ikat bidai dengan kain secara menyilang, pastikan ikatan kuat.', i: '<i class="fa-solid fa-compress text-gray-400"></i>' }
                 ]
             },
             {
                 title:'Kain Penyangga Tangan',
-                icon:'🧣',
+                icon:'<i class="fa-solid fa-mitten text-red-400"></i>',
                 desc:'Tutorial melipat penyangga lengan & bahu darurat.',
-                toolIcon: '🧵',
+                tools: [
+                    { name: 'Mitela', icon: '<i class="fa-solid fa-tape text-blue-400"></i>' },
+                    { name: 'Syal / Jilbab', icon: '<i class="fa-solid fa-mitten text-red-400"></i>' },
+                    { name: 'Kain Sarung', icon: '<i class="fa-solid fa-person-dress text-pink-400"></i>' }
+                ],
                 steps: [
-                    { d: 'Langkah 1: Lipat kain membentuk segitiga.', i: '📐' },
-                    { d: 'Langkah 2: Tekuk lengan sekitar 90 derajat dan posisikan telapak tangan sedikit lebih tinggi dari siku.', i: '💪' },
-                    { d: 'Langkah 3: Masukkan lengan ke kain hingga siku tertutup dan tangan berada di tengah.', i: '🪢' },
-                    { d: 'Langkah 4: Ikat dua ujung kain ke leher.', i: '🪢' }
+                    { d: 'Langkah 1: Lipat kain membentuk segitiga.', i: '<i class="fa-solid fa-ruler-combined text-gray-500"></i>' },
+                    { d: 'Langkah 2: Tekuk lengan sekitar 90 derajat dan posisikan telapak tangan sedikit lebih tinggi dari siku.', i: '<i class="fa-solid fa-dumbbell text-gray-600"></i>' },
+                    { d: 'Langkah 3: Masukkan lengan ke kain hingga siku tertutup dan tangan berada di tengah.', i: '<i class="fa-solid fa-compress text-gray-400"></i>' },
+                    { d: 'Langkah 4: Ikat dua ujung kain ke leher.', i: '<i class="fa-solid fa-compress text-gray-400"></i>' }
                 ]
             }
         ],
@@ -1752,65 +1791,65 @@ function sesudahPage(){
         craftingItems:[
             {
                 title:'Bidai Darurat',
-                icon:'🩹',
+                icon:'<i class="fa-solid fa-band-aid text-orange-300"></i>',
                 materials:[
-                    { name: 'Kayu Lurus', role: 'Penyangga', icon: '🪵', swappable: true, options: [{n: 'Kayu Lurus', i: '🪵'}, {n: 'Bambu', i: '🎋'}, {n: 'Tongkat', i: '🦯'}, {n: 'Papan/Karton', i: '📦'}] },
-                    { name: 'Kain Baju', role: 'Pengikat', icon: '👕', swappable: true, options: [{n: 'Kain Baju', i: '👕'}, {n: 'Perban', i: '🩹'}, {n: 'Tali', i: '🧵'}, {n: 'Syal', i: '🧣'}] },
-                    { name: 'Kain Lembut', role: 'Bantalan Tambahan', icon: '🧦', swappable: true, options: [{n: 'Kain Lembut', i: '🧦'}, {n: 'Handuk', i: '🛁'}, {n: 'Baju Lipat', i: '👕'}, {n: 'Kapas', i: '☁️'}] }
+                    { name: 'Kayu Lurus', role: 'Penyangga', icon: '<i class="fa-solid fa-tree text-amber-900"></i>', swappable: true, options: [{n: 'Kayu Lurus', i: '<i class="fa-solid fa-tree text-amber-900"></i>'}, {n: 'Bambu', i: '<i class="fa-solid fa-seedling text-green-500"></i>'}, {n: 'Tongkat', i: '<i class="fa-solid fa-crutch text-gray-400"></i>'}, {n: 'Papan/Karton', i: '<i class="fa-solid fa-box-open text-amber-600"></i>'}] },
+                    { name: 'Kain Baju', role: 'Pengikat', icon: '<i class="fa-solid fa-shirt text-blue-400"></i>', swappable: true, options: [{n: 'Kain Baju', i: '<i class="fa-solid fa-shirt text-blue-400"></i>'}, {n: 'Perban', i: '<i class="fa-solid fa-band-aid text-orange-300"></i>'}, {n: 'Tali', i: '<i class="fa-solid fa-tape text-blue-400"></i>'}, {n: 'Syal', i: '<i class="fa-solid fa-mitten text-red-400"></i>'}] },
+                    { name: 'Kain Lembut', role: 'Bantalan Tambahan', icon: '<i class="fa-solid fa-socks text-orange-300"></i>', swappable: true, options: [{n: 'Kain Lembut', i: '<i class="fa-solid fa-socks text-orange-300"></i>'}, {n: 'Handuk', i: '<i class="fa-solid fa-bath text-blue-200"></i>'}, {n: 'Baju Lipat', i: '<i class="fa-solid fa-shirt text-blue-400"></i>'}, {n: 'Kapas', i: '<i class="fa-solid fa-cloud text-gray-300"></i>'}] }
                 ],
                 steps: [
-                    { d: 'Periksa cedera, apakah terluka atau patah. JANGAN mencoba meluruskan bagian yang terlihat patah atau bengkok.', i: '🛑' },
-                    { d: 'Siapkan 2 penyangga keras (kayu/bambu) yang panjangnya melewati persendian di atas dan di bawah area patah.', i: '🪵' },
-                    { d: 'Sisipkan bantalan (kain lembut/baju) di antara kulit dan penyangga keras agar tidak melukai kulit.', i: '👕' },
+                    { d: 'Periksa cedera, apakah terluka atau patah. JANGAN mencoba meluruskan bagian yang terlihat patah atau bengkok.', i: '<i class="fa-solid fa-ban text-red-600"></i>' },
+                    { d: 'Siapkan 2 penyangga keras (kayu/bambu) yang panjangnya melewati persendian di atas dan di bawah area patah.', i: '<i class="fa-solid fa-tree text-amber-900"></i>' },
+                    { d: 'Sisipkan bantalan (kain lembut/baju) di antara kulit dan penyangga keras agar tidak melukai kulit.', i: '<i class="fa-solid fa-shirt text-blue-400"></i>' },
                     { d: 'Tempatkan penyangga keras di sisi kiri dan kanan dari tulang yang patah.', i: '🦵' },
-                    { d: 'Ikat penyangga HARUS di atas dan di bawah titik patah. JANGAN mengikat tepat di area patah.', i: '🪢' },
-                    { d: 'Ikat cukup erat agar stabil, tapi periksa sirkulasi ujung jari.', i: '✋' }
+                    { d: 'Ikat penyangga HARUS di atas dan di bawah titik patah. JANGAN mengikat tepat di area patah.', i: '<i class="fa-solid fa-compress text-gray-400"></i>' },
+                    { d: 'Ikat cukup erat agar stabil, tapi periksa sirkulasi ujung jari.', i: '<i class="fa-solid fa-hand text-yellow-300"></i>' }
                 ]
             },
             {
                 title:'Cairan Pembersih',
-                icon:'🧪',
+                icon:'<i class="fa-solid fa-flask text-purple-500"></i>',
                 materials:[
-                    { name: 'Air Mineral Segel', role: 'Cairan Steril', icon: '💧', swappable: true, options: [{n: 'Air Botol Segel', i: '💧'}, {n: 'Air Hujan Bersih', i: '🌧️'}, {n: 'Air Kelapa Muda', i: '🥥'}] },
-                    { name: 'Botol Plastik', role: 'Penyemprot', icon: '🧴', swappable: true, options: [{n: 'Botol Plastik', i: '🧴'}, {n: 'Plastik Kiloan', i: '🛍️'}] }
+                    { name: 'Air Mineral Segel', role: 'Cairan Steril', icon: '<i class="fa-solid fa-droplet text-blue-500"></i>', swappable: true, options: [{n: 'Air Botol Segel', i: '<i class="fa-solid fa-droplet text-blue-500"></i>'}, {n: 'Air Hujan Bersih', i: '<i class="fa-solid fa-cloud-showers-heavy text-blue-400"></i>'}, {n: 'Air Kelapa Muda', i: '<i class="fa-solid fa-bowling-ball text-amber-800"></i>'}] },
+                    { name: 'Botol Plastik', role: 'Penyemprot', icon: '<i class="fa-solid fa-bottle-water text-blue-300"></i>', swappable: true, options: [{n: 'Botol Plastik', i: '<i class="fa-solid fa-bottle-water text-blue-300"></i>'}, {n: 'Plastik Kiloan', i: '<i class="fa-solid fa-bag-shopping text-pink-500"></i>'}] }
                 ],
                 steps: [
-                    { d: 'Gunakan HANYA air mineral kemasan yang segelnya belum rusak. Jangan gunakan air genangan atau banjir.', i: '💧' },
-                    { d: 'Jika tidak ada, tadah air hujan bersih secara langsung menggunakan wadah.', i: '🌧️' },
-                    { d: 'Dalam kondisi darurat di alam bebas, air kelapa muda bisa digunakan untuk membersihkan kotoran dari luka.', i: '🥥' },
-                    { d: 'Tuang air ke dalam botol plastik bersih, lalu lubangi kecil bagian tutupnya.', i: '🧴' },
-                    { d: 'Semprotkan air dengan tekanan ke arah luka terbuka (flushing) agar kotoran/kerikil terdorong keluar. JANGAN menggosok luka.', i: '🌊' }
+                    { d: 'Gunakan HANYA air mineral kemasan yang segelnya belum rusak. Jangan gunakan air genangan atau banjir.', i: '<i class="fa-solid fa-droplet text-blue-500"></i>' },
+                    { d: 'Jika tidak ada, tadah air hujan bersih secara langsung menggunakan wadah.', i: '<i class="fa-solid fa-cloud-showers-heavy text-blue-400"></i>' },
+                    { d: 'Dalam kondisi darurat di alam bebas, air kelapa muda bisa digunakan untuk membersihkan kotoran dari luka.', i: '<i class="fa-solid fa-bowling-ball text-amber-800"></i>' },
+                    { d: 'Tuang air ke dalam botol plastik bersih, lalu lubangi kecil bagian tutupnya.', i: '<i class="fa-solid fa-bottle-water text-blue-300"></i>' },
+                    { d: 'Semprotkan air dengan tekanan ke arah luka terbuka (flushing) agar kotoran/kerikil terdorong keluar. JANGAN menggosok luka.', i: '<i class="fa-solid fa-water text-teal-600"></i>' }
                 ]
             },
             {
                 title:'Perban Darurat',
-                icon:'🩺',
+                icon:'<i class="fa-solid fa-stethoscope text-gray-700"></i>',
                 materials:[
-                    { name: 'Pembalut Wanita', role: 'Penyerap Darah', icon: '🩸', swappable: true, options: [{n: 'Pembalut Wanita', i: '🩸'}, {n: 'Tampon', i: '🩸'}, {n: 'Kain Katun Bersih', i: '👕'}] },
-                    { name: 'Baju Kaos Dalam', role: 'Kain Pengikat', icon: '🎽', swappable: true, options: [{n: 'Baju Kaos Dalam', i: '🎽'}, {n: 'Lakban (Duct Tape)', i: '🏷️'}, {n: 'Kain Panjang', i: '🎗️'}] },
-                    { name: 'Plastik Bersih', role: 'Pelindung (Opsional)', icon: '🛍️', swappable: true, options: [{n: 'Plastik Bersih', i: '🛍️'}, {n: 'Jas Hujan', i: '🧥'}] }
+                    { name: 'Pembalut Wanita', role: 'Penyerap Darah', icon: '<i class="fa-solid fa-droplet text-red-600"></i>', swappable: true, options: [{n: 'Pembalut Wanita', i: '<i class="fa-solid fa-droplet text-red-600"></i>'}, {n: 'Tampon', i: '<i class="fa-solid fa-droplet text-red-600"></i>'}, {n: 'Kain Katun Bersih', i: '<i class="fa-solid fa-shirt text-blue-400"></i>'}] },
+                    { name: 'Baju Kaos Dalam', role: 'Kain Pengikat', icon: '<i class="fa-solid fa-shirt text-gray-300"></i>', swappable: true, options: [{n: 'Baju Kaos Dalam', i: '<i class="fa-solid fa-shirt text-gray-300"></i>'}, {n: 'Lakban (Duct Tape)', i: '<i class="fa-solid fa-tag text-gray-400"></i>'}, {n: 'Kain Panjang', i: '<i class="fa-solid fa-ribbon text-yellow-500"></i>'}] },
+                    { name: 'Plastik Bersih', role: 'Pelindung (Opsional)', icon: '<i class="fa-solid fa-bag-shopping text-pink-500"></i>', swappable: true, options: [{n: 'Plastik Bersih', i: '<i class="fa-solid fa-bag-shopping text-pink-500"></i>'}, {n: 'Jas Hujan', i: '<i class="fa-solid fa-vest text-orange-500"></i>'}] }
                 ],
                 steps: [
-                    { d: 'Gunakan pembalut wanita sebagai bantalan trauma (trauma pad) yang sangat efektif menyerap pendarahan berat.', i: '🩸' },
-                    { d: 'Tempelkan bagian dalam penyerap tepat pada luka. Jika luka tusuk dalam, tampon dapat digunakan perlahan untuk menyumbat pendarahan.', i: '🩹' },
+                    { d: 'Gunakan pembalut wanita sebagai bantalan trauma (trauma pad) yang sangat efektif menyerap pendarahan berat.', i: '<i class="fa-solid fa-droplet text-red-600"></i>' },
+                    { d: 'Tempelkan bagian dalam penyerap tepat pada luka. Jika luka tusuk dalam, tampon dapat digunakan perlahan untuk menyumbat pendarahan.', i: '<i class="fa-solid fa-band-aid text-orange-300"></i>' },
                     { d: 'Robek baju kaos dalam katun (yang tidak berlumpur) menjadi pita panjang sebagai pengikat bantalan.', i: '✂️' },
-                    { d: 'Ikat dengan kencang tepat di atas bantalan pembalut untuk memberi tekanan (pressure) agar darah berhenti.', i: '🪢' },
-                    { d: 'Jika robekan kain kurang panjang, gunakan lakban/duct tape untuk menahan pembalut. Untuk luka dada tembus, gunakan plastik lalu lakban 3 sisinya.', i: '🏷️' }
+                    { d: 'Ikat dengan kencang tepat di atas bantalan pembalut untuk memberi tekanan (pressure) agar darah berhenti.', i: '<i class="fa-solid fa-compress text-gray-400"></i>' },
+                    { d: 'Jika robekan kain kurang panjang, gunakan lakban/duct tape untuk menahan pembalut. Untuk luka dada tembus, gunakan plastik lalu lakban 3 sisinya.', i: '<i class="fa-solid fa-tag text-gray-400"></i>' }
                 ]
             },
             {
                 title:'Tandu Darurat',
-                icon:'🛌',
+                icon:'<i class="fa-solid fa-bed text-blue-400"></i>',
                 materials:[
-                    { name: 'Batang Pohon Tebal', role: 'Rangka Penyangga', icon: '🪵', swappable: true, options: [{n: 'Batang Pohon', i: '🪵'}, {n: 'Pipa Paralon', i: '🦯'}, {n: 'Pipa Besi Ringan', i: '🔩'}] },
-                    { name: 'Jaket Tebal (2x)', role: 'Kain Penahan', icon: '🧥', swappable: true, options: [{n: 'Jaket Tebal', i: '🧥'}, {n: 'Sarung Kuat', i: '🥻'}, {n: 'Terpal / Tenda', i: '⛺'}] }
+                    { name: 'Batang Pohon Tebal', role: 'Rangka Penyangga', icon: '<i class="fa-solid fa-tree text-amber-900"></i>', swappable: true, options: [{n: 'Batang Pohon', i: '<i class="fa-solid fa-tree text-amber-900"></i>'}, {n: 'Pipa Paralon', i: '<i class="fa-solid fa-crutch text-gray-400"></i>'}, {n: 'Pipa Besi Ringan', i: '<i class="fa-solid fa-screwdriver-wrench text-gray-500"></i>'}] },
+                    { name: 'Jaket Tebal (2x)', role: 'Kain Penahan', icon: '<i class="fa-solid fa-vest text-orange-500"></i>', swappable: true, options: [{n: 'Jaket Tebal', i: '<i class="fa-solid fa-vest text-orange-500"></i>'}, {n: 'Sarung Kuat', i: '<i class="fa-solid fa-person-dress text-pink-400"></i>'}, {n: 'Terpal / Tenda', i: '<i class="fa-solid fa-tent text-green-600"></i>'}] }
                 ],
                 steps: [
-                    { d: 'Cari DUA tiang penyangga yang lurus dan kokoh sepanjang minimal 2 meter (sesuaikan tinggi korban).', i: '🪵' },
-                    { d: 'Siapkan 2 atau 3 jaket tebal ber-resleting kuat, atau 2 kain sarung utuh.', i: '🧥' },
+                    { d: 'Cari DUA tiang penyangga yang lurus dan kokoh sepanjang minimal 2 meter (sesuaikan tinggi korban).', i: '<i class="fa-solid fa-tree text-amber-900"></i>' },
+                    { d: 'Siapkan 2 atau 3 jaket tebal ber-resleting kuat, atau 2 kain sarung utuh.', i: '<i class="fa-solid fa-vest text-orange-500"></i>' },
                     { d: 'Metode Jaket: Balik bagian luar jaket ke dalam. Masukkan 2 tiang ke dalam kedua lengan jaket pertama, lalu resletingkan.', i: '🤐' },
                     { d: 'Ulangi langkah tersebut pada jaket kedua (dan ketiga) dengan posisi berhadapan agar area tubuh korban tertopang sempurna.', i: '🥼' },
-                    { d: 'Metode Sarung: Masukkan kedua tiang melintasi lubang dua sarung secara sejajar.', i: '🥻' },
+                    { d: 'Metode Sarung: Masukkan kedua tiang melintasi lubang dua sarung secara sejajar.', i: '<i class="fa-solid fa-person-dress text-pink-400"></i>' },
                     { d: 'Tarik kain hingga tegang. Tiang akan mengunci lipatan kain saat diberi beban. Uji coba dengan tubuh sehat sebelum mengangkat korban terluka.', i: '🏋️' }
                 ]
             }
@@ -1833,13 +1872,19 @@ function sesudahPage(){
                 {title: "5. Sanitasi", desc: "Gunakan jamban darurat/portable."},
                 {title: "6. Psikologi", desc: "Dukung mental keluarga."}
             ],
-            longsor: [
-                {title: "1. Relokasi Sementara", desc: "Pindah ke daerah aman."},
-                {title: "2. Catat Kerusakan", desc: "Lapor ke pemerintah daerah."},
-                {title: "3. Periksa Air", desc: "Gunakan air bersih untuk minum."},
-                {title: "4. Nutrisi", desc: "Pastikan asupan gizi keluarga."},
-                {title: "5. Sosialisasi", desc: "Kumpul dengan tetangga untuk dukung moral."},
-                {title: "6. Rencana Bangkit", desc: "Mulai proses rekonstruksi."}
+            kebakaran: [
+                {title: "1. Tunggu Izin", desc: "Jangan masuk sebelum Damkar nyatakan aman."},
+                {title: "2. Waspada Titik Api", desc: "Perhatikan bara yang mungkin masih menyala."},
+                {title: "3. Cek Instalasi", desc: "Jangan nyalakan listrik yang rusak parah."},
+                {title: "4. Dokumentasi", desc: "Foto barang rusak untuk klaim asuransi."},
+                {title: "5. Buang Barang", desc: "Buang makanan/obat yang terpapar panas."}
+            ],
+            tsunami: [
+                {title: "1. Tetap di Posko", desc: "Jangan kembali ke pantai sebelum info resmi."},
+                {title: "2. Jauhi Reruntuhan", desc: "Hindari genangan air deras dan puing-puing."},
+                {title: "3. Cek Keluarga", desc: "Cari kerabat menggunakan data posko pengungsian."},
+                {title: "4. Air Konsumsi", desc: "Minum air kemasan, hindari air sumur kotor."},
+                {title: "5. Bersihkan Luka", desc: "Cegah infeksi dari air laut yang terkontaminasi."}
             ]
         },
 
@@ -1937,6 +1982,7 @@ function sesudahPage(){
             this.modalData = item;
             this.currentInjuryType = 'info'; 
             this.injuryStepIndex = 0; // Mulai dari step awal
+            this.currentToolIndex = 0
             this.modal = true;
         },
 

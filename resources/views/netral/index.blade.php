@@ -179,13 +179,13 @@
         <div class="flex flex-wrap justify-center gap-4">
             @php
             $bencana = [
-                ['nama'=>'Gempa Bumi','icon'=>'🌍','ada'=>true],
-                ['nama'=>'Tsunami','icon'=>'🌊','ada'=>true],
-                ['nama'=>'Banjir','icon'=>'💧','ada'=>true],
+                ['nama'=>'Gempa Bumi','icon'=>'<i class="fa-solid fa-earth-asia text-blue-600"></i>','ada'=>true],
+                ['nama'=>'Tsunami','icon'=>'<i class="fa-solid fa-water text-teal-600"></i>','ada'=>true],
+                ['nama'=>'Banjir','icon'=>'<i class="fa-solid fa-droplet text-blue-500"></i>','ada'=>true],
                 ['nama'=>'Gunung Meletus','icon'=>'🌋','ada'=>false],
-                ['nama'=>'Tanah Longsor','icon'=>'⛰️','ada'=>false],
-                ['nama'=>'Kebakaran','icon'=>'🔥','ada'=>true],
-                ['nama'=>'Angin Puting','icon'=>'🌪️','ada'=>false],
+                ['nama'=>'Tanah Longsor','icon'=>'<i class="fa-solid fa-mountain text-amber-700"></i>','ada'=>false],
+                ['nama'=>'Kebakaran','icon'=>'<i class="fa-solid fa-fire text-red-500"></i>','ada'=>true],
+                ['nama'=>'Angin Puting','icon'=>'<i class="fa-solid fa-tornado text-gray-500"></i>','ada'=>false],
             ];
             @endphp
             @foreach($bencana as $b)
@@ -194,7 +194,7 @@
                 class="tutorial-item reveal w-[calc(50%-8px)] sm:w-[calc(33.33%-11px)] md:w-[calc(25%-12px)] flex flex-col items-center"
                 @if($b['ada']) @click="$dispatch('open-tutorial', { bencana: '{{ $b['nama'] }}' })" @else disabled @endif
             >
-                <div class="text-4xl mb-3">{{ $b['icon'] }}</div>
+                <div class="text-4xl mb-3">{!! $b['icon'] !!}</div>
                 <p class="font-head font-semibold text-sm text-center" style="color: var(--color-text-primary);">{{ $b['nama'] }}</p>
                 <span class="tag {{ $b['ada'] ? 'tag-available' : 'tag-soon' }}">{{ $b['ada'] ? 'Tersedia' : 'Segera' }}</span>
             </button>
@@ -213,16 +213,16 @@
 
     <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
         @foreach([
-            ['🪢', 'Kain Penyangga Tangan', 'Kain untuk menopang tangan saat cedera.'],
-            ['🥫', 'Membalut Luka', 'Cara membalut luka dengan kain.'],
-            ['🧭', 'Jam Matahari', 'Estimasi penunjuk waktu darurat dengan memanfaatkan bayangan dari sinar matahari.'],
-            ['☀️', 'Menentukan Keamanan Air', 'Cara menentukan apakah air aman digunakan.']
+            ['<i class="fa-solid fa-mitten text-red-400"></i>', 'Kain Penyangga Tangan', 'Kain untuk menopang tangan saat cedera.'],
+            ['<i class="fa-solid fa-bandage text-orange-300"></i>', 'Membalut Luka', 'Cara membalut luka dengan kain.'],
+            ['<i class="fa-solid fa-clock text-gray-600"></i>', 'Jam Matahari', 'Estimasi penunjuk waktu darurat dengan memanfaatkan bayangan dari sinar matahari.'],
+            ['<i class="fa-solid fa-glass-water-droplet text-blue-400"></i>', 'Menentukan Keamanan Air', 'Cara menentukan apakah air aman digunakan.']
         ] as $info)
         <div @click="$dispatch('open-info', { type: 'Survive', item: '{{ $info[1] }}' })" 
              class="info-main-card reveal cursor-pointer p-5 rounded-2xl border" 
              style="background: var(--color-surface); border-color: var(--color-border);">
             <div class="preview-box h-48 rounded-xl flex items-center justify-center text-6xl mb-4 bg-opacity-5" style="background: var(--color-text-muted);">
-                {{ $info[0] }}
+                {!! $info[0] !!}
             </div>
             <h3 class="text-xl font-bold mt-2" style="color: var(--color-text-primary);">{{ $info[1] }}</h3>
             <p class="text-sm mt-1 leading-relaxed" style="color: var(--color-text-muted);">{{ $info[2] }}</p>
@@ -242,17 +242,18 @@
 
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             @foreach([
-                ['🧴', 'Filter Air', 'air-bersih'],
-                ['🪝', 'Pisau', 'pisau'],
-                ['🔥', 'Korek Darurat', 'korek-api'],
-                ['🧭', 'Lampu Minyak', 'kompas']
+                ['<i class="fa-solid fa-filter text-blue-400"></i>', 'Filter Air', 'air-bersih'],
+                ['<i class="fa-solid fa-utensils text-gray-500"></i>', 'Pisau', 'pisau'],
+                ['<i class="fa-solid fa-fire-burner text-orange-500"></i>', 'Korek Darurat', 'korek-api'],
+                ['<i class="fa-solid fa-lightbulb text-yellow-500"></i>', 'Lampu Minyak', 'Lampu']
             ] as $craft)
             <button 
-                @click="$dispatch('open-crafting', { type: 'Survival', item: '{{ $craft[1] }}', icon: '{{ $craft[0] }}' })"
+                data-item-title="{{ $craft[1] }}" 
+                @click='$dispatch("open-crafting", { type: "Survival", item: "{{ $craft[1] }}", icon: `{!! $craft[0] !!}` })'
                 class="info-main-card reveal p-5 rounded-2xl border cursor-pointer transition-all hover:shadow-md hover:-translate-y-1"
                 style="background: var(--color-surface); border-color: var(--color-border);">
                 <div class="preview-box h-48 rounded-xl flex items-center justify-center text-6xl mb-4" style="background: rgba(var(--color-text-muted-rgb, 128,128,128), 0.1);">
-                    {{ $craft[0] }}
+                    {!! $craft[0] !!}
                 </div>
                 <h3 class="text-sm font-bold" style="color: var(--color-text-primary);">{{ $craft[1] }}</h3>
                 <p class="text-xs mt-1" style="color: var(--color-text-muted);">Tap untuk detail crafting</p>
@@ -275,17 +276,17 @@
 
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             @foreach([
-                ['🩹', 'Bidai Darurat', 'bidai'],
-                ['🧪', 'Cairan Pembersih', 'cairan-pembersih'],
-                ['🩺', 'Perban Darurat', 'perban-darurat'],
-                ['🛌', 'Tandu Darurat', 'tandu']
+                ['<i class="fa-solid fa-band-aid text-orange-300"></i>', 'Bidai Darurat', 'bidai'],
+                ['<i class="fa-solid fa-flask text-purple-500"></i>', 'Cairan Pembersih', 'cairan-pembersih'],
+                ['<i class="fa-solid fa-stethoscope text-gray-700"></i>', 'Perban Darurat', 'perban-darurat'],
+                ['<i class="fa-solid fa-bed text-blue-400"></i>', 'Tandu Darurat', 'tandu']
             ] as $care)
             <button 
-                @click="$dispatch('open-crafting', { type: 'Caregiver', item: '{{ $care[1] }}', icon: '{{ $care[0] }}' })"
+                @click='$dispatch("open-crafting", { type: "Caregiver", item: "{{ $care[1] }}", icon: `{!! $care[0] !!}` })'
                 class="info-main-card reveal p-5 rounded-2xl border cursor-pointer transition-all hover:shadow-md hover:-translate-y-1"
                 style="background: var(--color-surface); border-color: var(--color-border);">
                 <div class="preview-box h-48 rounded-xl flex items-center justify-center text-6xl mb-4" style="background: rgba(var(--color-text-muted-rgb, 128,128,128), 0.1);">
-                    {{ $care[0] }}
+                    {!! $care[0] !!}
                 </div>
                 <h3 class="text-sm font-bold" style="color: var(--color-text-primary);">{{ $care[1] }}</h3>
                 <p class="text-xs mt-1" style="color: var(--color-text-muted);">Tap untuk detail crafting</p>
@@ -305,17 +306,27 @@
     </div>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         @php
+        // Semua sisa emoji udah gw sapu bersih jadi FontAwesome biar seragam 100%
         $darurat = [
-            ['Polisi','110','👮','#2C3E50'],['Ambulans','118','🚑','#C0392B'],
-            ['Pemadam','113','🚒','#E67E22'],['BNPB','117','🆘','#27AE60'],
-            ['SAR','115','⛑️','#2C3E50'],['PLN','123','⚡','#F39C12'],
-            ['Pos Indonesia','161','📮','#7F8C8D'],['PDAM','119','💧','#2980B9'],
+            ['Polisi','110','<i class="fa-solid fa-shield-halved text-blue-700"></i>','#2C3E50'],
+            ['Ambulans','118','<i class="fa-solid fa-truck-medical text-red-500"></i>','#C0392B'],
+            ['Pemadam','113','<i class="fa-solid fa-fire-extinguisher text-orange-500"></i>','#E67E22'],
+            ['BNPB','117','<i class="fa-solid fa-life-ring text-green-500"></i>','#27AE60'],
+            ['SAR','115','<i class="fa-solid fa-helmet-safety text-slate-700"></i>','#2C3E50'],
+            ['PLN','123','<i class="fa-solid fa-bolt text-yellow-400"></i>','#F39C12'],
+            ['Pos Indonesia','161','<i class="fa-solid fa-envelope text-gray-500"></i>','#7F8C8D'],
+            ['PDAM','119','<i class="fa-solid fa-droplet text-blue-500"></i>','#2980B9'],
         ];
         @endphp
         @foreach($darurat as $d)
         <a href="tel:{{ $d[1] }}" class="darurat-card reveal">
             <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
-                 style="background: {{ $d[3] }}1a;">{{ $d[2] }}</div>
+                 style="background: {{ $d[3] }}1a;">
+                 
+                {{-- INI KUNCINYA BANG: Pakai tanda seru biar HTML-nya dirender --}}
+                {!! $d[2] !!}
+                
+            </div>
             <div>
                 <p class="font-head font-bold text-sm" style="color: var(--color-text-primary);">{{ $d[0] }}</p>
                 <p class="text-2xl font-extrabold font-head" style="color: var(--color-danger);">{{ $d[1] }}</p>
@@ -338,6 +349,18 @@
 <template x-teleport="body">
 <div
     x-data="tutorialModal()"
+    x-init="
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('openTutorial') === 'filter-air') {
+            // Karena data lengkapnya ada di Alpine netralPage (array craftingData),
+            // kita harus ambil dari komponen atasnya. Tapi biar gampang,
+            // kita dispatch balik aja event open-crafting pakai data manual.
+            setTimeout(() => {
+                const filterAirItem = document.querySelector('[data-item-title=\'Filter Air\']');
+                if(filterAirItem) filterAirItem.click();
+            }, 500);
+        }
+     "
     x-show="open"
     x-effect="document.body.classList.toggle('modal-open', open)"
     x-transition:enter="transition ease-out duration-200"
@@ -409,7 +432,7 @@
                                 
                                 <div class="w-full h-56 rounded-lg overflow-hidden mt-6 mb-4 flex items-center justify-center text-7xl transition-colors border border-black/5"
                                      :class="selectedChoice === choice ? 'bg-sky-50/50' : 'bg-slate-50'">
-                                    <span class="drop-shadow-sm" x-text="choice.icon"></span>
+                                    <span class="drop-shadow-sm" x-html="choice.icon"></span>
                                 </div>
                                 
                                 <span class="text-base font-extrabold text-slate-700 tracking-wide mt-auto" x-text="choice.desc"></span> 
@@ -542,7 +565,7 @@
             <div class="h-64 w-full max-w-[450px] bg-gray-200 rounded-2xl flex items-center justify-center shadow-inner">
 
                 <template x-if="currentContent.type === 'icon'">
-                    <div class="text-[100px]" x-text="currentContent.icon"></div>
+                    <div class="text-[100px]" x-html="currentContent.icon"></div>
                 </template>
 
                 <template x-if="currentContent.type === 'image'">
@@ -584,7 +607,7 @@
         <div class="relative">
 
             <div class="w-11 h-11 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center shadow-sm">
-                <span class="text-xl" x-text="toolIcon"></span>
+                <span class="text-xl" x-html="toolIcon"></span>
             </div>
 
             {{-- BUTTON SWITCH --}}
@@ -656,7 +679,7 @@
             <div class="flex gap-5">
                 <div class="flex flex-col gap-3 flex-shrink-0 self-center" style="width:160px;">
                     <div class="bg-gray-50 rounded-xl border flex flex-col items-center justify-center gap-2 py-6 relative">
-                        <div class="text-6xl" x-text="icon"></div>
+                        <div class="text-6xl" x-html="icon"></div>
                         <div class="font-bold text-xs text-center text-gray-600 px-2" x-text="item"></div>
                     </div>
                 </div>
@@ -666,7 +689,7 @@
                     <div class="grid grid-cols-2 gap-2">
                         <template x-for="(m, idx) in materials" :key="idx">
                             <div class="border p-3 rounded-xl relative flex flex-col items-center justify-center bg-white shadow-sm min-h-[90px]">
-                                <div class="text-3xl mb-1" x-text="m.icon"></div>
+                                <div class="text-3xl mb-1" x-html="m.icon"></div>
                                 <span class="text-[10px] font-bold text-center leading-tight text-gray-700" x-text="m.name"></span>
                                 <span class="text-[9px] font-semibold uppercase tracking-wide text-gray-400 mt-0.5" x-text="m.role"></span>
                                 <button x-show="m.swappable" @click="switchMaterial(idx)" class="absolute top-1.5 right-1.5 w-5 h-5 flex items-center justify-center bg-teal-500 text-white rounded-full text-[9px] font-bold transition">⇅</button>
@@ -698,7 +721,7 @@
         {{-- Arrow Kiri (Desktop Only) --}}
         <button @click="prevStep()" class="absolute -left-12 md:-left-16 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border shadow-sm flex items-center justify-center text-gray-400 hover:text-teal-600 hidden md:flex transition-colors z-10" x-show="currentStep > 1">◀</button>
 
-        <div class="bg-gray-100 w-full h-full rounded-2xl flex items-center justify-center shadow-inner text-[120px]" x-text="icon"></div>
+        <div class="bg-gray-100 w-full h-full rounded-2xl flex items-center justify-center shadow-inner text-[120px]" x-html="icon"></div>
 
         {{-- Arrow Kanan (Desktop Only) --}}
         <button @click="nextStep()" class="absolute -right-12 md:-right-16 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border shadow-sm flex items-center justify-center text-gray-400 hover:text-teal-600 hidden md:flex transition-colors z-10" x-show="currentStep < Object.keys(craftingData[item]?.instructions || {}).length">▶</button>
@@ -713,7 +736,7 @@
     <div class="flex gap-2 mb-6 justify-center overflow-x-auto pb-2">
         <template x-for="m in materials">
             <div class="flex flex-col items-center bg-white border p-2 rounded-lg shadow-sm min-w-[70px]">
-                <div class="text-2xl" x-text="m.icon"></div>
+                <div class="text-2xl" x-html="m.icon"></div>
                 <span class="text-[9px] font-bold text-gray-600 mt-1" x-text="m.name"></span>
             </div>
         </template>
@@ -756,7 +779,7 @@
                             title:'Dimana?', visual:'🏢', caption:'Lokasi Saat Ini', description:'Pilih kondisi lokasi kamu saat gempa terjadi.',
                             navIcon: 'fa-solid fa-location-dot',
                             options:[
-                                { label:'Luar Ruangan', icon:'🌳', desc:'Jauhi benda rawan jatuh.' },
+                                { label:'Luar Ruangan', icon:'<i class="fa-solid fa-tree text-green-700"></i>', desc:'Jauhi benda rawan jatuh.' },
                                 { label:'Dalam Ruangan', icon:'🏠', desc:'Lindungi kepala.' }
                             ]
                         },
@@ -777,39 +800,39 @@
                             ]
                         },
                         {
-                            title:'Akses Keluar?', visual:'🚪', caption:'Cari Jalur Aman', description:'Periksa jalur evakuasi.',
+                            title:'Akses Keluar?', visual:'<i class="fa-solid fa-door-open text-amber-800"></i>', caption:'Cari Jalur Aman', description:'Periksa jalur evakuasi.',
                             navIcon: 'fa-solid fa-door-open',
                             options:[
-                                { label:'Terbuka', icon:'🚪', desc:'Segera keluar.' },
-                                { label:'Tertutup', icon:'🪨', desc:'Cari jalur alternatif.' }
+                                { label:'Terbuka', icon:'<i class="fa-solid fa-door-open text-amber-800"></i>', desc:'Segera keluar.' },
+                                { label:'Tertutup', icon:'<i class="fa-solid fa-hill-rockslide text-gray-600"></i>', desc:'Cari jalur alternatif.' }
                             ]
                         },
                         {
-                            title:'Ada Api?', visual:'🔥', caption:'Bahaya Tambahan', description:'Periksa adanya kebakaran atau gas.',
+                            title:'Ada Api?', visual:'<i class="fa-solid fa-fire text-red-500"></i>', caption:'Bahaya Tambahan', description:'Periksa adanya kebakaran atau gas.',
                             navIcon: 'fa-solid fa-fire',
                             options:[
-                                { label:'Ada', icon:'🔥', desc:'Jauhi area.' },
+                                { label:'Ada', icon:'<i class="fa-solid fa-fire text-red-500"></i>', desc:'Jauhi area.' },
                                 { label:'Tidak', icon:'✅', desc:'Lanjut aman.' }
                             ]
                         },
                         {
-                            title:'Menuju Shelter', visual:'🏃', caption:'Evakuasi', description:'Ikuti jalur evakuasi resmi.',
+                            title:'Menuju Shelter', visual:'<i class="fa-solid fa-person-running text-green-500"></i>', caption:'Evakuasi', description:'Ikuti jalur evakuasi resmi.',
                             navIcon: 'fa-solid fa-person-running',
                             options:[
                                 { label:'Ikuti Jalur', icon:'➡️', desc:'Tetap tenang.' },
-                                { label:'Cari Jalur', icon:'🧭', desc:'Gunakan area terbuka.' }
+                                { label:'Cari Jalur', icon:'<i class="fa-solid fa-compass text-gray-600"></i>', desc:'Gunakan area terbuka.' }
                             ]
                         },
                         {
-                            title:'Area Aman?', visual:'⛺', caption:'Shelter', description:'Pastikan area jauh dari bangunan retak.',
+                            title:'Area Aman?', visual:'<i class="fa-solid fa-tent text-green-600"></i>', caption:'Shelter', description:'Pastikan area jauh dari bangunan retak.',
                             navIcon: 'fa-solid fa-tents',
                             options:[
-                                { label:'Sudah', icon:'⛺', desc:'Tetap di shelter.' },
-                                { label:'Belum', icon:'⚠️', desc:'Cari tempat lain.' }
+                                { label:'Sudah', icon:'<i class="fa-solid fa-tent text-green-600"></i>', desc:'Tetap di shelter.' },
+                                { label:'Belum', icon:'<i class="fa-solid fa-triangle-exclamation text-amber-500"></i>', desc:'Cari tempat lain.' }
                             ]
                         },
                         {
-                            title:'Aman', visual:'🏡', caption:'Kondisi Stabil', description:'Kamu telah mencapai area aman.',
+                            title:'Aman', visual:'<i class="fa-solid fa-house-chimney text-green-600"></i>', caption:'Kondisi Stabil', description:'Kamu telah mencapai area aman.',
                             navIcon: 'fa-solid fa-check-circle',
                             options:[
                                 { label:'Lanjut', icon:'✅', desc:'Periksa kondisi tubuh.' }
@@ -823,18 +846,18 @@
                     sebelum: ['Kenali tanda-tanda peringatan dini seperti gempa kuat atau air laut surut drastis.','Pahami peta rawan tsunami dan jalur evakuasi di daerahmu.','Siapkan tas siaga bencana untuk dibawa kapan saja.'],
                     saat: [
                         {
-                            title:'Dimana?', visual:'📍', caption:'Lokasi Saat Ini', description:'Di mana posisi kamu sekarang?',
+                            title:'Dimana?', visual:'<i class="fa-solid fa-location-dot text-red-500"></i>', caption:'Lokasi Saat Ini', description:'Di mana posisi kamu sekarang?',
                             navIcon: 'fa-solid fa-location-dot',
                             options:[
-                                { label:'Dekat Pantai', icon:'🏖️', desc:'Segera menjauh.' },
+                                { label:'Dekat Pantai', icon:'<i class="fa-solid fa-umbrella-beach text-yellow-500"></i>', desc:'Segera menjauh.' },
                                 { label:'Jauh Pantai', icon:'🏙️', desc:'Tetap waspada.' }
                             ]
                         },
                         {
-                            title:'Peringatan?', visual:'⚠️', caption:'Tanda Alam', description:'Apakah ada tanda tsunami?',
+                            title:'Peringatan?', visual:'<i class="fa-solid fa-triangle-exclamation text-amber-500"></i>', caption:'Tanda Alam', description:'Apakah ada tanda tsunami?',
                             navIcon: 'fa-solid fa-triangle-exclamation',
                             options:[
-                                { label:'Air Surut', icon:'🌊', desc:'Tanda bahaya.' },
+                                { label:'Air Surut', icon:'<i class="fa-solid fa-water text-teal-600"></i>', desc:'Tanda bahaya.' },
                                 { label:'Gempa Kuat', icon:'🫨', desc:'Potensi tsunami.' }
                             ]
                         },
@@ -855,7 +878,7 @@
                             ]
                         },
                         {
-                            title:'Evakuasi?', visual:'🏃', caption:'Metode', description:'Cara menuju tempat aman.',
+                            title:'Evakuasi?', visual:'<i class="fa-solid fa-person-running text-green-500"></i>', caption:'Metode', description:'Cara menuju tempat aman.',
                             navIcon: 'fa-solid fa-person-running',
                             options:[
                                 { label:'Jalan Kaki', icon:'🚶', desc:'Lebih disarankan.' },
@@ -863,10 +886,10 @@
                             ]
                         },
                         {
-                            title:'Tujuan?', visual:'⛰️', caption:'Tempat Tinggi', description:'Cari area evakuasi vertikal.',
+                            title:'Tujuan?', visual:'<i class="fa-solid fa-mountain text-amber-700"></i>', caption:'Tempat Tinggi', description:'Cari area evakuasi vertikal.',
                             navIcon: 'fa-solid fa-mountain-sun',
                             options:[
-                                { label:'Bukit', icon:'⛰️', desc:'Minimal 10m dpl.' },
+                                { label:'Bukit', icon:'<i class="fa-solid fa-mountain text-amber-700"></i>', desc:'Minimal 10m dpl.' },
                                 { label:'Gedung', icon:'🏢', desc:'Lantai 3 ke atas.' }
                             ]
                         },
@@ -875,14 +898,14 @@
                             navIcon: 'fa-solid fa-flag-checkered',
                             options:[
                                 { label:'Sudah Tinggi', icon:'✅', desc:'Tetap di sana.' },
-                                { label:'Masih Rendah', icon:'⚠️', desc:'Naik lagi.' }
+                                { label:'Masih Rendah', icon:'<i class="fa-solid fa-triangle-exclamation text-amber-500"></i>', desc:'Naik lagi.' }
                             ]
                         },
                         {
-                            title:'Aman', visual:'🌊', caption:'Bertahan', description:'Tunggu info resmi sebelum turun.',
+                            title:'Aman', visual:'<i class="fa-solid fa-water text-teal-600"></i>', caption:'Bertahan', description:'Tunggu info resmi sebelum turun.',
                             navIcon: 'fa-solid fa-tower-broadcast',
                             options:[
-                                { label:'Bertahan', icon:'🛑', desc:'Jangan ke pantai.' }
+                                { label:'Bertahan', icon:'<i class="fa-solid fa-ban text-red-600"></i>', desc:'Jangan ke pantai.' }
                             ]
                         }
                     ],
@@ -901,15 +924,15 @@
                             ]
                         },
                         {
-                            title:'Kondisi Air?', visual:'🌊', caption:'Ketinggian', description:'Bagaimana arus airnya?',
+                            title:'Kondisi Air?', visual:'<i class="fa-solid fa-water text-teal-600"></i>', caption:'Ketinggian', description:'Bagaimana arus airnya?',
                             navIcon: 'fa-solid fa-water',
                             options:[
                                 { label:'Cepat Naik', icon:'📈', desc:'Bahaya.' },
-                                { label:'Genangan', icon:'💧', desc:'Waspada.' }
+                                { label:'Genangan', icon:'<i class="fa-solid fa-droplet text-blue-500"></i>', desc:'Waspada.' }
                             ]
                         },
                         {
-                            title:'Listrik?', visual:'⚡', caption:'Risiko', description:'Apakah listrik sudah dipadamkan?',
+                            title:'Listrik?', visual:'<i class="fa-solid fa-bolt text-yellow-400"></i>', caption:'Risiko', description:'Apakah listrik sudah dipadamkan?',
                             navIcon: 'fa-solid fa-plug-circle-xmark',
                             options:[
                                 { label:'Padamkan', icon:'🔌', desc:'Hindari setrum.' },
@@ -917,18 +940,18 @@
                             ]
                         },
                         {
-                            title:'Barang?', visual:'🎒', caption:'Penyelamatan', description:'Amankan dokumen penting.',
+                            title:'Barang?', visual:'<i class="fa-solid fa-backpack text-green-600"></i>', caption:'Penyelamatan', description:'Amankan dokumen penting.',
                             navIcon: 'fa-solid fa-file-shield',
                             options:[
                                 { label:'Amankan', icon:'⬆️', desc:'Taruh di atas.' },
-                                { label:'Tinggalkan', icon:'🏃', desc:'Utamakan nyawa.' }
+                                { label:'Tinggalkan', icon:'<i class="fa-solid fa-person-running text-green-500"></i>', desc:'Utamakan nyawa.' }
                             ]
                         },
                         {
-                            title:'Arus Deras?', visual:'🌊', caption:'Bahaya', description:'Apakah air mengalir deras?',
+                            title:'Arus Deras?', visual:'<i class="fa-solid fa-water text-teal-600"></i>', caption:'Bahaya', description:'Apakah air mengalir deras?',
                             navIcon: 'fa-solid fa-triangle-exclamation',
                             options:[
-                                { label:'Hindari', icon:'🛑', desc:'Bisa terseret.' },
+                                { label:'Hindari', icon:'<i class="fa-solid fa-ban text-red-600"></i>', desc:'Bisa terseret.' },
                                 { label:'Jangan Terjang', icon:'❌', desc:'Berbahaya.' }
                             ]
                         },
@@ -937,15 +960,15 @@
                             navIcon: 'fa-solid fa-life-ring',
                             options:[
                                 { label:'Pelampung', icon:'🛟', desc:'Gunakan ban/botol.' },
-                                { label:'Tongkat', icon:'🦯', desc:'Cek kedalaman.' }
+                                { label:'Tongkat', icon:'<i class="fa-solid fa-crutch text-gray-400"></i>', desc:'Cek kedalaman.' }
                             ]
                         },
                         {
-                            title:'Tujuan?', visual:'⛺', caption:'Posko', description:'Cari posko pengungsian terdekat.',
+                            title:'Tujuan?', visual:'<i class="fa-solid fa-tent text-green-600"></i>', caption:'Posko', description:'Cari posko pengungsian terdekat.',
                             navIcon: 'fa-solid fa-tents',
                             options:[
-                                { label:'Posko', icon:'⛺', desc:'Tempat kering.' },
-                                { label:'Dataran Tinggi', icon:'⛰️', desc:'Aman dari air.' }
+                                { label:'Posko', icon:'<i class="fa-solid fa-tent text-green-600"></i>', desc:'Tempat kering.' },
+                                { label:'Dataran Tinggi', icon:'<i class="fa-solid fa-mountain text-amber-700"></i>', desc:'Aman dari air.' }
                             ]
                         },
                         {
@@ -966,8 +989,8 @@
                             title:'Dimana?', visual:'🏢', caption:'Lokasi', description:'Posisi kamu saat kebakaran terjadi.',
                             navIcon: 'fa-solid fa-location-dot',
                             options:[
-                                { label:'Dalam Ruangan', icon:'🚪', desc:'Cari jalan keluar.' },
-                                { label:'Luar Ruangan', icon:'🌳', desc:'Jauhi bangunan.' }
+                                { label:'Dalam Ruangan', icon:'<i class="fa-solid fa-door-open text-amber-800"></i>', desc:'Cari jalan keluar.' },
+                                { label:'Luar Ruangan', icon:'<i class="fa-solid fa-tree text-green-700"></i>', desc:'Jauhi bangunan.' }
                             ]
                         },
                         {
@@ -979,7 +1002,7 @@
                             ]
                         },
                         {
-                            title:'Pakaian?', visual:'👕', caption:'Risiko', description:'Apakah pakaian terbakar?',
+                            title:'Pakaian?', visual:'<i class="fa-solid fa-shirt text-blue-400"></i>', caption:'Risiko', description:'Apakah pakaian terbakar?',
                             navIcon: 'fa-solid fa-fire',
                             options:[
                                 { label:'Stop Drop Roll', icon:'🔄', desc:'Berguling.' },
@@ -987,15 +1010,15 @@
                             ]
                         },
                         {
-                            title:'Gagang Pintu?', visual:'🚪', caption:'Cek Suhu', description:'Periksa suhu gagang pintu.',
+                            title:'Gagang Pintu?', visual:'<i class="fa-solid fa-door-open text-amber-800"></i>', caption:'Cek Suhu', description:'Periksa suhu gagang pintu.',
                             navIcon: 'fa-solid fa-door-closed',
                             options:[
-                                { label:'Panas', icon:'🔥', desc:'Jangan dibuka.' },
+                                { label:'Panas', icon:'<i class="fa-solid fa-fire text-red-500"></i>', desc:'Jangan dibuka.' },
                                 { label:'Dingin', icon:'❄️', desc:'Buka perlahan.' }
                             ]
                         },
                         {
-                            title:'Akses Keluar?', visual:'🏃', caption:'Jalur', description:'Gunakan tangga darurat.',
+                            title:'Akses Keluar?', visual:'<i class="fa-solid fa-person-running text-green-500"></i>', caption:'Jalur', description:'Gunakan tangga darurat.',
                             navIcon: 'fa-solid fa-stairs',
                             options:[
                                 { label:'Tangga', icon:'🪜', desc:'Jangan pakai lift.' },
@@ -1003,18 +1026,18 @@
                             ]
                         },
                         {
-                            title:'Pemadam?', visual:'🧯', caption:'Tindakan', description:'Apakah api masih kecil?',
+                            title:'Pemadam?', visual:'<i class="fa-solid fa-fire-extinguisher text-red-600"></i>', caption:'Tindakan', description:'Apakah api masih kecil?',
                             navIcon: 'fa-solid fa-fire-extinguisher',
                             options:[
-                                { label:'Pakai APAR', icon:'🧯', desc:'Padamkan.' },
-                                { label:'Tinggalkan', icon:'🏃', desc:'Bila membesar.' }
+                                { label:'Pakai APAR', icon:'<i class="fa-solid fa-fire-extinguisher text-red-600"></i>', desc:'Padamkan.' },
+                                { label:'Tinggalkan', icon:'<i class="fa-solid fa-person-running text-green-500"></i>', desc:'Bila membesar.' }
                             ]
                         },
                         {
-                            title:'Titik Kumpul?', visual:'📍', caption:'Evakuasi', description:'Menuju titik kumpul yang aman.',
+                            title:'Titik Kumpul?', visual:'<i class="fa-solid fa-location-dot text-red-500"></i>', caption:'Evakuasi', description:'Menuju titik kumpul yang aman.',
                             navIcon: 'fa-solid fa-people-group',
                             options:[
-                                { label:'Titik Kumpul', icon:'📍', desc:'Kumpul di sana.' },
+                                { label:'Titik Kumpul', icon:'<i class="fa-solid fa-location-dot text-red-500"></i>', desc:'Kumpul di sana.' },
                                 { label:'Jauhi Gedung', icon:'🏢', desc:'Awas runtuhan.' }
                             ]
                         },
@@ -1049,10 +1072,10 @@
 
             toolIcons: [
 
-                { icon: '🥄', name: 'Kain Segitiga' },
-                { icon: '🪨', name: 'Syal' },
-                { icon: '🔪', name: 'Handuk Kecil' },
-                {icon: '🔪', name: 'Kain Panjang' }
+                { icon: '<i class="fa-solid fa-spoon text-gray-400"></i>', name: 'Kain Segitiga' },
+                { icon: '<i class="fa-solid fa-hill-rockslide text-gray-600"></i>', name: 'Syal' },
+                { icon: '<i class="fa-solid fa-kitchen-set text-gray-400"></i>', name: 'Handuk Kecil' },
+                {icon: '<i class="fa-solid fa-kitchen-set text-gray-400"></i>', name: 'Kain Panjang' }
 
             ],
 
@@ -1060,25 +1083,25 @@
 
                 {
                     type: 'icon',
-                    icon: '🥫',
+                    icon: '<i class="fa-solid fa-box text-gray-500"></i>',
                     description: 'Lipat kain membentuk segitiga.'
                 },
 
                 {
                     type: 'icon',
-                    icon: '🪨',
+                    icon: '<i class="fa-solid fa-hill-rockslide text-gray-600"></i>',
                     description: 'Tekuk lengan sekitar 90 derajat dan posisikan telapak tangan sedikit lebih tinggi dari siku.'
                 },
 
                 {
                     type: 'icon',
-                    icon: '🥫',
+                    icon: '<i class="fa-solid fa-box text-gray-500"></i>',
                     description: 'Masukkan lengan ke kain hingga siku tertutup dan tangan berada di tengah.'
                 },
 
                 {
                     type: 'icon',
-                    icon: '🍲',
+                    icon: '<i class="fa-solid fa-bowl-food text-orange-400"></i>',
                     description: 'Ikat dua ujung kain ke leher.'
                 }
 
@@ -1089,10 +1112,10 @@
 
             toolIcons: [
 
-                { icon: '🪢', name: 'Kasa' },
-                { icon: '🧵', name: 'Kain Bersih' },
-                { icon: '🧵', name: 'Perban' },
-                { icon: '🧵', name: 'Handuk Kecil Bersih' }
+                { icon: '<i class="fa-solid fa-compress text-gray-400"></i>', name: 'Kasa' },
+                { icon: '<i class="fa-solid fa-tape text-blue-400"></i>', name: 'Kain Bersih' },
+                { icon: '<i class="fa-solid fa-tape text-blue-400"></i>', name: 'Perban' },
+                { icon: '<i class="fa-solid fa-tape text-blue-400"></i>', name: 'Handuk Kecil Bersih' }
 
             ],
 
@@ -1100,31 +1123,31 @@
 
                 {
                     type: 'icon',
-                    icon: '🧵',
+                    icon: '<i class="fa-solid fa-tape text-blue-400"></i>',
                     description: 'Bersihkan luka menggunakan air mengalir.'
                 },
 
                 {
                     type: 'icon',
-                    icon: '🪢',
+                    icon: '<i class="fa-solid fa-compress text-gray-400"></i>',
                     description: 'Tekan luka perlahan selama beberapa menit menggunakan kain bersih untuk menghentikan pendarahan. Jika darah menembua balutan, tambahkan lapisan kasa tanpa melepas yang sudah ada.'
                 },
 
                 {
                     type: 'icon',
-                    icon: '✋',
+                    icon: '<i class="fa-solid fa-hand text-yellow-300"></i>',
                     description: 'Tutup luka menggunakan kasa, dan pastikan menutupi seluruh area luka.'
                 },
 
                 {
                     type: 'icon',
-                    icon: '✋',
+                    icon: '<i class="fa-solid fa-hand text-yellow-300"></i>',
                     description: 'Ikat atau rekatkan dengan kain pengikat.'
                 },
 
                 {
                     type: 'icon',
-                    icon: '✋',
+                    icon: '<i class="fa-solid fa-hand text-yellow-300"></i>',
                     description: 'Periksa sirkulasi, pastikan tidak terlalu kencang.'
                 }
 
@@ -1135,10 +1158,10 @@
 
             toolIcons: [
 
-                { icon: '🧭', name: 'Tongkat Lurus' },
-                { icon: '🧭', name: 'Ranting' },
-                { icon: '🧭', name: 'Kayu' },
-                { icon: '🧭', name: 'Pipa Kecil' },
+                { icon: '<i class="fa-solid fa-compass text-gray-600"></i>', name: 'Tongkat Lurus' },
+                { icon: '<i class="fa-solid fa-compass text-gray-600"></i>', name: 'Ranting' },
+                { icon: '<i class="fa-solid fa-compass text-gray-600"></i>', name: 'Kayu' },
+                { icon: '<i class="fa-solid fa-compass text-gray-600"></i>', name: 'Pipa Kecil' },
 
             ],
 
@@ -1146,37 +1169,37 @@
 
                 {
                     type: 'icon',
-                    icon: '☀️',
+                    icon: '<i class="fa-solid fa-sun text-yellow-500"></i>',
                     description: 'Tancapkan tongkat ke tanah dengan posisi tegak lurus.'
                 },
 
                 {
                     type: 'icon',
-                    icon: '🪵',
+                    icon: '<i class="fa-solid fa-tree text-amber-900"></i>',
                     description: 'Lihat ujung bayangan dari tongkat dan tandai dengan benda atau buat tanda di tanah.'
                 },
 
                 {
                     type: 'icon',
-                    icon: '🧭',
+                    icon: '<i class="fa-solid fa-compass text-gray-600"></i>',
                     description: 'Tunggu 10-20 menit dan tandai kembali ujung bayangan kedua.'
                 },
 
                 {
                     type: 'icon',
-                    icon: '🧭',
+                    icon: '<i class="fa-solid fa-compass text-gray-600"></i>',
                     description: 'Jika bayangan masih sangat panjang, maka waktu pagi. Jika bayangan mulai pendek, maka waktu mendekati siang. Jika semakin pendek, waktu sudah siang sekitar tengah hari. Setelah itu, bayangan akan mulai memanjang kembali menunjukkan waktu sore hingga petang.'
                 },
 
                 {
                     type: 'icon',
-                    icon: '🧭',
+                    icon: '<i class="fa-solid fa-compass text-gray-600"></i>',
                     description: 'Pagi, bayangan panjang dan bergerak cukup cepat (06.00-09.00). Siang, bayangan pendek dan bergerak lambat (09.00-11.30). Tengah hari, bayangan paling pendek dan matahari paling tinggi (11.30-13.00). Sore, bayangan mulai memanjang kembali (15.00-17.30).'
                 },
 
                 {
                     type: 'icon',
-                    icon: '🧭',
+                    icon: '<i class="fa-solid fa-compass text-gray-600"></i>',
                     description: 'Batu pertama menunjukkan arah timur, batu kedua menunjukkan arah barat.'
                 },
 
@@ -1187,7 +1210,7 @@
 
             toolIcons: [
 
-                { icon: '🧭' }
+                { icon: '<i class="fa-solid fa-compass text-gray-600"></i>' }
 
             ],
 
@@ -1195,31 +1218,31 @@
 
                 {
                     type: 'icon',
-                    icon: '☀️',
+                    icon: '<i class="fa-solid fa-sun text-yellow-500"></i>',
                     description: 'Utamakan air kemasan jika masih tersedia.'
                 },
 
                 {
                     type: 'icon',
-                    icon: '🪵',
+                    icon: '<i class="fa-solid fa-tree text-amber-900"></i>',
                     description: 'Cari air yang mengalir seperti sungai kecil atau mata air.'
                 },
 
                 {
                     type: 'icon',
-                    icon: '🧭',
+                    icon: '<i class="fa-solid fa-compass text-gray-600"></i>',
                     description: 'Tampung air hujan dan pastikan tidak terkontaminasi.'
                 },
 
                 {
                     type: 'icon',
-                    icon: '🧭',
+                    icon: '<i class="fa-solid fa-compass text-gray-600"></i>',
                     description: 'Hindari air yang berbau, berwarna, terkontaminasi, atau berada dekat daerah yang tercemar.'
                 },
 
                 {
                     type: 'icon',
-                    icon: '🧭',
+                    icon: '<i class="fa-solid fa-compass text-gray-600"></i>',
                     description: 'Usahakan saring dan rebus air, jangan minum air dari pantai karena mengandung garam tinggi'
                 }
 
@@ -1242,7 +1265,7 @@
 
         currentContent: {},
 
-        toolIcon: '🛠️',
+        toolIcon: '<i class="fa-solid fa-screwdriver-wrench text-gray-600"></i>',
 
         toolName: '',
 
@@ -1259,13 +1282,13 @@
             const itemData = stepsData[data.item] || {
 
                 toolIcons: [
-                    { icon: '🛠️', name: 'Tool' }
+                    { icon: '<i class="fa-solid fa-screwdriver-wrench text-gray-600"></i>', name: 'Tool' }
                 ],
 
                 steps: [
                     {
                         type: 'icon',
-                        icon: '📦',
+                        icon: '<i class="fa-solid fa-box-open text-amber-600"></i>',
                         description: 'Belum ada data.'
                     }
                 ]
@@ -1343,14 +1366,14 @@
 function craftingModal() {
     const craftingData = {
         'Filter Air': {
-            icon: '🧴',
+            icon: '<i class="fa-solid fa-filter text-blue-400"></i>',
             materials: [
-                { name: 'Botol Plastik', role: 'Wadah Filter', icon: '🧴', swappable: true, options: [{n: 'Botol Plastik', i: '🧴'}, {n: 'Botol Kaca', i: '🫙'}, {n: 'Wadah Bambu', i: '🎋'}, {n: 'Kaleng Tinggi', i: '🥫'}] },
-                { name: 'Kain Bersih', role: 'Kain Penyaring', icon: '🟩', swappable: true, options: [{n: 'Kain Bersih', i: '🟩'}, {n: 'Tisu Tebal', i: '🧻'}, {n: 'Kapas', i: '🌸'}, {n: 'Kaos Bekas', i: '👕'}] },
-                { name: 'Arang Kayu', role: 'Penyaring', icon: '🔥', swappable: true, options: [{n: 'Arang Kayu', i: '🔥'}, {n: 'Arang Tempurung Kelapa', i: '🥥'}, {n: 'Arang Bambu', i: '🎋'}, {n: 'Arang Kayu Keras', i: '🪵'}] },
-                { name: 'Pasir Bersih', role: 'Penyaring Halus', icon: '🌾', swappable: true, options: [{n: 'Pasir Bersih', i: '🌾'}, {n: 'Pasir Sungai', i: '🏞️'}, {n: 'Pasir Bangunan', i: '🏗️'}, {n: 'Pasir Pantai', i: '🏖️'}] },
-                { name: 'Batu Kerikil', role: 'Penyaring Kasar', icon: '🪨', swappable: true, options: [{n: 'Batu Kerikil', i: '🪨'}, {n: 'Batu Kali', i: '🪨'}, {n: 'Pecahan Bata', i: '🧱'}, {n: 'Kerikil Sungai', i: '🪨'}] },
-                { name: 'Gelas', role: 'Wadah Penampung', icon: '🫗', swappable: true, options: [{n: 'Gelas', i: '🫗'}, {n: 'Botol', i: '🫙'}, {n: 'Baskom', i: '🎋'}, {n: 'Kaleng Bersih', i: '🥫'}] }
+                { name: 'Botol Plastik', role: 'Wadah Filter', icon: '<i class="fa-solid fa-bottle-water text-blue-300"></i>', swappable: true, options: [{n: 'Botol Plastik', i: '<i class="fa-solid fa-bottle-water text-blue-300"></i>'}, {n: 'Botol Kaca', i: '<i class="fa-solid fa-jar text-gray-400"></i>'}, {n: 'Wadah Bambu', i: '<i class="fa-solid fa-seedling text-green-500"></i>'}, {n: 'Kaleng Tinggi', i: '<i class="fa-solid fa-box text-gray-500"></i>'}] },
+                { name: 'Kain Bersih', role: 'Kain Penyaring', icon: '<i class="fa-solid fa-square text-green-400"></i>', swappable: true, options: [{n: 'Kain Bersih', i: '<i class="fa-solid fa-square text-green-400"></i>'}, {n: 'Tisu Tebal', i: '<i class="fa-solid fa-toilet-paper text-white drop-shadow-md"></i>'}, {n: 'Kapas', i: '<i class="fa-solid fa-fan text-pink-300"></i>'}, {n: 'Kaos Bekas', i: '<i class="fa-solid fa-shirt text-blue-400"></i>'}] },
+                { name: 'Arang Kayu', role: 'Penyaring', icon: '<i class="fa-solid fa-fire text-red-500"></i>', swappable: true, options: [{n: 'Arang Kayu', i: '<i class="fa-solid fa-fire text-red-500"></i>'}, {n: 'Arang Tempurung Kelapa', i: '<i class="fa-solid fa-bowling-ball text-amber-800"></i>'}, {n: 'Arang Bambu', i: '<i class="fa-solid fa-seedling text-green-500"></i>'}, {n: 'Arang Kayu Keras', i: '<i class="fa-solid fa-tree text-amber-900"></i>'}] },
+                { name: 'Pasir Bersih', role: 'Penyaring Halus', icon: '<i class="fa-solid fa-wheat-awn text-yellow-600"></i>', swappable: true, options: [{n: 'Pasir Bersih', i: '<i class="fa-solid fa-wheat-awn text-yellow-600"></i>'}, {n: 'Pasir Sungai', i: '<i class="fa-solid fa-water text-blue-300"></i>'}, {n: 'Pasir Bangunan', i: '<i class="fa-solid fa-trowel-bricks text-gray-500"></i>'}, {n: 'Pasir Pantai', i: '<i class="fa-solid fa-umbrella-beach text-yellow-500"></i>'}] },
+                { name: 'Batu Kerikil', role: 'Penyaring Kasar', icon: '<i class="fa-solid fa-hill-rockslide text-gray-600"></i>', swappable: true, options: [{n: 'Batu Kerikil', i: '<i class="fa-solid fa-hill-rockslide text-gray-600"></i>'}, {n: 'Batu Kali', i: '<i class="fa-solid fa-hill-rockslide text-gray-600"></i>'}, {n: 'Pecahan Bata', i: '<i class="fa-solid fa-brick text-red-700"></i>'}, {n: 'Kerikil Sungai', i: '<i class="fa-solid fa-hill-rockslide text-gray-600"></i>'}] },
+                { name: 'Gelas', role: 'Wadah Penampung', icon: '<i class="fa-solid fa-glass-water text-blue-200"></i>', swappable: true, options: [{n: 'Gelas', i: '<i class="fa-solid fa-glass-water text-blue-200"></i>'}, {n: 'Botol', i: '<i class="fa-solid fa-jar text-gray-400"></i>'}, {n: 'Baskom', i: '<i class="fa-solid fa-seedling text-green-500"></i>'}, {n: 'Kaleng Bersih', i: '<i class="fa-solid fa-box text-gray-500"></i>'}] }
             ],
             instructions: {
                 1: 'Siapkan dan bersihkan semua bahan yang telah dipilih.',
@@ -1364,11 +1387,11 @@ function craftingModal() {
         },
 
         'Pisau': {
-            icon: '🔪',
+            icon: '<i class="fa-solid fa-utensils text-gray-500"></i>',
             materials: [
-                { name: 'Batu', role: 'Bahan Utama', icon: '🪨', swappable: true, options: [{n: 'Batu', i: '🪨'}, {n: 'Logam Pecah', i: '🔗'}, {n: 'Plastik Keras', i: '🧴'}] },
-                { name: 'Tali', role: 'Pengikat', icon: '🧵', swappable: true, options: [{n: 'Tali', i: '🧵'}, {n: 'Lakban', i: '🏷️'}, {n: 'Serat Tanaman', i: '🌿'}, {n: 'Kaos Bekas', i: '👕'}] },
-                { name: 'Kayu', role: 'Pegangan', icon: '🪵', swappable: true, options: [{n: 'Kayu', i: '🪵'}, {n: 'Ranting Tebal', i: '🌳'}, {n: 'Bambu', i: '🎋'}, {n: 'Pipa Kecil', i: '🦯'}] }
+                { name: 'Batu', role: 'Bahan Utama', icon: '<i class="fa-solid fa-hill-rockslide text-gray-600"></i>', swappable: true, options: [{n: 'Batu', i: '<i class="fa-solid fa-hill-rockslide text-gray-600"></i>'}, {n: 'Logam Pecah', i: '<i class="fa-solid fa-link text-gray-500"></i>'}, {n: 'Plastik Keras', i: '<i class="fa-solid fa-bottle-water text-blue-300"></i>'}] },
+                { name: 'Tali', role: 'Pengikat', icon: '<i class="fa-solid fa-tape text-blue-400"></i>', swappable: true, options: [{n: 'Tali', i: '<i class="fa-solid fa-tape text-blue-400"></i>'}, {n: 'Lakban', i: '<i class="fa-solid fa-tag text-gray-400"></i>'}, {n: 'Serat Tanaman', i: '<i class="fa-solid fa-leaf text-green-500"></i>'}, {n: 'Kaos Bekas', i: '<i class="fa-solid fa-shirt text-blue-400"></i>'}] },
+                { name: 'Kayu', role: 'Pegangan', icon: '<i class="fa-solid fa-tree text-amber-900"></i>', swappable: true, options: [{n: 'Kayu', i: '<i class="fa-solid fa-tree text-amber-900"></i>'}, {n: 'Ranting Tebal', i: '<i class="fa-solid fa-tree text-green-700"></i>'}, {n: 'Bambu', i: '<i class="fa-solid fa-seedling text-green-500"></i>'}, {n: 'Pipa Kecil', i: '<i class="fa-solid fa-crutch text-gray-400"></i>'}] }
             ],
             instructions: {
                 1: 'Cari bahan yang paling mudah untuk dibentuk/ditajamkan.',
@@ -1379,11 +1402,11 @@ function craftingModal() {
         },
         
         'Korek Darurat': {
-            icon: '🔥',
+            icon: '<i class="fa-solid fa-fire-burner text-orange-500"></i>',
             materials: [
-                { name: 'Baterai Bekas', role: 'Sumber Listrik', icon: '🔋', swappable: true, options: [{n: 'Baterai AA/AAA', i: '🔋'}, {n: 'Baterai Jam', i: '⌚'}, {n: 'Baterai Remote', i: '📱'}] },
-                { name: 'Kertas Timah', role: 'Konduktor', icon: '🍬', swappable: true, options: [{n: 'Bungkus Permen/Rokok', i: '🍬'}, {n: 'Aluminium Foil', i: '🌯'}, {n: 'Bungkus Obat', i: '💊'}] },
-                { name: 'Tisu Kering', role: 'Pemantik (Tinder)', icon: '🧻', swappable: true, options: [{n: 'Tisu Kering', i: '🧻'}, {n: 'Kapas', i: '☁️'}, {n: 'Serabut Kelapa', i: '🥥'}, {n: 'Benang Pakaian', i: '🧵'}] }
+                { name: 'Baterai Bekas', role: 'Sumber Listrik', icon: '<i class="fa-solid fa-battery-full text-green-500"></i>', swappable: true, options: [{n: 'Baterai AA/AAA', i: '<i class="fa-solid fa-battery-full text-green-500"></i>'}, {n: 'Baterai Jam', i: '<i class="fa-solid fa-clock text-gray-600"></i>'}, {n: 'Baterai Remote', i: '<i class="fa-solid fa-mobile-screen text-gray-700"></i>'}] },
+                { name: 'Kertas Timah', role: 'Konduktor', icon: '<i class="fa-solid fa-candy-cane text-red-400"></i>', swappable: true, options: [{n: 'Bungkus Permen/Rokok', i: '<i class="fa-solid fa-candy-cane text-red-400"></i>'}, {n: 'Aluminium Foil', i: '<i class="fa-solid fa-scroll text-gray-300"></i>'}, {n: 'Bungkus Obat', i: '<i class="fa-solid fa-pills text-red-500"></i>'}] },
+                { name: 'Tisu Kering', role: 'Pemantik (Tinder)', icon: '<i class="fa-solid fa-toilet-paper text-white drop-shadow-md"></i>', swappable: true, options: [{n: 'Tisu Kering', i: '<i class="fa-solid fa-toilet-paper text-white drop-shadow-md"></i>'}, {n: 'Kapas', i: '<i class="fa-solid fa-cloud text-gray-300"></i>'}, {n: 'Serabut Kelapa', i: '<i class="fa-solid fa-bowling-ball text-amber-800"></i>'}, {n: 'Benang Pakaian', i: '<i class="fa-solid fa-tape text-blue-400"></i>'}] }
             ],
             instructions: {
                 1: 'Gunting atau robek kertas timah (aluminium foil) memanjang sekitar 10 cm.',
@@ -1395,11 +1418,11 @@ function craftingModal() {
         },
         
         'Lampu Minyak': {
-            icon: '🧭',
+            icon: '<i class="fa-solid fa-lightbulb text-yellow-500"></i>',
             materials: [
-                { name: 'Minyak Goreng', role: 'Minyak', icon: '🪡', swappable: true, options: [{n: 'Minyak Goreng', i: '🪡'}, {n: 'Minyak Bekas', i: '🧷'}] },
-                { name: 'Tisu', role: 'Sumbu', icon: '🧲', swappable: true, options: [{n: 'Tisu', i: '🧲'}, {n: 'Kapas', i: '🧣'}, {n: 'Kain Perca', i: '👱'}] },
-                { name: 'Mangkuk Kecil', role: 'Wadah', icon: '💧', swappable: true, options: [{n: 'Mangkuk Kecil', i: '🥣'}, {n: 'Gelas', i: '🥣'}, {n: 'Kaleng Belah', i: '🥥'}] }
+                { name: 'Minyak Goreng', role: 'Minyak', icon: '<i class="fa-solid fa-bottle-droplet text-yellow-600"></i>', swappable: true, options: [{n: 'Minyak Goreng', i: '<i class="fa-solid fa-bottle-droplet text-yellow-600"></i>'}, {n: 'Minyak Bekas', i: '<i class="fa-solid fa-oil-can text-yellow-700"></i>'}] },
+                { name: 'Tisu', role: 'Sumbu', icon: '<i class="fa-solid fa-toilet-paper text-white drop-shadow-md"></i>', swappable: true, options: [{n: 'Tisu', i: '<i class="fa-solid fa-toilet-paper text-white drop-shadow-md"></i>'}, {n: 'Kapas', i: '<i class="fa-solid fa-cloud text-gray-300"></i>'}, {n: 'Kain Perca', i: '<i class="fa-solid fa-shirt text-orange-300"></i>'}] },
+                { name: 'Mangkuk Kecil', role: 'Wadah', icon: '<i class="fa-solid fa-bowl-food text-orange-200"></i>', swappable: true, options: [{n: 'Mangkuk Kecil', i: '<i class="fa-solid fa-bowl-food text-orange-200"></i>'}, {n: 'Gelas', i: '<i class="fa-solid fa-glass-water text-blue-200"></i>'}, {n: 'Kaleng Belah', i: '<i class="fa-solid fa-jar text-gray-400"></i>'}] }
             ],
             instructions: {
                 1: 'Gulung tisu memanjang hingga menjadi padat (sumbu)',
@@ -1410,11 +1433,11 @@ function craftingModal() {
         },
 
         'Bidai Darurat': {
-            icon: '🩹',
+            icon: '<i class="fa-solid fa-band-aid text-orange-300"></i>',
             materials: [
-                { name: 'Kayu Lurus', role: 'Penyangga', icon: '🪵', swappable: true, options: [{n: 'Kayu Lurus', i: '🪵'}, {n: 'Bambu', i: '🎋'}, {n: 'Tongkat', i: '🦯'}, {n: 'Papan/Karton', i: '📦'}] },
-                { name: 'Kain Baju', role: 'Pengikat', icon: '👕', swappable: true, options: [{n: 'Kain Baju', i: '👕'}, {n: 'Perban', i: '🩹'}, {n: 'Tali', i: '🧵'}, {n: 'Syal', i: '🧣'}] },
-                { name: 'Kain Lembut', role: 'Bantalan Tambahan', icon: '🧦', swappable: true, options: [{n: 'Kain Lembut', i: '🧦'}, {n: 'Handuk', i: '🛁'}, {n: 'Baju Lipat', i: '👕'}, {n: 'Kapas', i: '☁️'}] }
+                { name: 'Kayu Lurus', role: 'Penyangga', icon: '<i class="fa-solid fa-tree text-amber-900"></i>', swappable: true, options: [{n: 'Kayu Lurus', i: '<i class="fa-solid fa-tree text-amber-900"></i>'}, {n: 'Bambu', i: '<i class="fa-solid fa-seedling text-green-500"></i>'}, {n: 'Tongkat', i: '<i class="fa-solid fa-crutch text-gray-400"></i>'}, {n: 'Papan/Karton', i: '<i class="fa-solid fa-box-open text-amber-600"></i>'}] },
+                { name: 'Kain Baju', role: 'Pengikat', icon: '<i class="fa-solid fa-shirt text-blue-400"></i>', swappable: true, options: [{n: 'Kain Baju', i: '<i class="fa-solid fa-shirt text-blue-400"></i>'}, {n: 'Perban', i: '<i class="fa-solid fa-band-aid text-orange-300"></i>'}, {n: 'Tali', i: '<i class="fa-solid fa-tape text-blue-400"></i>'}, {n: 'Syal', i: '<i class="fa-solid fa-mitten text-red-400"></i>'}] },
+                { name: 'Kain Lembut', role: 'Bantalan Tambahan', icon: '<i class="fa-solid fa-socks text-orange-300"></i>', swappable: true, options: [{n: 'Kain Lembut', i: '<i class="fa-solid fa-socks text-orange-300"></i>'}, {n: 'Handuk', i: '<i class="fa-solid fa-bath text-blue-200"></i>'}, {n: 'Baju Lipat', i: '<i class="fa-solid fa-shirt text-blue-400"></i>'}, {n: 'Kapas', i: '<i class="fa-solid fa-cloud text-gray-300"></i>'}] }
             ],
             instructions: {
                 1: 'Periksa cedera, apakah terluka atau patah. JANGAN mencoba meluruskan bagian yang terlihat patah atau bengkok.',
@@ -1427,10 +1450,10 @@ function craftingModal() {
         },
         
         'Cairan Pembersih': {
-            icon: '🧪',
+            icon: '<i class="fa-solid fa-flask text-purple-500"></i>',
             materials: [
-                { name: 'Air Mineral Segel', role: 'Cairan Steril', icon: '💧', swappable: true, options: [{n: 'Air Botol Segel', i: '💧'}, {n: 'Air Hujan Bersih', i: '🌧️'}, {n: 'Air Kelapa Muda', i: '🥥'}] },
-                { name: 'Botol Plastik', role: 'Penyemprot', icon: '🧴', swappable: true, options: [{n: 'Botol Plastik', i: '🧴'}, {n: 'Plastik Kiloan', i: '🛍️'}] }
+                { name: 'Air Mineral Segel', role: 'Cairan Steril', icon: '<i class="fa-solid fa-droplet text-blue-500"></i>', swappable: true, options: [{n: 'Air Botol Segel', i: '<i class="fa-solid fa-droplet text-blue-500"></i>'}, {n: 'Air Hujan Bersih', i: '<i class="fa-solid fa-cloud-showers-heavy text-blue-400"></i>'}, {n: 'Air Kelapa Muda', i: '<i class="fa-solid fa-bowling-ball text-amber-800"></i>'}] },
+                { name: 'Botol Plastik', role: 'Penyemprot', icon: '<i class="fa-solid fa-bottle-water text-blue-300"></i>', swappable: true, options: [{n: 'Botol Plastik', i: '<i class="fa-solid fa-bottle-water text-blue-300"></i>'}, {n: 'Plastik Kiloan', i: '<i class="fa-solid fa-bag-shopping text-pink-500"></i>'}] }
             ],
             instructions: {
                 1: 'Gunakan HANYA air mineral kemasan yang segelnya belum rusak. Jangan gunakan air genangan atau banjir.',
@@ -1442,11 +1465,11 @@ function craftingModal() {
         },
         
         'Perban Darurat': {
-            icon: '🩺',
+            icon: '<i class="fa-solid fa-stethoscope text-gray-700"></i>',
             materials: [
-                { name: 'Pembalut Wanita', role: 'Penyerap Darah', icon: '🩸', swappable: true, options: [{n: 'Pembalut Wanita', i: '🩸'}, {n: 'Tampon', i: '🩸'}, {n: 'Kain Katun Bersih', i: '👕'}] },
-                { name: 'Baju Kaos Dalam', role: 'Kain Pengikat', icon: '🎽', swappable: true, options: [{n: 'Baju Kaos Dalam', i: '🎽'}, {n: 'Lakban (Duct Tape)', i: '🏷️'}, {n: 'Kain Panjang', i: '🎗️'}] },
-                { name: 'Plastik Bersih', role: 'Pelindung (Opsional)', icon: '🛍️', swappable: true, options: [{n: 'Plastik Bersih', i: '🛍️'}, {n: 'Jas Hujan', i: '🧥'}] }
+                { name: 'Pembalut Wanita', role: 'Penyerap Darah', icon: '<i class="fa-solid fa-droplet text-red-600"></i>', swappable: true, options: [{n: 'Pembalut Wanita', i: '<i class="fa-solid fa-droplet text-red-600"></i>'}, {n: 'Tampon', i: '<i class="fa-solid fa-droplet text-red-600"></i>'}, {n: 'Kain Katun Bersih', i: '<i class="fa-solid fa-shirt text-blue-400"></i>'}] },
+                { name: 'Baju Kaos Dalam', role: 'Kain Pengikat', icon: '<i class="fa-solid fa-shirt text-gray-300"></i>', swappable: true, options: [{n: 'Baju Kaos Dalam', i: '<i class="fa-solid fa-shirt text-gray-300"></i>'}, {n: 'Lakban (Duct Tape)', i: '<i class="fa-solid fa-tag text-gray-400"></i>'}, {n: 'Kain Panjang', i: '<i class="fa-solid fa-ribbon text-yellow-500"></i>'}] },
+                { name: 'Plastik Bersih', role: 'Pelindung (Opsional)', icon: '<i class="fa-solid fa-bag-shopping text-pink-500"></i>', swappable: true, options: [{n: 'Plastik Bersih', i: '<i class="fa-solid fa-bag-shopping text-pink-500"></i>'}, {n: 'Jas Hujan', i: '<i class="fa-solid fa-vest text-orange-500"></i>'}] }
             ],
             instructions: {
                 1: 'Gunakan pembalut wanita sebagai bantalan trauma (trauma pad) yang sangat efektif menyerap pendarahan berat.',
@@ -1458,10 +1481,10 @@ function craftingModal() {
         },
         
         'Tandu Darurat': {
-            icon: '🛌',
+            icon: '<i class="fa-solid fa-bed text-blue-400"></i>',
             materials: [
-                { name: 'Batang Pohon Tebal', role: 'Rangka Penyangga', icon: '🪵', swappable: true, options: [{n: 'Batang Pohon', i: '🪵'}, {n: 'Pipa Paralon', i: '🦯'}, {n: 'Pipa Besi Ringan', i: '🔩'}] },
-                { name: 'Jaket Tebal (2x)', role: 'Kain Penahan', icon: '🧥', swappable: true, options: [{n: 'Jaket Tebal', i: '🧥'}, {n: 'Sarung Kuat', i: '🥻'}, {n: 'Terpal / Tenda', i: '⛺'}] }
+                { name: 'Batang Pohon Tebal', role: 'Rangka Penyangga', icon: '<i class="fa-solid fa-tree text-amber-900"></i>', swappable: true, options: [{n: 'Batang Pohon', i: '<i class="fa-solid fa-tree text-amber-900"></i>'}, {n: 'Pipa Paralon', i: '<i class="fa-solid fa-crutch text-gray-400"></i>'}, {n: 'Pipa Besi Ringan', i: '<i class="fa-solid fa-screwdriver-wrench text-gray-500"></i>'}] },
+                { name: 'Jaket Tebal (2x)', role: 'Kain Penahan', icon: '<i class="fa-solid fa-vest text-orange-500"></i>', swappable: true, options: [{n: 'Jaket Tebal', i: '<i class="fa-solid fa-vest text-orange-500"></i>'}, {n: 'Sarung Kuat', i: '<i class="fa-solid fa-person-dress text-pink-400"></i>'}, {n: 'Terpal / Tenda', i: '<i class="fa-solid fa-tent text-green-600"></i>'}] }
             ],
             instructions: {
                 1: 'Cari DUA tiang penyangga yang lurus dan kokoh sepanjang minimal 2 meter (sesuaikan tinggi korban).',
@@ -1490,7 +1513,7 @@ function craftingModal() {
                 this.icon = craftingData[data.item].icon;
                 this.materials = JSON.parse(JSON.stringify(craftingData[data.item].materials));
             } else {
-                this.icon = '🛠️';
+                this.icon = '<i class="fa-solid fa-screwdriver-wrench text-gray-600"></i>';
                 this.materials = [];
             }
             this.currentView = 'selection';
