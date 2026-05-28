@@ -405,11 +405,19 @@
                                          :style="selectedChoice === choice ? 'background: var(--c-red);' : 'background: var(--c-beige);'"></div>
                                 </div>
 
-                                <div class="w-full h-32 md:h-48 mt-8 mb-4 md:mb-6 rounded-xl flex items-center justify-center text-6xl md:text-7xl transition-colors border border-black/5"
+                                <div class="w-full h-32 md:h-48 mt-8 mb-4 md:mb-6 rounded-xl flex items-center justify-center text-6xl md:text-7xl transition-colors border border-black/5 overflow-hidden"
                                     :style="selectedChoice === choice ? 'background: rgba(191,49,49,0.05);' : 'background: var(--c-light);'">
-                                    <span class="drop-shadow-sm" x-html="choice.icon"></span>
-                                </div>
+                                    
+                                    <!-- IF GIF PROPERTY EXISTS: Read the .gif property for the path -->
+                                    <template x-if="choice.gif">
+                                        <img :src="'{{ asset('') }}' + choice.gif" :alt="choice.desc" class="w-full h-full object-cover">
+                                    </template>
 
+                                    <!-- FALLBACK: If NO GIF property exists, render the FontAwesome vector icon -->
+                                    <template x-if="!choice.gif">
+                                        <span class="drop-shadow-sm" x-html="choice.icon"></span>
+                                    </template>
+                                </div>
                                 <h3 class="font-bold text-sm md:text-lg text-gray-800 text-center w-full leading-tight" x-text="choice.desc"></h3>
                             </button>
                         </template>
@@ -648,8 +656,8 @@ function saatPage(){
                     description:'Pilih kondisi lokasi kamu saat gempa terjadi.',
                     navIcon: 'fa-solid fa-location-dot',
                     options:[
-                        { label:'Luar Ruangan', icon:'<i class="fa-solid fa-tree text-green-700"></i>', desc:'Jauhi benda rawan jatuh.' },
-                        { label:'Dalam Ruangan', icon:'<i class="fa-solid fa-house text-green-700"></i>', desc:'Lindungi kepala.' }
+                        { label:'Luar Ruangan', icon:'<i class="fa-solid fa-tree text-green-700"></i>', desc:'Jauhi benda rawan jatuh.', gif:'assets/gifs/gempa/Fall.gif' },
+                        { label:'Dalam Ruangan', icon:'<i class="fa-solid fa-house text-green-700"></i>', desc:'Lindungi kepala.', gif:'assets/gifs/gempa/Hide & Grab.gif' }
                     ]
                 },
                 {
@@ -659,8 +667,8 @@ function saatPage(){
                     description:'Pastikan siapa saja berada dekat denganmu.',
                     navIcon: 'fa-solid fa-users',
                     options:[
-                        { label:'Sendiri', icon:'<i class="fa-solid fa-person text-gray-700"></i>', desc:'Fokus evakuasi diri.' },
-                        { label:'Bersama Orang', icon:'<i class="fa-solid fa-people-group text-blue-600"></i>', desc:'Bantu kelompok.' }
+                        { label:'Sendiri', icon:'<i class="fa-solid fa-person text-gray-700"></i>', desc:'Fokus evakuasi diri.', gif:'assets/gifs/gempa/Run.gif' },
+                        { label:'Bersama Orang', icon:'<i class="fa-solid fa-people-group text-blue-600"></i>', desc:'Bantu kelompok.', gif:'assets/gifs/gempa/Gathering.gif' }
                     ]
                 },
                 {
@@ -670,8 +678,8 @@ function saatPage(){
                     description:'Anak dan lansia harus diprioritaskan.',
                     navIcon: 'fa-solid fa-child-reaching',
                     options:[
-                        { label:'Ada', icon:'<i class="fa-solid fa-child-reaching text-orange-500"></i>', desc:'Bantu lebih dulu.' },
-                        { label:'Tidak Ada', icon:'<i class="fa-solid fa-thumbs-up text-green-500"></i>', desc:'Lanjut evakuasi.' }
+                        { label:'Ada', icon:'<i class="fa-solid fa-child-reaching text-orange-500"></i>', desc:'Bantu lebih dulu.', gif:'assets/gifs/gempa/Child.gif' },
+                        { label:'Tidak Ada', icon:'<i class="fa-solid fa-thumbs-up text-green-500"></i>', desc:'Lanjut evakuasi.', gif:'assets/gifs/gempa/Run.gif' }
                     ]
                 },
                 {
@@ -681,8 +689,8 @@ function saatPage(){
                     description:'Periksa jalur evakuasi.',
                     navIcon: 'fa-solid fa-door-open',
                     options:[
-                        { label:'Terbuka', icon:'<i class="fa-solid fa-door-open text-amber-800"></i>', desc:'Segera keluar.' },
-                        { label:'Tertutup', icon:'<i class="fa-solid fa-hill-rockslide text-gray-600"></i>', desc:'Cari jalur alternatif.' }
+                        { label:'Terbuka', icon:'<i class="fa-solid fa-door-open text-amber-800"></i>', desc:'Segera keluar.', gif:'assets/gifs/gempa/Evakuate.gif' },
+                        { label:'Tertutup', icon:'<i class="fa-solid fa-hill-rockslide text-gray-600"></i>', desc:'Cari jalur alternatif.', gif:'assets/gifs/gempa/Alternate.gif' }
                     ]
                 },
                 {
@@ -692,8 +700,8 @@ function saatPage(){
                     description:'Periksa adanya kebakaran atau gas.',
                     navIcon: 'fa-solid fa-fire',
                     options:[
-                        { label:'Ada', icon:'<i class="fa-solid fa-fire text-red-500"></i>', desc:'Jauhi area.' },
-                        { label:'Tidak', icon:'<i class="fa-solid fa-circle-check text-green-500"></i>', desc:'Lanjut aman.' }
+                        { label:'Ada', icon:'<i class="fa-solid fa-fire text-red-500"></i>', desc:'Jauhi area.', gif:'assets/gifs/gempa/Fire.gif' },
+                        { label:'Tidak', icon:'<i class="fa-solid fa-circle-check text-green-500"></i>', desc:'Lanjut aman.', gif:'assets/gifs/gempa/Evakuate.gif' }
                     ]
                 },
                 {
@@ -703,8 +711,8 @@ function saatPage(){
                     description:'Ikuti jalur evakuasi resmi.',
                     navIcon: 'fa-solid fa-person-running',
                     options:[
-                        { label:'Ikuti Jalur', icon:'<i class="fa-solid fa-arrow-right text-blue-500"></i>', desc:'Tetap tenang.' },
-                        { label:'Cari Jalur', icon:'<i class="fa-solid fa-compass text-gray-600"></i>', desc:'Gunakan area terbuka.' }
+                        { label:'Ikuti Jalur', icon:'<i class="fa-solid fa-arrow-right text-blue-500"></i>', desc:'Tetap tenang.', gif:'assets/gifs/gempa/Follow.gif' },
+                        { label:'Cari Jalur', icon:'<i class="fa-solid fa-compass text-gray-600"></i>', desc:'Gunakan area terbuka.', gif:'assets/gifs/gempa/Open.gif' }
                     ]
                 },
                 {
@@ -714,8 +722,8 @@ function saatPage(){
                     description:'Pastikan area jauh dari bangunan retak.',
                     navIcon: 'fa-solid fa-tents',
                     options:[
-                        { label:'Sudah', icon:'<i class="fa-solid fa-tent text-green-600"></i>', desc:'Tetap di shelter.' },
-                        { label:'Belum', icon:'<i class="fa-solid fa-triangle-exclamation text-amber-500"></i>', desc:'Cari tempat lain.' }
+                        { label:'Sudah', icon:'<i class="fa-solid fa-tent text-green-600"></i>', desc:'Tetap di shelter.', gif:'assets/gifs/gempa/Shelter.gif' },
+                        { label:'Belum', icon:'<i class="fa-solid fa-triangle-exclamation text-amber-500"></i>', desc:'Cari tempat lain.', gif:'assets/gifs/gempa/Crack.gif' }
                     ]
                 },
                 {
@@ -725,7 +733,7 @@ function saatPage(){
                     description:'Kamu telah mencapai area aman.',
                     navIcon: 'fa-solid fa-check-circle',
                     options:[
-                        { label:'Lanjut', icon:'<i class="fa-solid fa-circle-check text-green-500"></i>', desc:'Periksa kondisi tubuh.' }
+                        { label:'Lanjut', icon:'<i class="fa-solid fa-circle-check text-green-500"></i>', desc:'Periksa kondisi tubuh.', gif:'assets/gifs/gempa/Save.gif' }
                     ]
                 }
             ],
