@@ -88,62 +88,10 @@
     }
     .darurat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
 
-    /* ══════ MODAL — UNIVERSAL FIX ══════ */
-
-    /* modal-overlay: layout saja, display dikontrol Alpine x-show */
-    .modal-overlay {
-        position: fixed !important;
-        inset: 0 !important;
-        z-index: 9999 !important;
-        align-items: center !important;
-        justify-content: center !important;
-        padding: 20px !important;
-        background-color: rgba(16, 24, 32, 0.55) !important;
-        backdrop-filter: blur(6px) !important;
-        -webkit-backdrop-filter: blur(6px) !important;
-        /* JANGAN set display di sini — biarkan x-show Alpine yang atur */
-    }
-
-    /* Semua modal box: tidak overflow, flex column */
-    .modal-box {
-        position: relative;
-        z-index: 10000;
-        width: 100% !important;
-        max-width: 860px !important;
-        height: 95vh !important;
-        max-height: 95vh !important;
-        display: flex !important;
-        flex-direction: column !important;
-        overflow: hidden !important;
-        background: var(--color-surface);
-        border: 1px solid var(--color-border-md);
-        border-radius: var(--r-xl);
-        box-shadow: var(--shadow-lg);
-        transform: none !important;
-        margin: 0 auto !important;
-    }
-    .modal-box.modal-box-lg { max-width: 860px !important; }
-
     /* Lock scroll saat modal buka */
     body.modal-open {
         overflow: hidden !important;
         height: 100% !important;
-    }
-
-    /* Backdrop gelap untuk modal info & crafting (div absolute inset-0) */
-    .modal-backdrop-blur {
-        position: fixed !important;
-        inset: 0 !important;
-        background: rgba(16, 24, 32, 0.55) !important;
-        backdrop-filter: blur(6px) !important;
-        -webkit-backdrop-filter: blur(6px) !important;
-        z-index: 9998 !important;
-    }
-
-    /* Modal info & crafting box */
-    .modal-inner-box {
-        position: relative;
-        z-index: 9999;
     }
 
     /* x-cloak: sembunyikan elemen sebelum Alpine selesai init */
@@ -156,7 +104,7 @@
 
 {{-- ══════ HERO ══════ --}}
 <section class="hero-bg min-h-[88vh] flex items-center" id="hero">
-    <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-24 grid md:grid-cols-2 gap-12 items-center">
+    <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-28 md:pt-32 pb-24 grid md:grid-cols-2 gap-12 items-center">
         <div id="hero-text">
             <span class="inline-block px-3 py-1 text-xs font-bold rounded-full uppercase tracking-widest mb-6"
                   style="background: rgba(90,130,126,0.25); color: var(--c-cream);">
@@ -386,6 +334,7 @@
 
 {{-- ══════ MODALS ══════ --}}
 {{-- Modal: Tutorial Bencana --}}
+<template x-teleport="body">
 <div
     x-data="tutorialModal()"
     x-show="open"
@@ -399,13 +348,14 @@
     x-cloak
     @open-tutorial.window="openModal($event.detail.bencana)"
     @keydown.escape.window="closeModal()"
-    class="modal-overlay">
+    style="display:none;"
+    class="fixed inset-0 z-[9000] flex items-center justify-center p-4">
 
     {{-- 1. Backdrop Khas Sesudah/Saat (Blur gelap) --}}
-    <div class="modal-backdrop" @click="closeModal()"></div>
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="closeModal()"></div>
 
     {{-- 2. Box Modal dengan border-radius 24px/32px dan max-w-4xl --}}
-    <div class="modal-box w-full max-w-4xl bg-white rounded-[24px] md:rounded-[32px] flex flex-col justify-between overflow-hidden relative mx-auto" @click.stop>
+    <div class="w-full max-w-4xl bg-white rounded-[24px] md:rounded-[32px] flex flex-col justify-between overflow-hidden relative z-10 max-h-[90vh] mx-auto" @click.stop>
         
         <div class="modal-header border-b border-slate-100 flex items-center justify-between px-6 py-4 bg-white relative">
             <div class="modal-title flex items-center gap-2 text-slate-800 font-bold text-lg">
@@ -554,8 +504,10 @@
 
     </div>
 </div>
+</template>
 
 {{-- Modal: Info --}}
+<template x-teleport="body">
 <div
     x-data="infoModal()"
     x-show="open"
@@ -569,10 +521,12 @@
     x-cloak
     @open-info.window="openModal($event.detail)"
     @keydown.escape.window="closeModal()"
-    class="modal-overlay"
-    @click.self="closeModal()">
+    style="display:none;"
+    class="fixed inset-0 z-[9000] flex items-center justify-center p-4">
 
-    <div class="modal-inner-box bg-white rounded-2xl w-full max-w-2xl p-6 shadow-2xl flex flex-col" @click.stop>
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="closeModal()"></div>
+
+    <div class="bg-white rounded-[24px] md:rounded-[32px] w-full max-w-2xl p-6 md:p-8 shadow-2xl flex flex-col relative z-10 max-h-[90vh] overflow-y-auto" @click.stop>
 
         {{-- BUTTON STEP --}}
         <div class="flex justify-center gap-2 mb-6 flex-wrap">
@@ -694,18 +648,22 @@
 
     </div>
 </div>
+</template>
 
 {{-- Modal: Crafting --}}
+<template x-teleport="body">
 <div x-data="craftingModal()" 
      @open-crafting.window="openModal($event.detail)" 
      x-show="open"
      x-effect="document.body.classList.toggle('modal-open', open)"
      x-cloak
      @keydown.escape.window="open=false"
-     class="modal-overlay"
-     @click.self="open=false">
+     style="display:none;"
+     class="fixed inset-0 z-[9000] flex items-center justify-center p-4">
 
-    <div class="modal-inner-box bg-white rounded-2xl w-full max-w-2xl p-6 shadow-2xl flex flex-col transition-all" @click.stop>
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="open=false"></div>
+
+    <div class="bg-white rounded-[24px] md:rounded-[32px] w-full max-w-2xl p-6 md:p-8 shadow-2xl flex flex-col transition-all relative z-10 max-h-[90vh] overflow-y-auto" @click.stop>
         
         {{-- VIEW 1: SELECTION --}}
         <div x-show="currentView === 'selection'" class="flex flex-col">
@@ -775,6 +733,7 @@
 
     </div>
 </div>
+</template>
 
 @push('scripts')
 <script>
