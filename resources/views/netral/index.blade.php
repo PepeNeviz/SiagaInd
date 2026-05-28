@@ -258,16 +258,16 @@
 <section class="max-w-6xl mx-auto px-4 sm:px-6 py-16">
     <div class="mb-10 reveal">
         <div class="accent-bar" style="background: var(--c-teal, #008080);"></div>
-        <h2 class="font-head text-3xl font-bold" style="color: var(--color-text-primary);">Informasi & Survive</h2>
+        <h2 class="font-head text-3xl font-bold" style="color: var(--color-text-primary);">Informasi</h2>
         <p class="mt-2" style="color: var(--color-text-muted);">Panduan satu langkah untuk bertahan hidup (Hanya butuh 1 barang)</p>
     </div>
 
     <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
         @foreach([
             ['🪢', 'Kain Penyangga Tangan', 'Kain untuk menopang tangan saat cedera.'],
-            ['🥫', 'Membuka Kaleng', 'Teknik membuka makanan kaleng darurat tanpa menggunakan alat pembuka khusus.'],
-            ['🧭', 'Arah Mata Angin', 'Cara menentukan arah mata angin menggunakan metode navigasi alamiah.'],
-            ['☀️', 'Baca Jam Matahari', 'Estimasi penunjuk waktu darurat dengan memanfaatkan bayangan dari sinar matahari.']
+            ['🥫', 'Membalut Luka', 'Cara membalut luka dengan kain.'],
+            ['🧭', 'Jam Matahari', 'Estimasi penunjuk waktu darurat dengan memanfaatkan bayangan dari sinar matahari.'],
+            ['☀️', 'Baca Jam Matahari', '.']
         ] as $info)
         <div @click="$dispatch('open-info', { type: 'Survive', item: '{{ $info[1] }}' })" 
              class="info-main-card reveal cursor-pointer p-5 rounded-2xl border" 
@@ -842,12 +842,14 @@
             ]
         },
 
-        'Simpul Kilat': {
+        'Membalut Luka': {
 
             toolIcons: [
 
-                { icon: '🪢', name: 'Tali' },
-                { icon: '🧵', name: 'Benang Tebal' }
+                { icon: '🪢', name: 'Kasa' },
+                { icon: '🧵', name: 'Kain Bersih' },
+                { icon: '🧵', name: 'Perban' },
+                { icon: '🧵', name: 'Handuk Kecil Bersih' }
 
             ],
 
@@ -856,30 +858,44 @@
                 {
                     type: 'icon',
                     icon: '🧵',
-                    description: 'Siapkan tali dengan panjang secukupnya.'
+                    description: 'Bersihkan luka menggunakan air mengalir.'
                 },
 
                 {
                     type: 'icon',
                     icon: '🪢',
-                    description: 'Buat lingkaran kecil pada ujung tali.'
+                    description: 'Tekan luka perlahan selama beberapa menit menggunakan kain bersih untuk menghentikan pendarahan. Jika darah menembua balutan, tambahkan lapisan kasa tanpa melepas yang sudah ada.'
                 },
 
                 {
                     type: 'icon',
                     icon: '✋',
-                    description: 'Tarik kedua sisi tali hingga simpul mengencang.'
+                    description: 'Tutup luka menggunakan kasa, dan pastikan menutupi seluruh area luka.'
+                },
+
+                {
+                    type: 'icon',
+                    icon: '✋',
+                    description: 'Ikat atau rekatkan dengan kain pengikat.'
+                },
+
+                {
+                    type: 'icon',
+                    icon: '✋',
+                    description: 'Periksa sirkulasi, pastikan tidak terlalu kencang.'
                 }
 
             ]
         },
 
-        'Arah Mata Angin': {
+        'Jam Matahari': {
 
             toolIcons: [
 
-                { icon: '🧭', name: 'Kompas' },
-                { icon: '☀️', name: 'Matahari' }
+                { icon: '🧭', name: 'Tongkat Lurus' },
+                { icon: '🧭', name: 'Ranting' },
+                { icon: '🧭', name: 'Kayu' },
+                { icon: '🧭', name: 'Pipa Kecil' },
 
             ],
 
@@ -888,20 +904,38 @@
                 {
                     type: 'icon',
                     icon: '☀️',
-                    description: 'Perhatikan arah matahari terbit dan tenggelam.'
+                    description: 'Tancapkan tongkat ke tanah dengan posisi tegak lurus.'
                 },
 
                 {
                     type: 'icon',
                     icon: '🪵',
-                    description: 'Gunakan bayangan tongkat untuk menentukan arah.'
+                    description: 'Lihat ujung bayangan dari tongkat dan tandai dengan benda atau buat tanda di tanah.'
                 },
 
                 {
                     type: 'icon',
                     icon: '🧭',
-                    description: 'Tentukan utara, selatan, timur, dan barat.'
-                }
+                    description: 'Tunggu 10-20 menit dan tandai kembali ujung bayangan kedua.'
+                },
+
+                {
+                    type: 'icon',
+                    icon: '🧭',
+                    description: 'Jika bayangan masih sangat panjang, maka waktu pagi. Jika bayangan mulai pendek, maka waktu mendekati siang. Jika semakin pendek, waktu sudah siang sekitar tengah hari. Setelah itu, bayangan akan mulai memanjang kembali menunjukkan waktu sore hingga petang.'
+                },
+
+                {
+                    type: 'icon',
+                    icon: '🧭',
+                    description: 'Pagi, bayangan panjang dan bergerak cukup cepat (06.00-09.00). Siang, bayangan pendek dan bergerak lambat (09.00-11.30). Tengah hari, bayangan paling pendek dan matahari paling tinggi (11.30-13.00). Sore, bayangan mulai memanjang kembali (15.00-17.30).'
+                },
+
+                {
+                    type: 'icon',
+                    icon: '🧭',
+                    description: 'Batu pertama menunjukkan arah timur, batu kedua menunjukkan arah barat.'
+                },
 
             ]
         }
