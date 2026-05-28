@@ -731,9 +731,8 @@
                     </p>
                 </button>
 
-                <button
-                    @click="openSupply('p3k')"
-                    class="supply-btn rounded-[28px] p-10 text-center"
+                <a href="#informasi-section"
+                    class="supply-btn rounded-[28px] p-10 text-center block"
                 >
                     <div class="text-6xl mb-5">🩹</div>
 
@@ -742,11 +741,10 @@
                     <p class="text-sm text-gray-500 leading-relaxed">
                         Penanganan luka dan akses cepat menuju caregiver.
                     </p>
-                </button>
+                </a>
 
-                <button
-                    @click="openSupply('alat')"
-                    class="supply-btn rounded-[28px] p-10 text-center"
+                <a href="#crafting-section"
+                    class="supply-btn rounded-[28px] p-10 text-center block"
                 >
                     <div class="text-6xl mb-5">🛠️</div>
 
@@ -755,7 +753,7 @@
                     <p class="text-sm text-gray-500 leading-relaxed">
                         Crafting alat darurat dan improvisasi survival.
                     </p>
-                </button>
+                </a>
 
             </div>
 
@@ -765,7 +763,7 @@
 
 {{-- INFORMASI --}}
     {{-- Background pakai #EEEEEE biar misah sama section di bawahnya --}}
-    <section class="py-16 bg-[#EEEEEE] border-y border-black/5">
+    <section id="informasi-section" class="py-16 bg-[#EEEEEE] border-y border-black/5">
         <div class="max-w-6xl mx-auto px-4 sm:px-6">
             
             <div class="mb-10">
@@ -796,7 +794,7 @@
     </section>
 
     {{-- CRAFTING --}}
-    <section class="py-16 bg-white">
+    <section id="crafting-section" class="py-16 bg-white">
         <div class="max-w-6xl mx-auto px-4 sm:px-6">
             
             <div class="mb-10">
@@ -889,91 +887,56 @@
                          x-transition:leave="transition ease-in duration-300"
                          x-transition:leave-start="opacity-100 translate-x-0"
                          x-transition:leave-end="opacity-0 -translate-x-full"
-                         class="grid grid-cols-1 md:grid-cols-2 h-full w-full absolute inset-0"
-                         @touchstart="handleTouchStart" @touchend="handleTouchEnd" @touchmove="handleTouchMove">
-                        
-                        {{-- KIRI: Navigasi & Langkah (Area Thumb Zone) --}}
-                        {{-- style="overflow-y: auto;" ditambahkan untuk fitur scroll jika teks panjang --}}
-                        <div class="px-6 pb-8 pt-[12vh] md:p-8 flex flex-col h-full justify-between md:justify-center gap-6 relative bg-white z-10" style="overflow-y: auto;">
-                            
-                            {{-- Header Pertanyaan / Judul --}}
-                            <div class="flex items-center justify-between shrink-0">
-                                <button @click="if(injuryStepIndex > 0) injuryStepIndex--" 
-                                    class="w-10 h-10 rounded-xl flex items-center justify-center font-bold transition-opacity" 
-                                    :class="injuryStepIndex === 0 ? 'opacity-30 cursor-not-allowed bg-gray-100' : 'bg-[#E8F6F3] hover:bg-[#7FC7C7] text-[#2D6A6A]'">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-5 h-5"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                                </button>
-
-                                <div class="text-center px-2">
-                                    <p class="text-xs uppercase tracking-[.25em] text-gray-400 mb-1" x-text="'Langkah ' + (injuryStepIndex + 1)"></p>
-                                    <h2 class="font-head text-2xl md:text-3xl font-black" style="color: var(--c-teal-dark);" x-text="modalData.title"></h2>
-                                </div>
-
-                                <button @click="if(injuryStepIndex < modalData.steps.length - 1) injuryStepIndex++" 
-                                    class="w-10 h-10 rounded-xl flex items-center justify-center font-bold transition-opacity" 
-                                    :class="injuryStepIndex === modalData.steps.length - 1 ? 'opacity-30 cursor-not-allowed bg-gray-100' : 'bg-[#E8F6F3] hover:bg-[#7FC7C7] text-[#2D6A6A]'">
-                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-5 h-5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                                </button>
-                            </div>
-
-                            {{-- KONTEN UTAMA: Instruksi Langkah & Gambar Mobile --}}
-                            <div class="flex-1 flex flex-col items-center justify-center text-center">
-                                <div class="w-full rounded-[24px] p-6 md:p-8 border-2 border-dashed shadow-sm transition-all duration-300" 
-                                     style="border-color: var(--c-teal-light); background: var(--c-teal-bg);">
-                                    
-                                    {{-- Ikon Dinamis Mobile: Akan mencari stepVisuals, kalau kosong balik ke ikon utama --}}
-                                    <div class="text-[4.5rem] mb-5 md:hidden drop-shadow-md transition-transform duration-300" 
-                                         x-text="(modalData.stepVisuals && modalData.stepVisuals[injuryStepIndex]) ? modalData.stepVisuals[injuryStepIndex] : modalData.icon"></div> 
-                                    
-                                    <p class="text-lg md:text-xl font-bold leading-relaxed" style="color: var(--c-teal-dark);" x-text="modalData.steps[injuryStepIndex]"></p>
-                                </div>
-                            </div>
-
-                            {{-- Area Bawah: Pagination & Tombol Next --}}
-                            <div class="flex items-stretch justify-between gap-4 shrink-0 w-full mt-4">
-                                
-                                {{-- Tombol Angka --}}
-                                {{-- md:flex dihapus. grid-cols-3 sekarang berlaku permanen di HP dan PC! --}}
-                                {{-- Tambahan w-fit memastikan jarak antar kotak tetap rapat (tidak melar) --}}
-                                <div class="grid grid-cols-3 gap-2 md:gap-3 w-fit">
-                                    <template x-for="(step, index) in modalData.steps">
-                                        <button @click="injuryStepIndex = index"
-                                            class="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-xl font-bold transition-all"
-                                            :style="injuryStepIndex === index ? 'background: var(--c-teal-dark); color: white;' : 'background: #F3F3F3; color: #999;'"
-                                            x-text="index + 1"></button>
-                                    </template>
-                                </div>
-
-                                {{-- Tombol Aksi --}}
-                                <button x-show="injuryStepIndex < modalData.steps.length - 1" @click="injuryStepIndex++" 
-                                    class="w-28 md:w-28 rounded-xl font-bold text-white shadow-md flex items-center justify-center transition-all hover:opacity-90" style="background: var(--c-teal-main);">
-                                    Next
-                                </button>
-                                
-                                <button x-show="injuryStepIndex === modalData.steps.length - 1" @click="modal = false" 
-                                    class="w-28 md:w-28 rounded-xl font-bold text-white shadow-md flex items-center justify-center transition-all hover:opacity-90 bg-red-600">
-                                    Selesai
-                                </button>
+                         class="h-full w-full absolute inset-0 flex flex-col p-6 md:p-8 pt-[12vh] bg-white z-10 overflow-y-auto"
+                         @touchstart="touchStartX = $event.changedTouches[0].screenX" 
+                         @touchend="touchEndX = $event.changedTouches[0].screenX; handleSwipe()">
+                         
+                        {{-- 1. Area Tengah: Gambar --}}
+                        <div class="flex items-center justify-center mb-6 mt-20 md:mt-16">
+                            {{-- Ukuran box h-64 dan max-w-[450px] persis Netral --}}
+                            <div class="h-64 w-full max-w-[450px] rounded-2xl flex items-center justify-center border border-black/5 shadow-inner transition-all duration-300" style="background: var(--c-teal-bg);">
+                                <div class="text-[100px] drop-shadow-sm transition-transform duration-300" x-text="(modalData.stepVisuals && modalData.stepVisuals[injuryStepIndex]) ? modalData.stepVisuals[injuryStepIndex] : modalData.icon"></div>
                             </div>
                         </div>
 
-                        {{-- KANAN: Visual Icon Dinamis (Desktop) --}}
-                        {{-- Background pakai palette Sesudah (E8F6F3) dan font Teal Dark --}}
-                        <div class="hidden md:flex flex-col items-center justify-center p-8 relative" style="background: var(--c-teal-bg);">
+                        {{-- 2. Judul & Deskripsi --}}
+                        <div class="text-center mb-6 flex-grow">
+                            <h3 class="font-bold text-lg" style="color: var(--c-teal-dark);" x-text="modalData.title"></h3>
+                            <p class="text-gray-500 text-sm mt-2 max-w-md mx-auto leading-relaxed" x-text="modalData.steps[injuryStepIndex]"></p>
+                        </div>
+
+                        {{-- 3. Footer: Grid Pagination, dan Tombol Done --}}
+                        <div class="flex flex-wrap md:flex-nowrap justify-between items-center mt-auto pt-4 border-t border-gray-100 gap-4">
                             
-                            {{-- Ikon Raksasa Dinamis Desktop --}}
-                            <div class="text-[9rem] drop-shadow-2xl hover:scale-110 transition-transform duration-300" 
-                                 x-text="(modalData.stepVisuals && modalData.stepVisuals[injuryStepIndex]) ? modalData.stepVisuals[injuryStepIndex] : modalData.icon"></div>
-                            
-                            <h3 class="mt-8 font-head text-3xl font-black" style="color: var(--c-teal-dark);" x-text="modalData.title"></h3>
-                            
-                            <div class="mt-4 flex flex-wrap justify-center gap-2">
-                                <template x-for="tag in modalData.tags">
-                                    <span class="px-3 py-1 rounded-full text-xs font-bold" 
-                                          style="background: white; color: var(--c-teal-main); box-shadow: 0 2px 4px rgba(0,0,0,0.05);" 
-                                          x-text="tag"></span>
+                            {{-- Grid Pagination --}}
+                            <div class="flex justify-start md:justify-center gap-2 flex-grow overflow-x-auto pb-1 md:pb-0">
+                                <template x-for="(step, i) in modalData.steps">
+                                    <button @click="injuryStepIndex = i"
+                                            class="w-9 h-9 shrink-0 rounded-lg border font-bold text-sm transition-colors"
+                                            :class="injuryStepIndex === i ? 'text-white border-transparent' : 'bg-gray-50 text-gray-400 hover:bg-gray-100 border-gray-200'"
+                                            :style="injuryStepIndex === i ? 'background: var(--c-teal-dark);' : ''"
+                                            x-text="i + 1"></button>
                                 </template>
                             </div>
+
+                            <button @click="modal = false"
+                                    :disabled="injuryStepIndex !== modalData.steps.length - 1"
+                                    :class="injuryStepIndex === modalData.steps.length - 1 ? 'hover:opacity-90' : 'bg-gray-300 cursor-not-allowed'"
+                                    :style="injuryStepIndex === modalData.steps.length - 1 ? 'background: var(--c-teal-dark); color: white;' : 'color: white;'"
+                                    class="px-6 h-10 shrink-0 rounded-xl font-bold text-xs transition-colors hidden md:block">
+                                Done
+                            </button>
+                        </div>
+                        
+                        {{-- Tombol Done Mobile --}}
+                        <div class="mt-4 md:hidden">
+                            <button @click="modal = false"
+                                    :disabled="injuryStepIndex !== modalData.steps.length - 1"
+                                    :class="injuryStepIndex === modalData.steps.length - 1 ? 'hover:opacity-90' : 'bg-gray-300 cursor-not-allowed'"
+                                    :style="injuryStepIndex === modalData.steps.length - 1 ? 'background: var(--c-teal-dark); color: white;' : 'color: white;'"
+                                    class="w-full h-10 rounded-xl font-bold text-xs transition-colors">
+                                Done
+                            </button>
                         </div>
 
                     </div>
@@ -1098,50 +1061,56 @@
             </template>
 
             <template x-if="currentInjuryType === 'craft'">
-                <div @click.stop class="bg-white rounded-[24px] md:rounded-[32px] w-full max-w-2xl p-6 md:p-8 shadow-2xl flex flex-col transition-all relative z-10 max-h-[90vh] overflow-y-auto mx-auto">
+                <div @click.stop class="bg-white rounded-[24px] md:rounded-[32px] w-full max-w-4xl p-6 md:p-10 shadow-2xl flex flex-col transition-all relative z-10 max-h-[95vh] overflow-y-auto mx-auto">
                     
                     {{-- ==========================================
                          VIEW 1: SELECTION BAHAN
                     =========================================== --}}
                     <div x-show="currentView === 'selection'" class="flex flex-col">
-                        <div class="flex justify-between items-center mb-6">
+                        <div class="flex justify-between items-center mb-5">
                             <h2 class="text-lg font-bold" style="color: var(--c-teal-dark);" x-text="modalData.title"></h2>
-                            <button @click="modal = false" class="text-xl text-gray-400 hover:text-[var(--c-teal-dark)] transition-colors">✕</button>
+                            <button @click="modal = false" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-red-100 text-gray-400 transition text-sm font-bold">✕</button>
                         </div>
                         
-                        <div class="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6">
-                            <div class="rounded-xl p-4 flex flex-col items-center justify-center border border-black/5 h-[200px]" style="background: var(--c-teal-bg);">
-                                <div class="text-7xl drop-shadow-sm" x-text="modalData.icon"></div>
-                                <div class="font-bold mt-3 text-sm text-center" style="color: var(--c-teal-dark);" x-text="modalData.title"></div>
+                        <div class="flex gap-5 flex-wrap md:flex-nowrap">
+                            <div class="flex flex-col gap-3 flex-shrink-0 w-full md:w-[160px] self-center">
+                                <div class="bg-gray-50 rounded-xl border flex flex-col items-center justify-center gap-2 py-6">
+                                    <div class="text-6xl drop-shadow-sm" x-text="modalData.icon"></div>
+                                    <div class="font-bold text-xs text-center text-gray-600 px-2" style="color: var(--c-teal-dark);" x-text="modalData.title"></div>
+                                </div>
                             </div>
 
-                            <div class="grid grid-cols-2 gap-3 h-[200px]">
-                                <template x-for="(m, idx) in craftingMaterials" :key="idx">
-                                    <div class="border border-gray-100 p-3 rounded-xl relative flex flex-col items-center justify-center bg-white shadow-sm transition-all hover:border-[var(--c-teal-light)]">
-                                        <div class="text-3xl drop-shadow-sm mb-1" x-text="m.icon"></div>
-                                        <span class="text-[10px] font-bold text-center text-gray-600" x-text="m.name"></span>
-                                        
-                                        <button x-show="m.swappable" @click="switchMaterial(idx)" 
-                                                class="absolute top-1.5 right-1.5 p-1 bg-gray-50 border border-gray-200 rounded text-[10px] text-gray-500 hover:bg-[var(--c-teal-bg)] hover:text-[var(--c-teal-dark)] transition-colors"
-                                                title="Ganti Bahan">⇅</button>
-                                    </div>
-                                </template>
+                            <div class="flex-1 overflow-y-auto w-full" style="max-height:320px;">
+                                <p class="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2">Bahan (Tap ⇅ untuk Ganti)</p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <template x-for="(m, idx) in craftingMaterials" :key="idx">
+                                        <div class="border p-3 rounded-xl relative flex flex-col items-center justify-center bg-white shadow-sm min-h-[90px]">
+                                            <div class="text-3xl drop-shadow-sm mb-1" x-text="m.icon"></div>
+                                            <span class="text-[10px] font-bold text-center leading-tight text-gray-700" x-text="m.name"></span>
+                                            <span class="text-[9px] font-semibold uppercase tracking-wide text-gray-400 mt-0.5" x-text="m.role || 'Bahan'"></span>
+                                            
+                                            <button x-show="m.swappable" @click="switchMaterial(idx)" 
+                                                    class="absolute top-1.5 right-1.5 w-5 h-5 flex items-center justify-center bg-teal-500 text-white rounded-full text-[9px] font-bold transition"
+                                                    title="Ganti Bahan">⇅</button>
+                                        </div>
+                                    </template>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="mt-6 flex justify-end">
-                            <button @click="currentView = 'process'" 
-                                    class="px-8 py-2.5 rounded-xl font-bold text-white shadow-md hover:-translate-y-0.5 active:scale-95 transition-all text-sm tracking-wide" 
-                                    style="background: var(--c-teal-dark);">
-                                Next
-                            </button>
+                        {{-- SELECTION FOOTER --}}
+                        <div class="flex justify-between gap-4 w-full mt-6 pt-4 border-t border-gray-100">
+                            <button @click="modal = false" class="px-6 py-2.5 bg-gray-100 text-gray-600 rounded-xl font-bold hover:bg-gray-200 transition text-sm">Batal</button>
+                            <button @click="currentView = 'process'" class="px-8 py-2.5 rounded-xl font-bold text-white shadow-md transition-transform hover:-translate-y-0.5 text-sm tracking-wide" style="background: var(--c-teal-dark);">Next →</button>
                         </div>
                     </div>
 
                     {{-- ==========================================
                          VIEW 2: PROCESS & SLIDER
                     =========================================== --}}
-                    <div x-show="currentView === 'process'" class="flex flex-col">
+                    <div x-show="currentView === 'process'" class="flex flex-col"
+                         @touchstart="touchStartX = $event.changedTouches[0].screenX" 
+                         @touchend="touchEndX = $event.changedTouches[0].screenX; handleSwipe()">
                         
                         <div class="flex justify-center gap-2 mb-6">
                             <template x-for="(step, i) in modalData.steps">
@@ -1153,18 +1122,16 @@
                             </template>
                         </div>
 
-                        <div class="h-64 flex items-center justify-center mb-6 gap-2">
-                            <div class="w-14 flex justify-center">
-                                <button @click="injuryStepIndex--" x-show="injuryStepIndex > 0" class="text-3xl p-3 text-gray-400 hover:bg-gray-100 hover:text-[var(--c-teal-dark)] rounded-full transition">◀</button>
-                            </div>
+                        <div class="h-64 flex items-center justify-center mb-6 gap-2 relative w-full max-w-[450px] mx-auto">
+                            {{-- Arrow Kiri (Desktop Only) --}}
+                            <button @click="injuryStepIndex--" x-show="injuryStepIndex > 0" class="absolute -left-12 md:-left-16 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border shadow-sm flex items-center justify-center text-gray-400 hover:text-[var(--c-teal-dark)] hidden md:flex transition-colors z-10">◀</button>
                             
-                            <div class="w-full max-w-[450px] h-full rounded-2xl flex items-center justify-center border border-black/5 shadow-inner" style="background: var(--c-teal-bg);">
+                            <div class="w-full h-full rounded-2xl flex items-center justify-center border border-black/5 shadow-inner" style="background: var(--c-teal-bg);">
                                 <div class="text-[110px] drop-shadow-sm transition-transform duration-300" x-text="modalData.steps[injuryStepIndex].i"></div>
                             </div>
 
-                            <div class="w-14 flex justify-center">
-                                <button @click="injuryStepIndex++" x-show="injuryStepIndex < modalData.steps.length - 1" class="text-3xl p-3 text-gray-400 hover:bg-gray-100 hover:text-[var(--c-teal-dark)] rounded-full transition">▶</button>
-                            </div>
+                            {{-- Arrow Kanan (Desktop Only) --}}
+                            <button @click="injuryStepIndex++" x-show="injuryStepIndex < modalData.steps.length - 1" class="absolute -right-12 md:-right-16 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border shadow-sm flex items-center justify-center text-gray-400 hover:text-[var(--c-teal-dark)] hidden md:flex transition-colors z-10">▶</button>
                         </div>
 
                         <div class="text-center mb-5">
@@ -1511,20 +1478,13 @@ function sesudahPage(){
             this.touchEndY = e.changedTouches[0].screenY;
         },
 
+        handleSwipe() {
+            if (this.touchEndX < this.touchStartX - 50 && this.injuryStepIndex < this.modalData.steps.length - 1) this.injuryStepIndex++;
+            if (this.touchEndX > this.touchStartX + 50 && this.injuryStepIndex > 0) this.injuryStepIndex--;
+        },
+        
         handleTouchEnd(){
-            const diffX = this.touchStartX - this.touchEndX;
-            const diffY = Math.abs(this.touchStartY - this.touchEndY);
-            
-            // Pastikan swipe adalah horizontal, dan bukan scroll vertikal
-            if(Math.abs(diffX) > diffY && Math.abs(diffX) > 50){
-                if(diffX > 0){
-                    // Swipe Kiri (Next)
-                    if(this.injuryStepIndex < this.modalData.steps.length - 1) this.injuryStepIndex++;
-                } else {
-                    // Swipe Kanan (Prev)
-                    if(this.injuryStepIndex > 0) this.injuryStepIndex--;
-                }
-            }
+            this.handleSwipe();
         },
         // ---------------------------------------------------------
 
@@ -1598,28 +1558,12 @@ function sesudahPage(){
 
         openSupply(type){
             if(type === 'minum'){
-                this.modalData = {
-                    title:'Filter Air Darurat',
-                    desc:'Cari air mengalir. Jika tidak ada, gunakan tutorial filter air improvisasi.',
-                    icon:'💧',
-                    tags:['Filter Air','Survival']
-                }
+                window.location.href = '{{ route("netral") }}?openTutorial=filter-air';
             }else if(type === 'p3k'){
-                this.modalData = {
-                    title:'Akses Cepat Caregiver',
-                    desc:'Buka panduan medis dan penanganan luka.',
-                    icon:'🩹',
-                    tags:['P3K']
-                }
+                this.openInfo(this.infoItems[1]); // Membalut Luka
             }else{
-                this.modalData = {
-                    title:'Crafting Alat',
-                    desc:'Buat alat darurat improvisasi dari bahan sekitar.',
-                    icon:'🛠️',
-                    tags:['Crafting']
-                }
+                this.openCraft(this.craftingItems[0]); // Bidai Darurat
             }
-            this.modal = true
         },
 
         autoOpenInjury(){

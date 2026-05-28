@@ -368,7 +368,9 @@
                 </div>
 
                 {{-- Area konten yang bisa di swipe --}}
-                <div class="flex-1 overflow-y-auto flex flex-col" @touchstart="handleTouchStart" @touchend="handleTouchEnd" @touchmove="handleTouchMove">
+                <div class="flex-1 overflow-y-auto flex flex-col" 
+                     @touchstart="touchStartX = $event.changedTouches[0].screenX" 
+                     @touchend="touchEndX = $event.changedTouches[0].screenX; handleSwipe()">
                     
                     {{-- 2. QUESTION NAVIGATION ROW (Panah Diperjelas) --}}
                     <div class="px-6 md:px-12 pt-8 pb-6 flex items-center justify-between shrink-0">
@@ -418,8 +420,8 @@
                 {{-- 5. FOOTER (Warna terintegrasi) --}}
                 <div class="px-6 md:px-12 py-5 border-t flex flex-wrap items-center justify-center md:justify-between gap-4 shrink-0" style="background: #FAFAFA; border-color: var(--c-light);">
                     
-                    <div class="flex flex-wrap justify-center gap-2">
-                        <template x-for="(step, index) in questions">
+                    <div class="grid grid-cols-6 sm:flex sm:flex-wrap sm:justify-center gap-2 w-full">
+                        <template x-for="(step, index) in (questions[currentDisasterName] || [])">
                             <button @click="goQuestion(index)"
                                 class="h-9 md:h-10 rounded-xl flex items-center justify-center text-sm font-bold transition-all duration-300 shadow-sm border"
                                 {{-- Jika aktif: padding dilebarkan. Jika tidak: lebarnya dikunci kotak (w-9) --}}
@@ -438,11 +440,11 @@
                         </template>
                     </div>
 
-                    <button x-show="currentStep < questions.length - 1" @click="nextQuestion"
+                    <button x-show="questions[currentDisasterName] && currentStep < questions[currentDisasterName].length - 1" @click="nextQuestion"
                         class="w-full md:w-auto px-10 py-3 md:py-3.5 rounded-xl font-bold text-white shadow-md transition-transform hover:-translate-y-0.5 active:scale-95" style="background: var(--c-red);">
                         Selanjutnya
                     </button>
-                    <button x-show="currentStep === questions.length - 1" @click="finishFlow"
+                    <button x-show="questions[currentDisasterName] && currentStep === questions[currentDisasterName].length - 1" @click="finishFlow"
                         class="w-full md:w-auto px-10 py-3 md:py-3.5 rounded-xl font-bold text-white shadow-md transition-transform hover:-translate-y-0.5 active:scale-95" style="background: var(--c-dark-red);">
                         Selesai
                     </button>
@@ -597,8 +599,6 @@ function saatPage(){
 
         touchStartX:0,
         touchEndX:0,
-        touchStartY:0,
-        touchEndY:0,
 
         // Tambahkan 2 variabel ini di bawah touchEndY: 0,
         currentDisasterName: '',
@@ -642,95 +642,364 @@ function saatPage(){
             }
         ],
 
-        questions:[
-            {
-                title:'Dimana?',
-                visual:'🏢',
-                caption:'Lokasi Saat Ini',
-                description:'Pilih kondisi lokasi kamu saat gempa terjadi.',
-                navIcon: 'fa-solid fa-location-dot', // <-- TAMBAH INI
-                options:[
-                    { label:'Luar Ruangan', icon:'🌳', desc:'Jauhi benda rawan jatuh.' },
-                    { label:'Dalam Ruangan', icon:'🏠', desc:'Lindungi kepala.' }
-                ]
-            },
-            {
-                title:'Berapa Orang?',
-                visual:'👥',
-                caption:'Cek Sekitar',
-                description:'Pastikan siapa saja berada dekat denganmu.',
-                navIcon: 'fa-solid fa-users', // <-- TAMBAH INI (Ikon orang banyak)
-                options:[
-                    { label:'Sendiri', icon:'🧍', desc:'Fokus evakuasi diri.' },
-                    { label:'Bersama Orang', icon:'👨‍👩‍👧', desc:'Bantu kelompok.' }
-                ]
-            },
-            {
-                title:'Ada Anak?',
-                visual:'🧒',
-                caption:'Prioritas Evakuasi',
-                description:'Anak dan lansia harus diprioritaskan.',
-                navIcon: 'fa-solid fa-child-reaching', // <-- TAMBAH INI (Ikon anak)
-                options:[
-                    { label:'Ada', icon:'🧒', desc:'Bantu lebih dulu.' },
-                    { label:'Tidak Ada', icon:'👌', desc:'Lanjut evakuasi.' }
-                ]
-            },
-            {
-                title:'Akses Keluar?',
-                visual:'🚪',
-                caption:'Cari Jalur Aman',
-                description:'Periksa jalur evakuasi.',
-                navIcon: 'fa-solid fa-door-open', // <-- TAMBAH INI
-                options:[
-                    { label:'Terbuka', icon:'🚪', desc:'Segera keluar.' },
-                    { label:'Tertutup', icon:'🪨', desc:'Cari jalur alternatif.' }
-                ]
-            },
-            {
-                title:'Ada Api?',
-                visual:'🔥',
-                caption:'Bahaya Tambahan',
-                description:'Periksa adanya kebakaran atau gas.',
-                navIcon: 'fa-solid fa-fire', // <-- TAMBAH INI
-                options:[
-                    { label:'Ada', icon:'🔥', desc:'Jauhi area.' },
-                    { label:'Tidak', icon:'✅', desc:'Lanjut aman.' }
-                ]
-            },
-            {
-                title:'Menuju Shelter',
-                visual:'🏃',
-                caption:'Evakuasi',
-                description:'Ikuti jalur evakuasi resmi.',
-                navIcon: 'fa-solid fa-person-running', // <-- TAMBAH INI
-                options:[
-                    { label:'Ikuti Jalur', icon:'➡️', desc:'Tetap tenang.' },
-                    { label:'Cari Jalur', icon:'🧭', desc:'Gunakan area terbuka.' }
-                ]
-            },
-            {
-                title:'Area Aman?',
-                visual:'⛺',
-                caption:'Shelter',
-                description:'Pastikan area jauh dari bangunan retak.',
-                navIcon: 'fa-solid fa-tents', // <-- TAMBAH INI
-                options:[
-                    { label:'Sudah', icon:'⛺', desc:'Tetap di shelter.' },
-                    { label:'Belum', icon:'⚠️', desc:'Cari tempat lain.' }
-                ]
-            },
-            {
-                title:'Aman',
-                visual:'🏡',
-                caption:'Kondisi Stabil',
-                description:'Kamu telah mencapai area aman.',
-                navIcon: 'fa-solid fa-check-circle', // <-- TAMBAH INI
-                options:[
-                    { label:'Lanjut', icon:'✅', desc:'Periksa kondisi tubuh.' }
-                ]
-            }
-        ],
+        questions: {
+            'Gempa Bumi': [
+                {
+                    title:'Dimana?',
+                    visual:'🏢',
+                    caption:'Lokasi Saat Ini',
+                    description:'Pilih kondisi lokasi kamu saat gempa terjadi.',
+                    navIcon: 'fa-solid fa-location-dot',
+                    options:[
+                        { label:'Luar Ruangan', icon:'🌳', desc:'Jauhi benda rawan jatuh.' },
+                        { label:'Dalam Ruangan', icon:'🏠', desc:'Lindungi kepala.' }
+                    ]
+                },
+                {
+                    title:'Berapa Orang?',
+                    visual:'👥',
+                    caption:'Cek Sekitar',
+                    description:'Pastikan siapa saja berada dekat denganmu.',
+                    navIcon: 'fa-solid fa-users',
+                    options:[
+                        { label:'Sendiri', icon:'🧍', desc:'Fokus evakuasi diri.' },
+                        { label:'Bersama Orang', icon:'👨‍👩‍👧', desc:'Bantu kelompok.' }
+                    ]
+                },
+                {
+                    title:'Ada Anak?',
+                    visual:'🧒',
+                    caption:'Prioritas Evakuasi',
+                    description:'Anak dan lansia harus diprioritaskan.',
+                    navIcon: 'fa-solid fa-child-reaching',
+                    options:[
+                        { label:'Ada', icon:'🧒', desc:'Bantu lebih dulu.' },
+                        { label:'Tidak Ada', icon:'👌', desc:'Lanjut evakuasi.' }
+                    ]
+                },
+                {
+                    title:'Akses Keluar?',
+                    visual:'🚪',
+                    caption:'Cari Jalur Aman',
+                    description:'Periksa jalur evakuasi.',
+                    navIcon: 'fa-solid fa-door-open',
+                    options:[
+                        { label:'Terbuka', icon:'🚪', desc:'Segera keluar.' },
+                        { label:'Tertutup', icon:'🪨', desc:'Cari jalur alternatif.' }
+                    ]
+                },
+                {
+                    title:'Ada Api?',
+                    visual:'🔥',
+                    caption:'Bahaya Tambahan',
+                    description:'Periksa adanya kebakaran atau gas.',
+                    navIcon: 'fa-solid fa-fire',
+                    options:[
+                        { label:'Ada', icon:'🔥', desc:'Jauhi area.' },
+                        { label:'Tidak', icon:'✅', desc:'Lanjut aman.' }
+                    ]
+                },
+                {
+                    title:'Menuju Shelter',
+                    visual:'🏃',
+                    caption:'Evakuasi',
+                    description:'Ikuti jalur evakuasi resmi.',
+                    navIcon: 'fa-solid fa-person-running',
+                    options:[
+                        { label:'Ikuti Jalur', icon:'➡️', desc:'Tetap tenang.' },
+                        { label:'Cari Jalur', icon:'🧭', desc:'Gunakan area terbuka.' }
+                    ]
+                },
+                {
+                    title:'Area Aman?',
+                    visual:'⛺',
+                    caption:'Shelter',
+                    description:'Pastikan area jauh dari bangunan retak.',
+                    navIcon: 'fa-solid fa-tents',
+                    options:[
+                        { label:'Sudah', icon:'⛺', desc:'Tetap di shelter.' },
+                        { label:'Belum', icon:'⚠️', desc:'Cari tempat lain.' }
+                    ]
+                },
+                {
+                    title:'Aman',
+                    visual:'🏡',
+                    caption:'Kondisi Stabil',
+                    description:'Kamu telah mencapai area aman.',
+                    navIcon: 'fa-solid fa-check-circle',
+                    options:[
+                        { label:'Lanjut', icon:'✅', desc:'Periksa kondisi tubuh.' }
+                    ]
+                }
+            ],
+            'Tsunami': [
+                {
+                    title:'Dimana?',
+                    visual:'📍',
+                    caption:'Lokasi Saat Ini',
+                    description:'Di mana posisi kamu sekarang?',
+                    navIcon: 'fa-solid fa-location-dot',
+                    options:[
+                        { label:'Dekat Pantai', icon:'🏖️', desc:'Segera menjauh.' },
+                        { label:'Jauh Pantai', icon:'🏙️', desc:'Tetap waspada.' }
+                    ]
+                },
+                {
+                    title:'Peringatan?',
+                    visual:'⚠️',
+                    caption:'Tanda Alam',
+                    description:'Apakah ada tanda tsunami?',
+                    navIcon: 'fa-solid fa-triangle-exclamation',
+                    options:[
+                        { label:'Air Surut', icon:'🌊', desc:'Tanda bahaya.' },
+                        { label:'Gempa Kuat', icon:'🫨', desc:'Potensi tsunami.' }
+                    ]
+                },
+                {
+                    title:'Berapa Orang?',
+                    visual:'👥',
+                    caption:'Cek Sekitar',
+                    description:'Siapa yang bersamamu saat ini?',
+                    navIcon: 'fa-solid fa-users',
+                    options:[
+                        { label:'Sendiri', icon:'🧍', desc:'Evakuasi diri.' },
+                        { label:'Bersama', icon:'👨‍👩‍👧', desc:'Bantu yang lain.' }
+                    ]
+                },
+                {
+                    title:'Ada Rentan?',
+                    visual:'👵',
+                    caption:'Prioritas',
+                    description:'Adakah lansia atau anak kecil?',
+                    navIcon: 'fa-solid fa-person-cane',
+                    options:[
+                        { label:'Ada', icon:'🧒', desc:'Bantu mereka.' },
+                        { label:'Tidak', icon:'👌', desc:'Segera lari.' }
+                    ]
+                },
+                {
+                    title:'Evakuasi?',
+                    visual:'🏃',
+                    caption:'Metode',
+                    description:'Cara menuju tempat aman.',
+                    navIcon: 'fa-solid fa-person-running',
+                    options:[
+                        { label:'Jalan Kaki', icon:'🚶', desc:'Lebih disarankan.' },
+                        { label:'Kendaraan', icon:'🚗', desc:'Bisa macet.' }
+                    ]
+                },
+                {
+                    title:'Tujuan?',
+                    visual:'⛰️',
+                    caption:'Tempat Tinggi',
+                    description:'Cari area evakuasi vertikal.',
+                    navIcon: 'fa-solid fa-mountain-sun',
+                    options:[
+                        { label:'Bukit', icon:'⛰️', desc:'Minimal 10m dpl.' },
+                        { label:'Gedung', icon:'🏢', desc:'Lantai 3 ke atas.' }
+                    ]
+                },
+                {
+                    title:'Area Aman?',
+                    visual:'✅',
+                    caption:'Status Lokasi',
+                    description:'Apakah posisi sudah cukup tinggi?',
+                    navIcon: 'fa-solid fa-flag-checkered',
+                    options:[
+                        { label:'Sudah Tinggi', icon:'✅', desc:'Tetap di sana.' },
+                        { label:'Masih Rendah', icon:'⚠️', desc:'Naik lagi.' }
+                    ]
+                },
+                {
+                    title:'Aman',
+                    visual:'🌊',
+                    caption:'Bertahan',
+                    description:'Tunggu info resmi sebelum turun.',
+                    navIcon: 'fa-solid fa-tower-broadcast',
+                    options:[
+                        { label:'Bertahan', icon:'🛑', desc:'Jangan ke pantai.' }
+                    ]
+                }
+            ],
+            'Banjir': [
+                {
+                    title:'Dimana?',
+                    visual:'🏠',
+                    caption:'Lokasi',
+                    description:'Posisi kamu saat air naik.',
+                    navIcon: 'fa-solid fa-house-flood-water',
+                    options:[
+                        { label:'Dalam Rumah', icon:'🛋️', desc:'Naik ke lantai atas.' },
+                        { label:'Luar Rumah', icon:'🛣️', desc:'Cari dataran tinggi.' }
+                    ]
+                },
+                {
+                    title:'Kondisi Air?',
+                    visual:'🌊',
+                    caption:'Ketinggian',
+                    description:'Bagaimana arus airnya?',
+                    navIcon: 'fa-solid fa-water',
+                    options:[
+                        { label:'Cepat Naik', icon:'📈', desc:'Bahaya.' },
+                        { label:'Genangan', icon:'💧', desc:'Waspada.' }
+                    ]
+                },
+                {
+                    title:'Listrik?',
+                    visual:'⚡',
+                    caption:'Risiko',
+                    description:'Apakah listrik sudah dipadamkan?',
+                    navIcon: 'fa-solid fa-plug-circle-xmark',
+                    options:[
+                        { label:'Padamkan', icon:'🔌', desc:'Hindari setrum.' },
+                        { label:'Sudah', icon:'✅', desc:'Bagus.' }
+                    ]
+                },
+                {
+                    title:'Barang?',
+                    visual:'🎒',
+                    caption:'Penyelamatan',
+                    description:'Amankan dokumen penting.',
+                    navIcon: 'fa-solid fa-file-shield',
+                    options:[
+                        { label:'Amankan', icon:'⬆️', desc:'Taruh di atas.' },
+                        { label:'Tinggalkan', icon:'🏃', desc:'Utamakan nyawa.' }
+                    ]
+                },
+                {
+                    title:'Arus Deras?',
+                    visual:'🌊',
+                    caption:'Bahaya',
+                    description:'Apakah air mengalir deras?',
+                    navIcon: 'fa-solid fa-triangle-exclamation',
+                    options:[
+                        { label:'Hindari', icon:'🛑', desc:'Bisa terseret.' },
+                        { label:'Jangan Terjang', icon:'❌', desc:'Berbahaya.' }
+                    ]
+                },
+                {
+                    title:'Evakuasi?',
+                    visual:'🛟',
+                    caption:'Alat',
+                    description:'Bagaimana cara evakuasi?',
+                    navIcon: 'fa-solid fa-life-ring',
+                    options:[
+                        { label:'Pelampung', icon:'🛟', desc:'Gunakan ban/botol.' },
+                        { label:'Tongkat', icon:'🦯', desc:'Cek kedalaman.' }
+                    ]
+                },
+                {
+                    title:'Tujuan?',
+                    visual:'⛺',
+                    caption:'Posko',
+                    description:'Cari posko pengungsian terdekat.',
+                    navIcon: 'fa-solid fa-tents',
+                    options:[
+                        { label:'Posko', icon:'⛺', desc:'Tempat kering.' },
+                        { label:'Dataran Tinggi', icon:'⛰️', desc:'Aman dari air.' }
+                    ]
+                },
+                {
+                    title:'Aman',
+                    visual:'✅',
+                    caption:'Bertahan',
+                    description:'Tunggu air surut sepenuhnya.',
+                    navIcon: 'fa-solid fa-check-circle',
+                    options:[
+                        { label:'Lanjut', icon:'✅', desc:'Periksa keluarga.' }
+                    ]
+                }
+            ],
+            'Kebakaran': [
+                {
+                    title:'Dimana?',
+                    visual:'🏢',
+                    caption:'Lokasi',
+                    description:'Posisi kamu saat kebakaran terjadi.',
+                    navIcon: 'fa-solid fa-location-dot',
+                    options:[
+                        { label:'Dalam Ruangan', icon:'🚪', desc:'Cari jalan keluar.' },
+                        { label:'Luar Ruangan', icon:'🌳', desc:'Jauhi bangunan.' }
+                    ]
+                },
+                {
+                    title:'Kondisi Asap?',
+                    visual:'💨',
+                    caption:'Asap',
+                    description:'Seberapa tebal asapnya?',
+                    navIcon: 'fa-solid fa-smog',
+                    options:[
+                        { label:'Asap Tebal', icon:'🌫️', desc:'Merangkak di bawah.' },
+                        { label:'Asap Tipis', icon:'💨', desc:'Jalan cepat.' }
+                    ]
+                },
+                {
+                    title:'Pakaian?',
+                    visual:'👕',
+                    caption:'Risiko',
+                    description:'Apakah pakaian terbakar?',
+                    navIcon: 'fa-solid fa-fire',
+                    options:[
+                        { label:'Stop Drop Roll', icon:'🔄', desc:'Berguling.' },
+                        { label:'Aman', icon:'✅', desc:'Lanjut lari.' }
+                    ]
+                },
+                {
+                    title:'Gagang Pintu?',
+                    visual:'🚪',
+                    caption:'Cek Suhu',
+                    description:'Periksa suhu gagang pintu.',
+                    navIcon: 'fa-solid fa-door-closed',
+                    options:[
+                        { label:'Panas', icon:'🔥', desc:'Jangan dibuka.' },
+                        { label:'Dingin', icon:'❄️', desc:'Buka perlahan.' }
+                    ]
+                },
+                {
+                    title:'Akses Keluar?',
+                    visual:'🏃',
+                    caption:'Jalur',
+                    description:'Gunakan tangga darurat.',
+                    navIcon: 'fa-solid fa-stairs',
+                    options:[
+                        { label:'Tangga', icon:'🪜', desc:'Jangan pakai lift.' },
+                        { label:'Jendela', icon:'🪟', desc:'Tunggu bantuan (jika terjebak).' }
+                    ]
+                },
+                {
+                    title:'Pemadam?',
+                    visual:'🧯',
+                    caption:'Tindakan',
+                    description:'Apakah api masih kecil?',
+                    navIcon: 'fa-solid fa-fire-extinguisher',
+                    options:[
+                        { label:'Pakai APAR', icon:'🧯', desc:'Padamkan.' },
+                        { label:'Tinggalkan', icon:'🏃', desc:'Bila membesar.' }
+                    ]
+                },
+                {
+                    title:'Titik Kumpul?',
+                    visual:'📍',
+                    caption:'Evakuasi',
+                    description:'Menuju titik kumpul yang aman.',
+                    navIcon: 'fa-solid fa-people-group',
+                    options:[
+                        { label:'Titik Kumpul', icon:'📍', desc:'Kumpul di sana.' },
+                        { label:'Jauhi Gedung', icon:'🏢', desc:'Awas runtuhan.' }
+                    ]
+                },
+                {
+                    title:'Aman',
+                    visual:'✅',
+                    caption:'Bertahan',
+                    description:'Hubungi pemadam dan tunggu.',
+                    navIcon: 'fa-solid fa-check-circle',
+                    options:[
+                        { label:'Lanjut', icon:'✅', desc:'Cek luka bakar.' }
+                    ]
+                }
+            ]
+        },
 
         injuries:[
             {
@@ -856,19 +1125,23 @@ function saatPage(){
         ],
 
         get currentQuestion(){
-            return this.questions[this.currentStep]
+            const q = this.questions[this.currentDisasterName];
+            return q ? q[this.currentStep] : {};
         },
 
         startDisaster(item){
 
-            this.currentStep = 0
-            this.popup = true
+            this.currentDisasterName = item.name;
+            this.currentDisasterIcon = item.icon;
+            this.currentStep = 0;
+            this.selectedChoice = null;
+            this.popup = true;
 
         },
 
         nextQuestion(){
-
-            if(this.currentStep < this.questions.length - 1){
+            const q = this.questions[this.currentDisasterName];
+            if(q && this.currentStep < q.length - 1){
                 this.currentStep++
             }
 
@@ -916,30 +1189,9 @@ function saatPage(){
 
         },
 
-        handleTouchStart(e){
-            this.touchStartX = e.changedTouches[0].screenX
-            this.touchStartY = e.changedTouches[0].screenY
-        },
-
-        handleTouchMove(e){
-            this.touchEndX = e.changedTouches[0].screenX
-            this.touchEndY = e.changedTouches[0].screenY
-        },
-
-        handleTouchEnd(){
-            const diffX = this.touchStartX - this.touchEndX
-            const diffY = Math.abs(this.touchStartY - this.touchEndY)
-            
-            // Pastikan swipe adalah horizontal, bukan vertical scroll
-            if(Math.abs(diffX) > diffY && Math.abs(diffX) > 50){
-                if(diffX > 0){
-                    // Swipe kiri (next question)
-                    this.nextQuestion()
-                } else {
-                    // Swipe kanan (prev question)
-                    this.prevQuestion()
-                }
-            }
+        handleSwipe() {
+            if (this.touchEndX < this.touchStartX - 50) this.nextQuestion();
+            if (this.touchEndX > this.touchStartX + 50) this.prevQuestion();
         }
 
     }

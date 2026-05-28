@@ -303,9 +303,6 @@ button:focus, input:focus, select:focus {
 }
 
 #content-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
     width: 100%;
 }
 
@@ -809,7 +806,7 @@ body.modal-open { overflow: hidden !important; }
             <button data-category="banjir"  class="category-btn disaster-btn">Banjir</button>
             <button data-category="longsor" class="category-btn disaster-btn">Longsor</button>
         </div>
-        <div id="content-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+        <div id="content-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full"></div>
         <div id="step-container" class="flex justify-center gap-3 mt-8">
             <button class="step-btn active" data-page="0">1</button>
             <button class="step-btn" data-page="1">2</button>
@@ -879,88 +876,28 @@ body.modal-open { overflow: hidden !important; }
 
   {{-- WORKSPACE UTAMA --}}
   <template x-if="activeTas">
-    <div class="grid lg:grid-cols-2 gap-8 items-start">
+    <div class="flex flex-col space-y-6">
 
-      {{-- KOLOM KIRI: VISUALISASI TAS --}}
-      <div class="space-y-4">
+      {{-- 1. [100% Width] Kategori & Dimensi --}}
+      <div class="grid lg:grid-cols-2 gap-4 lg:gap-8">
+        
         {{-- Kategori Umur --}}
-<div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-2">
-  <p class="font-head font-semibold text-navy text-sm">Kategori</p>
-  <div class="grid grid-cols-4 gap-1.5">
-    <template x-for="kat in ['anak','remaja','dewasa','lansia']" :key="kat">
-      <button @click="updateKategori(kat)"
-              class="px-2 py-2 border rounded-xl text-xs font-semibold capitalize transition-colors"
-              :class="activeTas.kategori===kat
-                ? 'text-white'
-                : 'bg-white text-gray-700 border-gray-200 hover:border-[var(--c-teal-dk)] hover:text-[var(--c-teal-dk)]'"
-              :style="activeTas.kategori===kat ? 'background: var(--c-teal-dk); border-color: var(--c-teal-dk);' : ''">
-        <span x-text="kat==='anak'?'Anak':kat.charAt(0).toUpperCase()+kat.slice(1)"></span>
-      </button>
-    </template>
-  </div>
-</div>
-
-        {{-- Info Skala Realtime --}}
-        <div class="bg-navy/5 rounded-xl px-4 py-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-navy font-medium">
-          <span>📐 Tas: <strong x-text="bagCm.p + ' × ' + bagCm.t + ' cm'"></strong></span>
-          <span>📦 Zona: <strong x-text="bagCm.p + ' × ' + bagCm.zh + ' cm'"></strong> per area</span>
-          <span class="text-gray-400 font-normal">skala: <span x-text="pxPerCm + ' px/cm'"></span></span>
-        </div>
-
-        {{-- Kanvas SVG Tas --}}
-        <div class="flex flex-col items-center">
-          <div id="bag-wrap">
-            <svg id="bag-svg" viewBox="0 0 260 340" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <ellipse cx="130" cy="334" rx="88" ry="8" fill="#e2ddd6"/>
-              <path d="M82 96 Q78 62 88 38 Q97 20 110 20 Q122 20 124 38 L126 96" stroke="#B0A898" stroke-width="12" stroke-linecap="round" fill="none"/>
-              <path d="M178 96 Q182 62 172 38 Q163 20 150 20 Q138 20 136 38 L134 96" stroke="#B0A898" stroke-width="12" stroke-linecap="round" fill="none"/>
-              <path d="M82 96 Q78 62 88 38 Q97 20 110 20 Q122 20 124 38 L126 96" stroke="#C8BFB4" stroke-width="4" stroke-linecap="round" fill="none"/>
-              <path d="M178 96 Q182 62 172 38 Q163 20 150 20 Q138 20 136 38 L134 96" stroke="#C8BFB4" stroke-width="4" stroke-linecap="round" fill="none"/>
-              <rect x="96" y="46" width="68" height="12" rx="4" fill="#8C7B6E" stroke="#6E5E55" stroke-width="0.5"/>
-              <rect x="122" y="42" width="16" height="20" rx="3" fill="#A08070" stroke="#7A6055" stroke-width="0.5"/>
-              <path d="M38 120 Q36 92 64 82 L196 82 Q224 92 222 120 L234 310 Q235 330 212 332 L48 332 Q25 330 26 310 Z" fill="#C8BFB4" stroke="#A09080" stroke-width="1.5"/>
-              <path d="M42 120 Q40 96 65 88 L95 85 L94 330 L50 328 Q28 326 28 308 Z" fill="#D4CCC4" opacity="0.4"/>
-              <path d="M56 86 L204 86 L210 108 L50 108 Z" fill="#B8AFA6"/>
-              <path d="M56 86 Q130 80 204 86" stroke="#6A5A50" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-              <circle cx="130" cy="81" r="5" fill="#7A6A60" stroke="#5A4A40" stroke-width="0.5"/>
-              <circle cx="130" cy="81" r="2" fill="#3A2A20"/>
-              <rect x="125" y="75" width="10" height="8" rx="2" fill="#8C7A6E"/>
-              <line x1="46" y1="180" x2="214" y2="180" stroke="#9A8A7A" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.6"/>
-              <line x1="46" y1="252" x2="214" y2="252" stroke="#9A8A7A" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.6"/>
-            </svg>
-            <div id="inner-area">
-              <div class="zona" id="zona-a" data-zona="sangat_penting"></div>
-              <div class="zona" id="zona-b" data-zona="penting"></div>
-              <div class="zona" id="zona-c" data-zona="cukup_penting"></div>
-              <div class="ghost-box" id="ghost-box"></div>
-            </div>
-          </div>
-
-          {{-- Progress Bar Kapasitas Zona --}}
-          <div class="w-full mt-3 space-y-1.5">
-            <template x-for="z in zonaList" :key="z.key">
-              <div class="flex items-center text-xs">
-                <span class="zdot flex-shrink-0" :class="'d'+z.short"></span>
-                <span class="ml-2 text-gray-500 w-28" x-text="z.label"></span>
-                <div class="zona-bar"><div class="zona-bar-fill" :style="'width:'+z.pct+'%;background:'+z.color"></div></div>
-                <span class="text-gray-400 w-8 text-right" x-text="z.pct+'%'"></span>
-              </div>
+        <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-2">
+          <p class="font-head font-semibold text-navy text-sm">Kategori</p>
+          <div class="grid grid-cols-4 gap-1.5">
+            <template x-for="kat in ['anak','remaja','dewasa','lansia']" :key="kat">
+              <button @click="updateKategori(kat)"
+                      class="px-2 py-2 border rounded-xl text-xs font-semibold capitalize transition-colors"
+                      :class="activeTas.kategori===kat
+                        ? 'text-white'
+                        : 'bg-white text-gray-700 border-gray-200 hover:border-[var(--c-teal-dk)] hover:text-[var(--c-teal-dk)]'"
+                      :style="activeTas.kategori===kat ? 'background: var(--c-teal-dk); border-color: var(--c-teal-dk);' : ''">
+                <span x-text="kat==='anak'?'Anak':kat.charAt(0).toUpperCase()+kat.slice(1)"></span>
+              </button>
             </template>
           </div>
-
-          {{-- Kontrol Layout Otomatis --}}
-          <div class="flex gap-2 mt-3 flex-wrap justify-center">
-            <button @click="sortAll()" class="px-3 py-1.5 text-xs font-semibold border border-gray-200 rounded-full hover:bg-gray-50 transition-colors">✦ Rapikan Semua</button>
-            <button @click="sortZona('sangat_penting')" class="px-3 py-1.5 text-xs font-semibold border border-red-200 text-red-600 rounded-full hover:bg-red-50">🔴 Atas</button>
-            <button @click="sortZona('penting')"        class="px-3 py-1.5 text-xs font-semibold border border-orange-200 text-orange-600 rounded-full hover:bg-orange-50">🟠 Tengah</button>
-            <button @click="sortZona('cukup_penting')"  class="px-3 py-1.5 text-xs font-semibold border border-green-200 text-green-600 rounded-full hover:bg-green-50">🟢 Bawah</button>
-          </div>
-          <p class="text-xs text-gray-400 mt-2 text-center">Geser item bebas · Klik 2× untuk hapus dari tas</p>
         </div>
-      </div>
 
-      {{-- KOLOM KANAN: DAFTAR ELEMEN ITEM --}}
-      <div class="space-y-3">
         {{-- Dimensi Input --}}
         <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-3">
           <div class="flex items-center justify-between">
@@ -990,70 +927,149 @@ body.modal-open { overflow: hidden !important; }
           </div>
           <p class="text-xs text-gray-400">Mengubah dimensi akan mereset isi tas (skala berubah)</p>
         </div>
-
-        <div class="flex items-center justify-between my-3">
-          <h3 class="font-head font-bold text-navy text-lg">Daftar Item</h3>
-          <span class="text-xs text-gray-400 capitalize">Rekomendasi: <span x-text="activeTas.kategori"></span></span>
-        </div>
-        <div class="relative mb-3">
-          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
-          <input type="text" x-model="search" placeholder="Cari item..."
-                 class="w-full pl-9 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-navy shadow-sm"/>
-        </div>
-
-        <!-- Item Grid with Internal Scroll -->
-        <div class="item-scroll-container">
-          <div class="grid grid-cols-3 sm:grid-cols-4 gap-3" id="item-grid-blade">
-    <template x-for="item in filteredRekomendasi" :key="item.id">
-      
-      <div :data-item-id="item.id"
-           :data-rotated="rotatedIds.includes(item.id) ? '1' : '0'"
-           :class="{'used': usedIds.includes(item.id)}"
-           draggable="false"
-           class="icard relative select-none">
-
-        {{-- Rotate Button --}}
-        <button x-show="!usedIds.includes(item.id)"
-          @click.stop="toggleRotate(item.id)"
-          :class="rotatedIds.includes(item.id) ? 'text-[var(--c-teal-dk)] bg-[var(--c-sage-lt)]' : 'bg-gray-100 text-gray-400'"
-          class="absolute top-1.5 right-1.5 w-5 h-5 rounded-full flex items-center justify-center text-xs hover:opacity-80 transition-all"
-          title="Rotate item">
-          🔄
-        </button>
-
-        {{-- Dimensi Mini Preview --}}
-        <div draggable="false" class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden relative">
-          <div :style="getPreviewStyle(item)" class="rounded-sm opacity-60 border border-gray-300 bg-gray-300 transition-all duration-200"></div>
-        </div>
-
-        <p class="text-xs font-semibold text-navy text-center leading-tight" x-text="item.nama_item"></p>
-        <span class="text-xs text-gray-400" x-text="getDimHint(item)"></span>
-        <span class="zdot" :class="item.zona_saran==='sangat_penting'?'da':item.zona_saran==='penting'?'db':'dc'"></span>
-        <span x-show="usedIds.includes(item.id)" class="text-xs text-gray-400">✓ Sudah</span>
       </div>
 
-    </template>
-  </div>
+      {{-- [TOP] Bag Info / Dimensions (Centered) --}}
+      <div class="bg-navy/5 w-full max-w-lg mx-auto rounded-xl px-4 py-2 flex flex-wrap justify-center items-center gap-x-4 gap-y-1 text-xs text-navy font-medium">
+        <span>📐 Tas: <strong x-text="bagCm.p + ' × ' + bagCm.t + ' cm'"></strong></span>
+        <span>📦 Zona: <strong x-text="bagCm.p + ' × ' + bagCm.zh + ' cm'"></strong> per area</span>
+        <span class="text-gray-400 font-normal">skala: <span x-text="pxPerCm + ' px/cm'"></span></span>
+      </div>
+
+      {{-- 2. [55% Bag | 45% Item List] SPLIT SECTION --}}
+      <div class="grid grid-cols-[55%_45%] sm:grid-cols-[55%_45%] lg:grid-cols-2 gap-2 sm:gap-4 lg:gap-8 items-start h-[500px] lg:h-[600px] w-full overflow-hidden">
+        
+        {{-- KIRI: ONLY THE BAG (55%) --}}
+        <div class="flex flex-col h-full justify-center items-center overflow-hidden w-full min-w-0">
+          <div class="w-full max-w-full overflow-hidden flex justify-center items-center transform scale-[0.70] xs:scale-[0.80] sm:scale-[0.85] lg:scale-100 origin-center">
+            <div id="bag-wrap" class="flex-shrink-0">
+              <svg id="bag-svg" viewBox="0 0 260 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="130" cy="334" rx="88" ry="8" fill="#e2ddd6"/>
+                <path d="M82 96 Q78 62 88 38 Q97 20 110 20 Q122 20 124 38 L126 96" stroke="#B0A898" stroke-width="12" stroke-linecap="round" fill="none"/>
+                <path d="M178 96 Q182 62 172 38 Q163 20 150 20 Q138 20 136 38 L134 96" stroke="#B0A898" stroke-width="12" stroke-linecap="round" fill="none"/>
+                <path d="M82 96 Q78 62 88 38 Q97 20 110 20 Q122 20 124 38 L126 96" stroke="#C8BFB4" stroke-width="4" stroke-linecap="round" fill="none"/>
+                <path d="M178 96 Q182 62 172 38 Q163 20 150 20 Q138 20 136 38 L134 96" stroke="#C8BFB4" stroke-width="4" stroke-linecap="round" fill="none"/>
+                <rect x="96" y="46" width="68" height="12" rx="4" fill="#8C7B6E" stroke="#6E5E55" stroke-width="0.5"/>
+                <rect x="122" y="42" width="16" height="20" rx="3" fill="#A08070" stroke="#7A6055" stroke-width="0.5"/>
+                <path d="M38 120 Q36 92 64 82 L196 82 Q224 92 222 120 L234 310 Q235 330 212 332 L48 332 Q25 330 26 310 Z" fill="#C8BFB4" stroke="#A09080" stroke-width="1.5"/>
+                <path d="M42 120 Q40 96 65 88 L95 85 L94 330 L50 328 Q28 326 28 308 Z" fill="#D4CCC4" opacity="0.4"/>
+                <path d="M56 86 L204 86 L210 108 L50 108 Z" fill="#B8AFA6"/>
+                <path d="M56 86 Q130 80 204 86" stroke="#6A5A50" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                <circle cx="130" cy="81" r="5" fill="#7A6A60" stroke="#5A4A40" stroke-width="0.5"/>
+                <circle cx="130" cy="81" r="2" fill="#3A2A20"/>
+                <rect x="125" y="75" width="10" height="8" rx="2" fill="#8C7A6E"/>
+                <line x1="46" y1="180" x2="214" y2="180" stroke="#9A8A7A" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.6"/>
+                <line x1="46" y1="252" x2="214" y2="252" stroke="#9A8A7A" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.6"/>
+              </svg>
+              <div id="inner-area">
+                <div class="zona" id="zona-a" data-zona="sangat_penting"></div>
+                <div class="zona" id="zona-b" data-zona="penting"></div>
+                <div class="zona" id="zona-c" data-zona="cukup_penting"></div>
+                <div class="ghost-box" id="ghost-box"></div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <p class="text-xs text-gray-400 text-center mt-3">
+        {{-- KANAN: DAFTAR ELEMEN ITEM (45%) --}}
+        <div class="flex flex-col h-full overflow-hidden w-full min-w-0 pr-1 pl-0.5">
+          
+          <div class="flex items-center justify-between mb-2 px-1">
+            <h3 class="font-head font-bold text-navy text-sm sm:text-base lg:text-lg whitespace-nowrap overflow-hidden text-ellipsis truncate w-full">Daftar Item</h3>
+          </div>
+
+          {{-- Search Input in right column --}}
+          <div class="relative w-full mb-3 px-1">
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
+            <input type="text" x-model="search" placeholder="Cari..."
+                   class="w-full pl-8 pr-2 py-2 bg-white border border-gray-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-navy shadow-sm"/>
+          </div>
+
+          <!-- Item Grid with Internal Scroll (Strictly 2 Cols on mobile) -->
+          <div class="item-scroll-container flex-1 overflow-y-auto slim-scroll pr-1 pl-1 pb-4">
+            <div class="grid grid-cols-2 gap-2 w-full" id="item-grid-blade">
+              <template x-for="item in filteredRekomendasi" :key="item.id">
+                
+                <div :data-item-id="item.id"
+                     :data-rotated="rotatedIds.includes(item.id) ? '1' : '0'"
+                     :class="{'used': usedIds.includes(item.id)}"
+                     draggable="true"
+                     @dragstart="window.startDragCard(event, item.id, item.nama_item, item.zona_saran, rotatedIds.includes(item.id))"
+                     class="icard w-full h-full relative z-10 cursor-pointer select-none transition-all duration-200 bg-white rounded-xl border border-gray-100 p-2 shadow-sm"
+                     @click="if(!usedIds.includes(item.id)) { 
+                         $el.classList.add('scale-90', 'opacity-75');
+                         setTimeout(() => $el.classList.remove('scale-90', 'opacity-75'), 200);
+                         window.tapAddItemMobile(item.id, item.nama_item, item.zona_saran, rotatedIds.includes(item.id));
+                     }">
+
+                  {{-- Unified Rotate Button --}}
+                  <button x-show="!usedIds.includes(item.id)"
+                    @click.stop="toggleRotate(item.id)"
+                    class="absolute top-1 right-1 z-20 w-6 h-6 flex items-center justify-center rounded-full bg-teal-500 text-white text-[10px] shadow-sm cursor-pointer"
+                    title="Rotate item">
+                    <i class="fa-solid fa-rotate-right"></i>
+                  </button>
+
+                  {{-- Dimensi Mini Preview --}}
+                  <div draggable="false" class="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden relative mx-auto">
+                    <div :style="getPreviewStyle(item)" class="rounded-sm opacity-60 border border-gray-300 bg-gray-300 transition-all duration-200"></div>
+                  </div>
+
+                  <p class="text-[9px] sm:text-[10px] font-semibold text-navy text-center leading-tight mt-1" x-text="item.nama_item"></p>
+                  <span class="text-[8px] sm:text-[9px] text-gray-400 block text-center mt-0.5" x-text="getDimHint(item)"></span>
+                  <div class="flex justify-center mt-1">
+                    <span class="zdot" :class="item.zona_saran==='sangat_penting'?'da':item.zona_saran==='penting'?'db':'dc'"></span>
+                  </div>
+                  <span x-show="usedIds.includes(item.id)" class="text-[8px] sm:text-[10px] text-gray-400 text-center block mt-0.5 font-bold">✓</span>
+                </div>
+
+              </template>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{-- 3. [BOTTOM] PERCENTAGE LEGENDS, FILTER BUTTONS, TEXT, SAVE BUTTON --}}
+      <div class="flex flex-col space-y-4 pt-4 border-t border-gray-100">
+        
+        {{-- Progress Bar Kapasitas Zona --}}
+        <div class="w-full max-w-lg mx-auto space-y-2">
+          <template x-for="z in zonaList" :key="z.key">
+            <div class="flex items-center text-xs">
+              <span class="zdot flex-shrink-0" :class="'d'+z.short"></span>
+              <span class="ml-2 text-gray-500 w-28" x-text="z.label"></span>
+              <div class="zona-bar"><div class="zona-bar-fill" :style="'width:'+z.pct+'%;background:'+z.color"></div></div>
+              <span class="text-gray-400 w-8 text-right" x-text="z.pct+'%'"></span>
+            </div>
+          </template>
+        </div>
+
+        {{-- Kontrol Layout Otomatis --}}
+        <div class="flex gap-2 flex-wrap justify-center w-full max-w-lg mx-auto mt-2">
+          <button @click="sortAll()" class="px-3 py-1.5 text-xs font-semibold border border-gray-200 rounded-full hover:bg-gray-50 transition-colors">✦ Rapikan Semua</button>
+          <button @click="sortZona('sangat_penting')" class="px-3 py-1.5 text-xs font-semibold border border-red-200 text-red-600 rounded-full hover:bg-red-50">🔴 Atas</button>
+          <button @click="sortZona('penting')"        class="px-3 py-1.5 text-xs font-semibold border border-orange-200 text-orange-600 rounded-full hover:bg-orange-50">🟠 Tengah</button>
+          <button @click="sortZona('cukup_penting')"  class="px-3 py-1.5 text-xs font-semibold border border-green-200 text-green-600 rounded-full hover:bg-green-50">🟢 Bawah</button>
+        </div>
+
+        {{-- Legends --}}
+        <p class="text-[10px] sm:text-xs text-gray-400 text-center lg:text-left mt-2">
           🔴 Sangat penting &nbsp;·&nbsp; 🟠 Penting &nbsp;·&nbsp; 🟢 Cukup penting<br>
-          Item hanya masuk zona yang sesuai · 🔄 untuk rotate · ukuran menyesuaikan dimensi tas
+          <span class="hidden lg:inline">Geser item bebas · Klik 2× untuk hapus dari tas</span>
+          <span class="lg:hidden">Tap item untuk masuk tas · Tap di dalam tas untuk hapus</span>
+          &nbsp;·&nbsp; 🔄 rotate menyesuaikan tas
         </p>
 
-        <button @click="saveManual()" 
-        class="w-full sm:w-auto px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-xl shadow-md flex items-center justify-center gap-2 transition-all duration-200 transform active:scale-95">
-  💾 Simpan Perubahan Tas
-</button>
+        {{-- Save Button --}}
+        <div class="flex justify-center lg:justify-start mt-2">
+          <button @click="saveManual()" 
+                  class="w-full sm:w-auto px-6 py-3.5 lg:px-8 lg:py-3 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-xl shadow-md flex items-center justify-center gap-2 transition-all duration-200 transform active:scale-95">
+            💾 Simpan Perubahan Tas
+          </button>
+        </div>
 
-        <a href="{{ route('sesudah') }}" class="flex items-center justify-between bg-green-50 border border-green-200 rounded-2xl px-5 py-4 hover:bg-green-100 transition-colors group">
-          <div>
-            <p class="font-head font-semibold text-green-700 text-sm">Cek Supply Sesudah Bencana</p>
-            <p class="text-xs text-gray-500 mt-0.5">Lihat kelengkapan tas ini di section Sesudah</p>
-          </div>
-          <svg class="w-5 h-5 text-green-600 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-        </a>
       </div>
+
     </div>
   </template>
 
@@ -1223,10 +1239,10 @@ function renderGrid() {
     // Gunakan setTimeout agar animasi fade out terlihat sebelum konten berubah
     setTimeout(() => {
         grid.innerHTML = items.map((item, idx) => `
-            <div class="info-card" style="animation-delay: ${idx * 0.1}s">
-                <div class="img-box"></div>
-                <h3 class="font-bold text-lg mb-2">${item.title}</h3>
-                <p class="text-sm text-gray-500">${item.desc}</p>
+            <div class="info-card w-full h-full flex flex-col" style="animation-delay: ${idx * 0.1}s">
+                <div class="img-box w-full h-32 md:h-40 bg-gray-100 rounded-lg mb-4 flex-shrink-0"></div>
+                <h3 class="font-bold text-lg mb-2 text-[var(--h-teal-dk)]">${item.title}</h3>
+                <p class="text-sm text-gray-500 flex-1">${item.desc}</p>
             </div>
         `).join('');
         
@@ -1368,28 +1384,64 @@ function makeSvg(nama, zona, w, h) {
     </svg>`;
 }
 
+function removePlacedItem(el, p) {
+    el.remove();
+    placed[p.zona] = placed[p.zona].filter(x => x !== p);
+    const card = document.querySelector(`[data-item-id="${p.itemId}"]`);
+    if (card) card.classList.remove('used');
+    window.dispatchEvent(new CustomEvent('item-removed', {detail:{id: p.itemId}}));
+    window.dispatchEvent(new CustomEvent('update-stats'));
+}
+
 function createPlacedEl(p) {
     const el = document.createElement('div');
     el.className = 'placed-item';
     el.dataset.itemId = p.itemId;
     el.style.cssText = `left:${p.x}px;top:${p.y}px;width:${p.px.w}px;height:${p.px.h}px;z-index:10;position:absolute;cursor:move`;
     el.innerHTML = makeSvg(p.namaItem, p.zona, p.px.w, p.px.h);
-    el.title = 'Geser bebas · Klik 2× hapus';
-    el.addEventListener('mousedown', e => startDragPlaced(e, p, el));
-    el.addEventListener('touchstart', e => startDragPlaced(e, p, el), {passive:false});
+    el.title = window.innerWidth < 1024 ? 'Tap untuk kembalikan' : 'Geser bebas · Klik 2× hapus';
+    
+    if (window.innerWidth >= 1024) {
+        el.addEventListener('mousedown', e => startDragPlaced(e, p, el));
+    }
+    el.addEventListener('touchstart', e => {
+        if (window.innerWidth >= 1024) startDragPlaced(e, p, el);
+    }, {passive:false});
+    
     el.addEventListener('dblclick', e => {
         e.stopPropagation();
-        el.remove();
-        placed[p.zona] = placed[p.zona].filter(x => x !== p);
-        const card = document.querySelector(`[data-item-id="${p.itemId}"]`);
-        if (card) card.classList.remove('used');
-        window.dispatchEvent(new CustomEvent('item-removed', {detail:{id: p.itemId}}));
-        window.dispatchEvent(new CustomEvent('update-stats'));
+        removePlacedItem(el, p);
     });
+    
+    el.addEventListener('click', e => {
+        if (window.innerWidth < 1024) {
+            e.stopPropagation();
+            removePlacedItem(el, p);
+        }
+    });
+
     document.getElementById('inner-area')?.appendChild(el);
     p.el = el; // simpan referensi el ke dalam objek p
     return el;
 }
+
+window.tapAddItemMobile = function(itemId, namaItem, zonaSaran, rotated) {
+    const baseCm = ITEM_CM[namaItem] || DEFAULT_CM;
+    const cm = rotated ? {w: baseCm.h, h: baseCm.w} : baseCm;
+    const px = {
+        w: Math.max(10, Math.round(cm.w * PX_PER_CM)),
+        h: Math.max(8, Math.round(cm.h * PX_PER_CM)),
+    };
+    
+    const p = {uid:'r_'+itemId+'_'+Date.now(), itemId, namaItem, zona: zonaSaran, px, x:0, y:ZONA_TOP[zonaSaran], rotated: !!rotated};
+    placed[zonaSaran].push(p);
+    
+    createPlacedEl(p);
+    sortZona(zonaSaran);
+    
+    window.dispatchEvent(new CustomEvent('item-placed', {detail:{id: itemId, namaItem: namaItem, zona_saran: zonaSaran, x:p.x, y:p.y, rotated: !!rotated}}));
+    window.dispatchEvent(new CustomEvent('update-stats'));
+};
 
 function startDragCard(e, itemId, namaItem, zonaSaran, rotated = false) {
     // Guard: cek modal vanilla JS, bukan Alpine store
@@ -2000,8 +2052,10 @@ document.addEventListener('alpine:init', () => {
             const card = e.target.closest('.icard');
             if (!card || card.classList.contains('used')) return;
             
-            if (e.cancelable) e.preventDefault();
+            // Allow default for touchstart so click can fire on mobile taps
+            if (e.cancelable && e.type !== 'touchstart') e.preventDefault();
             
+            // Allow drag to continue on mobile without blocking
             const id = card.dataset.itemId || card.dataset.id;
             const item = this.rekomendasi.find(r => String(r.id) === String(id));
             if (!item) return;

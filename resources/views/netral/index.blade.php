@@ -378,12 +378,14 @@
             
             {{-- KONDISI 1: JIKA FASE "SAAT" (KUIS / DECISION TREE INTERAKTIF) --}}
             <template x-if="fase === 'saat'">
-                <div class="w-full flex flex-col items-center flex-1 py-0"> 
+                <div class="w-full flex flex-col items-center flex-1 py-0"
+                     @touchstart="touchStartX = $event.changedTouches[0].screenX"
+                     @touchend="touchEndX = $event.changedTouches[0].screenX; handleSwipe()"> 
                     <div class="flex items-center justify-center gap-6 mb-2 w-full select-none">
                         <button @click="prevStep()" class="w-9 h-9 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-800 transition-all">
                             <i class="fa-solid fa-chevron-left text-sm"></i>
                         </button>
-                        <h3 class="text-base font-bold text-slate-800 tracking-tight text-center max-w-[550px] w-full min-h-[32px] flex items-center justify-center" x-text="currentQuestion()"></h3>
+                        <h3 class="text-base font-bold text-slate-800 tracking-tight text-center max-w-[550px] w-full min-h-[32px] flex items-center justify-center" x-text="currentQuestion().description"></h3>
                         <button @click="nextStep()" class="w-9 h-9 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-800 transition-all">
                             <i class="fa-solid fa-chevron-right text-sm"></i>
                         </button>
@@ -392,38 +394,31 @@
                     {{-- Card interaktif diperbesar dengan max-w-2xl --}}
                     <div class="grid grid-cols-2 gap-6 w-full max-w-2xl mx-auto mb-0.5">
                         
-                        <button @click="lokasi = 'dalam'" 
-                                :class="lokasi === 'dalam' ? 'border-sky-500 bg-sky-50/30 ring-2 ring-sky-500/20' : 'border-slate-200 bg-white hover:bg-slate-50'"
-                                class="relative rounded-xl border p-6 flex flex-col items-center text-center transition-all duration-200 group min-h-[340px]"> 
-                            <div class="absolute top-4 right-4 flex items-center gap-1">
-                                <span class="text-[10px] font-bold text-slate-400 group-hover:text-slate-600">Dalam ruangan</span>
-                                <span :class="lokasi === 'dalam' ? 'bg-sky-500' : 'bg-slate-200'" class="w-2 h-2 rounded-full inline-block"></span>
-                            </div>
-                            
-                            <div class="w-full h-56 rounded-lg overflow-hidden mt-6 mb-4 shadow-sm border border-slate-100">
-                                <img src="/images/tutorial-gempa.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Dalam Ruangan">
-                            </div>
-                            <span class="text-base font-extrabold text-slate-700 tracking-wide mt-auto">Lindungi Kepala</span> 
-                        </button>
-
-                        <button @click="lokasi = 'luar'" 
-                                :class="lokasi === 'luar' ? 'border-teal-500 bg-teal-50/30 ring-2 ring-teal-500/20' : 'border-slate-200 bg-white hover:bg-slate-50'"
-                                class="relative rounded-xl border p-6 flex flex-col items-center text-center transition-all duration-200 group min-h-[340px]"> 
-                            <div class="absolute top-4 right-4 flex items-center gap-1">
-                                <span class="text-[10px] font-bold text-slate-400 group-hover:text-slate-600">Luar ruangan</span>
-                                <span :class="lokasi === 'luar' ? 'bg-teal-500' : 'bg-slate-200'" class="w-2 h-2 rounded-full inline-block"></span>
-                            </div>
-                            
-                            <div class="w-full h-56 rounded-lg overflow-hidden mt-6 mb-4 shadow-sm border border-slate-100">
-                                <img src="/images/tutorial-gempa.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Luar Ruangan">
-                            </div>
-                            <span class="text-base font-extrabold text-slate-700 tracking-wide mt-auto">Jauhi Benda Rawan</span> 
-                        </button>
+                        <template x-for="choice in currentQuestion().options">
+                            <button @click="selectedChoice = choice" 
+                                    :class="selectedChoice === choice ? 'border-sky-500 bg-sky-50/30 ring-2 ring-sky-500/20' : 'border-slate-200 bg-white hover:bg-slate-50'"
+                                    class="relative rounded-xl border p-6 flex flex-col items-center text-center transition-all duration-200 group min-h-[340px]"> 
+                                
+                                <div class="absolute top-4 right-4 flex items-center gap-1">
+                                    <span class="text-[10px] font-bold uppercase tracking-wide" 
+                                          :class="selectedChoice === choice ? 'text-sky-600' : 'text-slate-400 group-hover:text-slate-600'" 
+                                          x-text="choice.label"></span>
+                                    <span :class="selectedChoice === choice ? 'bg-sky-500' : 'bg-slate-200'" class="w-2.5 h-2.5 rounded-full inline-block"></span>
+                                </div>
+                                
+                                <div class="w-full h-56 rounded-lg overflow-hidden mt-6 mb-4 flex items-center justify-center text-7xl transition-colors border border-black/5"
+                                     :class="selectedChoice === choice ? 'bg-sky-50/50' : 'bg-slate-50'">
+                                    <span class="drop-shadow-sm" x-text="choice.icon"></span>
+                                </div>
+                                
+                                <span class="text-base font-extrabold text-slate-700 tracking-wide mt-auto" x-text="choice.desc"></span> 
+                            </button>
+                        </template>
 
                     </div>
 
-                    <div class="w-full max-w-2xl bg-slate-50 rounded-xl p-4 border border-slate-100 text-center">
-                        <p class="text-xs font-medium text-slate-600 leading-relaxed" x-text="currentDescription()"></p>
+                    <div class="w-full max-w-2xl bg-slate-50 rounded-xl p-4 border border-slate-100 text-center mt-2">
+                        <p class="text-xs font-medium text-slate-600 leading-relaxed" x-text="currentQuestion().caption"></p>
                     </div>
 
                 </div>
@@ -473,30 +468,16 @@
 
 
         {{-- FOOTER 1: Khusus muncul saat fase 'saat' --}}
-        <div x-show="fase === 'saat'" class="border-t border-slate-200 px-6 py-4 bg-slate-50 rounded-b-2xl flex flex-col items-center justify-center">
-            <div class="flex items-center justify-center gap-2 flex-wrap">
+        <div x-show="fase === 'saat'" class="border-t border-slate-200 px-6 py-4 bg-slate-50 rounded-b-[24px] md:rounded-b-[32px] flex flex-col items-center justify-center">
+            <div class="grid grid-cols-6 sm:flex sm:flex-wrap sm:justify-center gap-2 w-full">
                 <template x-for="(item, index) in getSteps()" :key="index">
                     <button @click="currentStep = index" 
-                            :class="currentStep === index ? 'bg-slate-800 text-white scale-105 shadow-sm' : 'bg-slate-200 text-slate-500 hover:bg-slate-300'"
-                            class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black transition-all duration-150">
-                        <span x-show="index === 0" class="flex items-center justify-center gap-0.5 text-[10px]">
-                            <i class="fa-solid fa-house-chimney text-[9px]"></i><span x-text="index+1"></span>
+                            :class="currentStep === index ? 'bg-slate-800 text-white shadow-sm px-3 sm:px-4' : 'bg-slate-200 text-slate-500 hover:bg-slate-300 w-9 sm:w-10 px-0'"
+                            class="h-9 sm:h-10 rounded-xl flex items-center justify-center text-xs font-black transition-all duration-300 mx-auto">
+                        <span x-show="currentStep === index" class="flex items-center justify-center gap-1.5 text-[11px]">
+                            <i :class="item.navIcon" class="text-[10px]"></i><span x-text="index+1"></span>
                         </span>
-                        <span x-show="index !== 0" x-text="index+1"></span>
-                    </button>
-                </template>
-            </div>
-        </div>
-        
-        {{-- FOOTER 2: Dikasih x-show agar HANYA muncul saat BUKAN fase 'saat' (Sebelum & Sesudah) --}}
-        <div x-show="fase !== 'saat'" class="border-t border-slate-100 px-6 py-3 bg-slate-50/50 rounded-b-[24px] md:rounded-b-[32px] flex items-center justify-center">
-            <div class="flex items-center justify-center gap-2 flex-wrap">
-                {{-- Looping angka berdasarkan jumlah langkah yang ada --}}
-                <template x-for="(item, index) in getSteps()" :key="index">
-                    <button @click="currentStep = index" 
-                            :class="currentStep === index ? 'bg-slate-800 text-white scale-105 shadow-sm' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'"
-                            class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black transition-all duration-150">
-                        <span x-text="index + 1"></span>
+                        <span x-show="currentStep !== index" x-text="index+1"></span>
                     </button>
                 </template>
             </div>
@@ -526,7 +507,9 @@
 
     <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="closeModal()"></div>
 
-    <div class="bg-white rounded-[24px] md:rounded-[32px] w-full max-w-2xl p-6 md:p-8 shadow-2xl flex flex-col relative z-10 max-h-[90vh] overflow-y-auto" @click.stop>
+    <div class="bg-white rounded-[24px] md:rounded-[32px] w-full max-w-2xl p-6 md:p-8 shadow-2xl flex flex-col relative z-10 max-h-[90vh] overflow-y-auto" @click.stop
+         @touchstart="touchStartX = $event.changedTouches[0].screenX"
+         @touchend="touchEndX = $event.changedTouches[0].screenX; handleSwipe()">
 
         {{-- BUTTON STEP --}}
         <div class="flex justify-center gap-2 mb-6 flex-wrap">
@@ -663,7 +646,7 @@
 
     <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="open=false"></div>
 
-    <div class="bg-white rounded-[24px] md:rounded-[32px] w-full max-w-2xl p-6 md:p-8 shadow-2xl flex flex-col transition-all relative z-10 max-h-[90vh] overflow-y-auto" @click.stop>
+    <div class="bg-white rounded-[24px] md:rounded-[32px] w-full max-w-4xl p-6 md:p-10 shadow-2xl flex flex-col transition-all relative z-10 max-h-[95vh] overflow-y-auto" @click.stop>
         
         {{-- VIEW 1: SELECTION --}}
         <div x-show="currentView === 'selection'" class="flex flex-col">
@@ -673,12 +656,11 @@
             </div>
 
             <div class="flex gap-5">
-                <div class="flex flex-col gap-3 flex-shrink-0" style="width:160px;">
-                    <div class="bg-gray-50 rounded-xl border flex flex-col items-center justify-center gap-2 py-6">
+                <div class="flex flex-col gap-3 flex-shrink-0 self-center" style="width:160px;">
+                    <div class="bg-gray-50 rounded-xl border flex flex-col items-center justify-center gap-2 py-6 relative">
                         <div class="text-6xl" x-text="icon"></div>
                         <div class="font-bold text-xs text-center text-gray-600 px-2" x-text="item"></div>
                     </div>
-                    <button @click="currentView = 'process'" class="w-full py-2.5 bg-gray-900 text-white rounded-xl font-bold hover:bg-gray-700 transition text-sm">Next →</button>
                 </div>
 
                 <div class="flex-1 overflow-y-auto" style="max-height:320px;">
@@ -695,10 +677,18 @@
                     </div>
                 </div>
             </div>
+            
+            {{-- SELECTION FOOTER --}}
+            <div class="flex justify-between gap-4 w-full mt-6 pt-4 border-t">
+                <button @click="closeModal()" class="px-6 py-2.5 bg-gray-100 text-gray-600 rounded-xl font-bold hover:bg-gray-200 transition text-sm">Batal</button>
+                <button @click="currentView = 'process'" class="px-8 py-2.5 bg-teal-600 text-white rounded-xl font-bold hover:bg-teal-700 shadow-md transition-transform hover:-translate-y-0.5 text-sm tracking-wide">Next →</button>
+            </div>
         </div>
 
         {{-- VIEW 2: PROCESS --}}
-<div x-show="currentView === 'process'" class="flex flex-col">
+<div x-show="currentView === 'process'" class="flex flex-col"
+     @touchstart="touchStartX = $event.changedTouches[0].screenX"
+     @touchend="touchEndX = $event.changedTouches[0].screenX; handleSwipe()">
     <div class="flex justify-center gap-2 mb-6">
         <template x-for="i in 7">
             <button @click="currentStep = i" class="w-9 h-9 rounded-lg border font-bold text-sm transition-colors" :class="currentStep === i ? 'bg-gray-800 text-white' : 'bg-gray-100 hover:bg-gray-200'" x-text="i"></button>
@@ -706,8 +696,14 @@
     </div>
 
     {{-- AREA GAMBAR/IKON DIBUAT LEBIH BESAR (h-64) --}}
-    <div class="h-64 flex items-center justify-center mb-6">
-        <div class="bg-gray-100 w-full max-w-[400px] h-full rounded-2xl flex items-center justify-center shadow-inner text-[120px]" x-text="icon"></div>
+    <div class="h-64 flex items-center justify-center mb-6 relative w-full max-w-[400px] mx-auto">
+        {{-- Arrow Kiri (Desktop Only) --}}
+        <button @click="prevStep()" class="absolute -left-12 md:-left-16 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border shadow-sm flex items-center justify-center text-gray-400 hover:text-teal-600 hidden md:flex transition-colors z-10" x-show="currentStep > 1">◀</button>
+
+        <div class="bg-gray-100 w-full h-full rounded-2xl flex items-center justify-center shadow-inner text-[120px]" x-text="icon"></div>
+
+        {{-- Arrow Kanan (Desktop Only) --}}
+        <button @click="nextStep()" class="absolute -right-12 md:-right-16 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border shadow-sm flex items-center justify-center text-gray-400 hover:text-teal-600 hidden md:flex transition-colors z-10" x-show="currentStep < Object.keys(craftingData[item]?.instructions || {}).length">▶</button>
     </div>
 
     <div class="text-center mb-6">
@@ -743,17 +739,84 @@
 
     function tutorialModal() {
         return {
-            open: false, bencana: '', fase: 'saat', currentStep: 0, lokasi: 'dalam',
-            openModal(nama) { this.bencana = nama; this.fase = 'saat'; this.currentStep = 0; this.lokasi = 'dalam'; this.open = true; document.body.classList.add('modal-open'); },
+            open: false, bencana: '', fase: 'saat', currentStep: 0, selectedChoice: null,
+            touchStartX: 0, touchEndX: 0,
+            icons: {
+                'Gempa Bumi': 'fa-solid fa-house-chimney',
+                'Tsunami': 'fa-solid fa-water',
+                'Banjir': 'fa-solid fa-house-flood-water',
+                'Kebakaran': 'fa-solid fa-fire-flame-curved'
+            },
+            openModal(nama) { this.bencana = nama; this.fase = 'saat'; this.currentStep = 0; this.selectedChoice = null; this.open = true; document.body.classList.add('modal-open'); },
             closeModal()    { this.open = false; document.body.classList.remove('modal-open'); },
             steps: {
                 'Gempa Bumi': {
                     ambang: ['Identifikasi benda yang rawan jatuh dan amankan.','Siapkan tas siaga dan dokumen penting.','Latih simulasi evakuasi keluarga.'],
                     sebelum: ['Identifikasi benda yang rawan jatuh dan amankan.','Siapkan tas siaga dan dokumen penting.','Latih simulasi evakuasi keluarga.'],
                     saat: [
-                        { question: 'Apa yang harus dilakukan saat guncangan pertama terasa?', description: 'Segera jatuhkan badan ke lantai agar tidak kehilangan keseimbangan akibat getaran.' },
-                        { question: 'Dimana tempat paling aman saat gempa berlangsung?', description: 'Berlindung di bawah meja kokoh atau lindungi kepala dan jauhi kaca.' },
-                        { question: 'Apa yang harus dilakukan setelah guncangan berhenti?', description: 'Keluar menuju area terbuka dengan tenang, hindari bangunan dan kabel listrik.' }
+                        {
+                            title:'Dimana?', visual:'🏢', caption:'Lokasi Saat Ini', description:'Pilih kondisi lokasi kamu saat gempa terjadi.',
+                            navIcon: 'fa-solid fa-location-dot',
+                            options:[
+                                { label:'Luar Ruangan', icon:'🌳', desc:'Jauhi benda rawan jatuh.' },
+                                { label:'Dalam Ruangan', icon:'🏠', desc:'Lindungi kepala.' }
+                            ]
+                        },
+                        {
+                            title:'Berapa Orang?', visual:'👥', caption:'Cek Sekitar', description:'Pastikan siapa saja berada dekat denganmu.',
+                            navIcon: 'fa-solid fa-users',
+                            options:[
+                                { label:'Sendiri', icon:'🧍', desc:'Fokus evakuasi diri.' },
+                                { label:'Bersama Orang', icon:'👨‍👩‍👧', desc:'Bantu kelompok.' }
+                            ]
+                        },
+                        {
+                            title:'Ada Anak?', visual:'🧒', caption:'Prioritas Evakuasi', description:'Anak dan lansia harus diprioritaskan.',
+                            navIcon: 'fa-solid fa-child-reaching',
+                            options:[
+                                { label:'Ada', icon:'🧒', desc:'Bantu lebih dulu.' },
+                                { label:'Tidak Ada', icon:'👌', desc:'Lanjut evakuasi.' }
+                            ]
+                        },
+                        {
+                            title:'Akses Keluar?', visual:'🚪', caption:'Cari Jalur Aman', description:'Periksa jalur evakuasi.',
+                            navIcon: 'fa-solid fa-door-open',
+                            options:[
+                                { label:'Terbuka', icon:'🚪', desc:'Segera keluar.' },
+                                { label:'Tertutup', icon:'🪨', desc:'Cari jalur alternatif.' }
+                            ]
+                        },
+                        {
+                            title:'Ada Api?', visual:'🔥', caption:'Bahaya Tambahan', description:'Periksa adanya kebakaran atau gas.',
+                            navIcon: 'fa-solid fa-fire',
+                            options:[
+                                { label:'Ada', icon:'🔥', desc:'Jauhi area.' },
+                                { label:'Tidak', icon:'✅', desc:'Lanjut aman.' }
+                            ]
+                        },
+                        {
+                            title:'Menuju Shelter', visual:'🏃', caption:'Evakuasi', description:'Ikuti jalur evakuasi resmi.',
+                            navIcon: 'fa-solid fa-person-running',
+                            options:[
+                                { label:'Ikuti Jalur', icon:'➡️', desc:'Tetap tenang.' },
+                                { label:'Cari Jalur', icon:'🧭', desc:'Gunakan area terbuka.' }
+                            ]
+                        },
+                        {
+                            title:'Area Aman?', visual:'⛺', caption:'Shelter', description:'Pastikan area jauh dari bangunan retak.',
+                            navIcon: 'fa-solid fa-tents',
+                            options:[
+                                { label:'Sudah', icon:'⛺', desc:'Tetap di shelter.' },
+                                { label:'Belum', icon:'⚠️', desc:'Cari tempat lain.' }
+                            ]
+                        },
+                        {
+                            title:'Aman', visual:'🏡', caption:'Kondisi Stabil', description:'Kamu telah mencapai area aman.',
+                            navIcon: 'fa-solid fa-check-circle',
+                            options:[
+                                { label:'Lanjut', icon:'✅', desc:'Periksa kondisi tubuh.' }
+                            ]
+                        }
                     ],
                     sesudah: ['Periksa kondisi diri dan keluarga.','Waspada gempa susulan.','Ikuti informasi resmi dari BMKG dan BNPB.']
                 },
@@ -761,9 +824,69 @@
                     ambang: ['Kenali tanda-tanda peringatan dini seperti gempa kuat atau air laut surut drastis.','Pahami peta rawan tsunami dan jalur evakuasi di daerahmu.','Siapkan tas siaga bencana untuk dibawa kapan saja.'],
                     sebelum: ['Kenali tanda-tanda peringatan dini seperti gempa kuat atau air laut surut drastis.','Pahami peta rawan tsunami dan jalur evakuasi di daerahmu.','Siapkan tas siaga bencana untuk dibawa kapan saja.'],
                     saat: [
-                        { question: 'Apa yang harus dilakukan jika mendengar sirine atau melihat air laut surut drastis?', description: 'Segera lari menjauhi pantai menuju daerah tinggi (minimal 10 meter dpl) secepat mungkin.' },
-                        { question: 'Bagaimana cara evakuasi yang benar?', description: 'Evakuasi dengan berjalan kaki bila memungkinkan untuk menghindari kemacetan parah.' },
-                        { question: 'Kapan boleh kembali ke rumah?', description: 'Jangan pernah kembali ke pantai hingga ada pernyataan aman resmi dari BMKG.' }
+                        {
+                            title:'Dimana?', visual:'📍', caption:'Lokasi Saat Ini', description:'Di mana posisi kamu sekarang?',
+                            navIcon: 'fa-solid fa-location-dot',
+                            options:[
+                                { label:'Dekat Pantai', icon:'🏖️', desc:'Segera menjauh.' },
+                                { label:'Jauh Pantai', icon:'🏙️', desc:'Tetap waspada.' }
+                            ]
+                        },
+                        {
+                            title:'Peringatan?', visual:'⚠️', caption:'Tanda Alam', description:'Apakah ada tanda tsunami?',
+                            navIcon: 'fa-solid fa-triangle-exclamation',
+                            options:[
+                                { label:'Air Surut', icon:'🌊', desc:'Tanda bahaya.' },
+                                { label:'Gempa Kuat', icon:'🫨', desc:'Potensi tsunami.' }
+                            ]
+                        },
+                        {
+                            title:'Berapa Orang?', visual:'👥', caption:'Cek Sekitar', description:'Siapa yang bersamamu saat ini?',
+                            navIcon: 'fa-solid fa-users',
+                            options:[
+                                { label:'Sendiri', icon:'🧍', desc:'Evakuasi diri.' },
+                                { label:'Bersama', icon:'👨‍👩‍👧', desc:'Bantu yang lain.' }
+                            ]
+                        },
+                        {
+                            title:'Ada Rentan?', visual:'👵', caption:'Prioritas', description:'Adakah lansia atau anak kecil?',
+                            navIcon: 'fa-solid fa-person-cane',
+                            options:[
+                                { label:'Ada', icon:'🧒', desc:'Bantu mereka.' },
+                                { label:'Tidak', icon:'👌', desc:'Segera lari.' }
+                            ]
+                        },
+                        {
+                            title:'Evakuasi?', visual:'🏃', caption:'Metode', description:'Cara menuju tempat aman.',
+                            navIcon: 'fa-solid fa-person-running',
+                            options:[
+                                { label:'Jalan Kaki', icon:'🚶', desc:'Lebih disarankan.' },
+                                { label:'Kendaraan', icon:'🚗', desc:'Bisa macet.' }
+                            ]
+                        },
+                        {
+                            title:'Tujuan?', visual:'⛰️', caption:'Tempat Tinggi', description:'Cari area evakuasi vertikal.',
+                            navIcon: 'fa-solid fa-mountain-sun',
+                            options:[
+                                { label:'Bukit', icon:'⛰️', desc:'Minimal 10m dpl.' },
+                                { label:'Gedung', icon:'🏢', desc:'Lantai 3 ke atas.' }
+                            ]
+                        },
+                        {
+                            title:'Area Aman?', visual:'✅', caption:'Status Lokasi', description:'Apakah posisi sudah cukup tinggi?',
+                            navIcon: 'fa-solid fa-flag-checkered',
+                            options:[
+                                { label:'Sudah Tinggi', icon:'✅', desc:'Tetap di sana.' },
+                                { label:'Masih Rendah', icon:'⚠️', desc:'Naik lagi.' }
+                            ]
+                        },
+                        {
+                            title:'Aman', visual:'🌊', caption:'Bertahan', description:'Tunggu info resmi sebelum turun.',
+                            navIcon: 'fa-solid fa-tower-broadcast',
+                            options:[
+                                { label:'Bertahan', icon:'🛑', desc:'Jangan ke pantai.' }
+                            ]
+                        }
                     ],
                     sesudah: ['Tetap berada di daerah aman dan jauhi pesisir.','Hindari bangunan yang retak atau rusak.','Tunggu informasi resmi pemerintah sebelum kembali.']
                 },
@@ -771,9 +894,69 @@
                     ambang: ['Perhatikan informasi cuaca, tinggi muka air, dan peringatan dini hujan lebat.','Amankan dokumen penting dan barang berharga di tempat yang lebih tinggi.','Pastikan saluran air di sekitar tempat tinggal tidak tersumbat.'],
                     sebelum: ['Perhatikan informasi cuaca, tinggi muka air, dan peringatan dini hujan lebat.','Amankan dokumen penting dan barang berharga di tempat yang lebih tinggi.','Pastikan saluran air di sekitar tempat tinggal tidak tersumbat.'],
                     saat: [
-                        { question: 'Apa yang harus dilakukan jika air mulai menggenang masuk ke rumah?', description: 'Matikan jaringan listrik dan gas utama untuk menghindari risiko tersengat arus atau ledakan.' },
-                        { question: 'Bagaimana cara mengevakuasi diri dengan aman?', description: 'Bergerak ke dataran yang lebih tinggi. Gunakan tongkat untuk mengecek kedalaman lubang jalan.' },
-                        { question: 'Bolehkah menerjang arus air?', description: 'Jangan berjalan menerjang arus banjir. Air setinggi lutut sudah cukup kuat untuk menyeret orang dewasa.' }
+                        {
+                            title:'Dimana?', visual:'🏠', caption:'Lokasi', description:'Posisi kamu saat air naik.',
+                            navIcon: 'fa-solid fa-house-flood-water',
+                            options:[
+                                { label:'Dalam Rumah', icon:'🛋️', desc:'Naik ke lantai atas.' },
+                                { label:'Luar Rumah', icon:'🛣️', desc:'Cari dataran tinggi.' }
+                            ]
+                        },
+                        {
+                            title:'Kondisi Air?', visual:'🌊', caption:'Ketinggian', description:'Bagaimana arus airnya?',
+                            navIcon: 'fa-solid fa-water',
+                            options:[
+                                { label:'Cepat Naik', icon:'📈', desc:'Bahaya.' },
+                                { label:'Genangan', icon:'💧', desc:'Waspada.' }
+                            ]
+                        },
+                        {
+                            title:'Listrik?', visual:'⚡', caption:'Risiko', description:'Apakah listrik sudah dipadamkan?',
+                            navIcon: 'fa-solid fa-plug-circle-xmark',
+                            options:[
+                                { label:'Padamkan', icon:'🔌', desc:'Hindari setrum.' },
+                                { label:'Sudah', icon:'✅', desc:'Bagus.' }
+                            ]
+                        },
+                        {
+                            title:'Barang?', visual:'🎒', caption:'Penyelamatan', description:'Amankan dokumen penting.',
+                            navIcon: 'fa-solid fa-file-shield',
+                            options:[
+                                { label:'Amankan', icon:'⬆️', desc:'Taruh di atas.' },
+                                { label:'Tinggalkan', icon:'🏃', desc:'Utamakan nyawa.' }
+                            ]
+                        },
+                        {
+                            title:'Arus Deras?', visual:'🌊', caption:'Bahaya', description:'Apakah air mengalir deras?',
+                            navIcon: 'fa-solid fa-triangle-exclamation',
+                            options:[
+                                { label:'Hindari', icon:'🛑', desc:'Bisa terseret.' },
+                                { label:'Jangan Terjang', icon:'❌', desc:'Berbahaya.' }
+                            ]
+                        },
+                        {
+                            title:'Evakuasi?', visual:'🛟', caption:'Alat', description:'Bagaimana cara evakuasi?',
+                            navIcon: 'fa-solid fa-life-ring',
+                            options:[
+                                { label:'Pelampung', icon:'🛟', desc:'Gunakan ban/botol.' },
+                                { label:'Tongkat', icon:'🦯', desc:'Cek kedalaman.' }
+                            ]
+                        },
+                        {
+                            title:'Tujuan?', visual:'⛺', caption:'Posko', description:'Cari posko pengungsian terdekat.',
+                            navIcon: 'fa-solid fa-tents',
+                            options:[
+                                { label:'Posko', icon:'⛺', desc:'Tempat kering.' },
+                                { label:'Dataran Tinggi', icon:'⛰️', desc:'Aman dari air.' }
+                            ]
+                        },
+                        {
+                            title:'Aman', visual:'✅', caption:'Bertahan', description:'Tunggu air surut sepenuhnya.',
+                            navIcon: 'fa-solid fa-check-circle',
+                            options:[
+                                { label:'Lanjut', icon:'✅', desc:'Periksa keluarga.' }
+                            ]
+                        }
                     ],
                     sesudah: ['Bersihkan rumah dengan disinfektan untuk mencegah penyebaran kuman penyakit.','Jangan langsung menyalakan listrik sebelum dipastikan kering dan aman.','Hindari air genangan yang bisa menyebabkan infeksi kulit.']
                 },
@@ -781,18 +964,82 @@
                     ambang: ['Sediakan Alat Pemadam Api Ringan (APAR) dan pelajari cara penggunaannya.','Pastikan tidak ada instalasi listrik yang kelebihan beban atau rusak.','Buat jalur evakuasi dan latih seluruh anggota keluarga.'],
                     sebelum: ['Sediakan Alat Pemadam Api Ringan (APAR) dan pelajari cara penggunaannya.','Pastikan tidak ada instalasi listrik yang kelebihan beban atau rusak.','Buat jalur evakuasi dan latih seluruh anggota keluarga.'],
                     saat: [
-                        { question: 'Apa yang harus dilakukan saat melihat api mulai membesar?', description: 'Tetap tenang, segera keluar lewat rute darurat tercepat, dan tekan tombol alarm kebakaran jika ada.' },
-                        { question: 'Bagaimana cara bergerak di ruangan yang penuh asap tebal?', description: 'Merangkak di bawah asap karena udara bersih ada di bawah, tutup mulut & hidung dengan kain basah.' },
-                        { question: 'Apa tindakan jika pakaian kita terbakar?', description: 'Berhenti berlari, rebahkan diri ke lantai, lindungi wajah, dan bergulinglah untuk memadamkan api (Stop, Drop, Roll).' }
+                        {
+                            title:'Dimana?', visual:'🏢', caption:'Lokasi', description:'Posisi kamu saat kebakaran terjadi.',
+                            navIcon: 'fa-solid fa-location-dot',
+                            options:[
+                                { label:'Dalam Ruangan', icon:'🚪', desc:'Cari jalan keluar.' },
+                                { label:'Luar Ruangan', icon:'🌳', desc:'Jauhi bangunan.' }
+                            ]
+                        },
+                        {
+                            title:'Kondisi Asap?', visual:'💨', caption:'Asap', description:'Seberapa tebal asapnya?',
+                            navIcon: 'fa-solid fa-smog',
+                            options:[
+                                { label:'Asap Tebal', icon:'🌫️', desc:'Merangkak di bawah.' },
+                                { label:'Asap Tipis', icon:'💨', desc:'Jalan cepat.' }
+                            ]
+                        },
+                        {
+                            title:'Pakaian?', visual:'👕', caption:'Risiko', description:'Apakah pakaian terbakar?',
+                            navIcon: 'fa-solid fa-fire',
+                            options:[
+                                { label:'Stop Drop Roll', icon:'🔄', desc:'Berguling.' },
+                                { label:'Aman', icon:'✅', desc:'Lanjut lari.' }
+                            ]
+                        },
+                        {
+                            title:'Gagang Pintu?', visual:'🚪', caption:'Cek Suhu', description:'Periksa suhu gagang pintu.',
+                            navIcon: 'fa-solid fa-door-closed',
+                            options:[
+                                { label:'Panas', icon:'🔥', desc:'Jangan dibuka.' },
+                                { label:'Dingin', icon:'❄️', desc:'Buka perlahan.' }
+                            ]
+                        },
+                        {
+                            title:'Akses Keluar?', visual:'🏃', caption:'Jalur', description:'Gunakan tangga darurat.',
+                            navIcon: 'fa-solid fa-stairs',
+                            options:[
+                                { label:'Tangga', icon:'🪜', desc:'Jangan pakai lift.' },
+                                { label:'Jendela', icon:'🪟', desc:'Tunggu bantuan (jika terjebak).' }
+                            ]
+                        },
+                        {
+                            title:'Pemadam?', visual:'🧯', caption:'Tindakan', description:'Apakah api masih kecil?',
+                            navIcon: 'fa-solid fa-fire-extinguisher',
+                            options:[
+                                { label:'Pakai APAR', icon:'🧯', desc:'Padamkan.' },
+                                { label:'Tinggalkan', icon:'🏃', desc:'Bila membesar.' }
+                            ]
+                        },
+                        {
+                            title:'Titik Kumpul?', visual:'📍', caption:'Evakuasi', description:'Menuju titik kumpul yang aman.',
+                            navIcon: 'fa-solid fa-people-group',
+                            options:[
+                                { label:'Titik Kumpul', icon:'📍', desc:'Kumpul di sana.' },
+                                { label:'Jauhi Gedung', icon:'🏢', desc:'Awas runtuhan.' }
+                            ]
+                        },
+                        {
+                            title:'Aman', visual:'✅', caption:'Bertahan', description:'Hubungi pemadam dan tunggu.',
+                            navIcon: 'fa-solid fa-check-circle',
+                            options:[
+                                { label:'Lanjut', icon:'✅', desc:'Cek luka bakar.' }
+                            ]
+                        }
                     ],
                     sesudah: ['Jangan kembali ke dalam bangunan sebelum dinyatakan aman oleh pemadam kebakaran.','Segera cari pertolongan medis jika ada yang mengalami luka bakar atau sesak napas.','Hubungi nomor darurat 113 untuk memastikan api telah padam sepenuhnya.']
                 }
             },
             getSteps()          { return this.steps[this.bencana]?.[this.fase] ?? []; },
-            currentQuestion()   { return this.getSteps()[this.currentStep]?.question ?? ''; },
-            currentDescription(){ return this.getSteps()[this.currentStep]?.description ?? ''; },
-            nextStep() { if (this.currentStep < this.getSteps().length - 1) this.currentStep++; },
-            prevStep() { if (this.currentStep > 0) this.currentStep--; }
+            currentQuestion()   { return this.getSteps()[this.currentStep] || {}; },
+            currentDescription(){ return this.getSteps()[this.currentStep]?.description || ''; },
+            nextStep() { if (this.currentStep < this.getSteps().length - 1) { this.currentStep++; this.selectedChoice = null; } },
+            prevStep() { if (this.currentStep > 0) { this.currentStep--; this.selectedChoice = null; } },
+            handleSwipe() {
+                if (this.touchEndX < this.touchStartX - 50) this.nextStep();
+                if (this.touchEndX > this.touchStartX + 50) this.prevStep();
+            }
         }
     }
 
@@ -947,6 +1194,8 @@
         item: '',
 
         currentStep: 1,
+        touchStartX: 0, 
+        touchEndX: 0,
 
         steps: [],
 
@@ -1030,6 +1279,11 @@
             this.updateContent();
         },
 
+        handleSwipe() {
+            if (this.touchEndX < this.touchStartX - 50) this.nextStep();
+            if (this.touchEndX > this.touchStartX + 50) this.prevStep();
+        },
+
         switchToolIcon() {
 
             if(this.toolIcons.length <= 1) return;
@@ -1058,7 +1312,17 @@
     function craftingModal() {
     return {
         open: false, item: '', icon: '', currentView: 'selection', currentStep: 1, materials: [],
+        touchStartX: 0, touchEndX: 0,
         
+        init() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('openTutorial') === 'filter-air') {
+                this.$nextTick(() => {
+                    this.openModal({item: 'Filter Air'});
+                });
+            }
+        },
+
         craftingData: {
 
             'Filter Air': {
@@ -1136,6 +1400,19 @@
             let next = m.options[(curIdx + 1) % m.options.length];
             m.name = next.n; 
             m.icon = next.i;
+        },
+
+        nextStep() { 
+            if (this.currentStep < Object.keys(this.craftingData[this.item].instructions).length) this.currentStep++; 
+        },
+
+        prevStep() { 
+            if (this.currentStep > 1) this.currentStep--; 
+        },
+
+        handleSwipe() {
+            if (this.touchEndX < this.touchStartX - 50) this.nextStep();
+            if (this.touchEndX > this.touchStartX + 50) this.prevStep();
         },
 
         closeModal() { this.open = false; document.body.classList.remove('modal-open'); }
