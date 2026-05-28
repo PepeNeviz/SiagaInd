@@ -89,33 +89,7 @@
         backdrop-filter:blur(12px);
     }
 
-    .modal-overlay {
-        position: fixed !important;
-        inset: 0 !important;
-        background-color: rgba(0, 0, 0, 0.6) !important;
-        backdrop-filter: blur(10px) !important;
-        z-index: 50 !important;
-        padding: 20px !important;
-        display: flex;            /* !important dihapus */
-        align-items: center;      /* !important dihapus */
-        justify-content: center;  /* !important dihapus */
-    }
 
-    .modal-box {
-        position: relative;
-        z-index: 51;
-        width: 100% !important;
-        max-width: 860px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        background: var(--c-light);
-        border-radius: 32px;
-        overflow: hidden;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        transform: none !important;
-        margin: 0 auto !important;
-        touch-action: pan-y;
-    }
 
     .question-container{
         display:flex;
@@ -169,29 +143,9 @@
         }
     }
 
-    /* Mobile responsive */
-    @media (max-width: 768px) {
-        .modal-box {
-            max-width: 100% !important;
-            border-radius: 20px;
-            margin: 0 10px !important;
-        }
 
-        .modal-box > .grid {
-            grid-template-columns: 1fr !important;
-        }
 
-        .modal-box .p-8 {
-            padding: 16px !important;
-        }
-    }
 
-    .modal-backdrop {
-        position: absolute;
-        inset: 0;
-        background: transparent;
-        cursor: pointer;
-    }
 
     .popup-panel{
         background: var(--c-light);
@@ -301,7 +255,7 @@
     x-data="saatPage()"
 
     {{-- TUTORIAL --}}
-    <section>
+    <section class="pt-28 md:pt-32 pb-24">
 
         <div class="max-w-6xl mx-auto px-5">
 
@@ -392,13 +346,14 @@
             x-transition:leave="transition ease-in duration-150"
             x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
-            class="modal-overlay"
+            class="fixed inset-0 z-[9000] flex items-center justify-center p-4"
         >
-            <div class="modal-backdrop" @click="popup = false"></div>
+            <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="popup = false"></div>
 
             <div
                 @click.stop
-                class="modal-box w-full max-w-4xl bg-white rounded-[24px] md:rounded-[32px] overflow-hidden flex flex-col relative"
+                class="w-full max-w-4xl bg-white rounded-[24px] md:rounded-[32px] overflow-hidden flex flex-col relative z-10 max-h-[90vh]"
+                style="background: var(--c-light); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);"
             >
 
                 {{-- 1. HEADER --}}
@@ -572,13 +527,14 @@
             x-transition:leave="transition ease-in duration-150"
             x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
-            class="modal-overlay"
+            class="fixed inset-0 z-[9000] flex items-center justify-center p-4"
         >
-            <div class="modal-backdrop" @click="caregiverPopup = false"></div>
+            <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="caregiverPopup = false"></div>
 
             <div
                 @click.stop
-                class="modal-box"
+                class="w-full max-w-4xl bg-white rounded-[24px] md:rounded-[32px] flex flex-col relative z-10 max-h-[90vh] overflow-y-auto"
+                style="background: var(--c-light); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);"
             >
 
                 {{-- Padding diubah agar lebih ramah untuk HP (p-6) dan tetap lega di Desktop (md:p-10) --}}

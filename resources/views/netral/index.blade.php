@@ -179,11 +179,11 @@
             @php
             $bencana = [
                 ['nama'=>'Gempa Bumi','icon'=>'🌍','ada'=>true],
-                ['nama'=>'Tsunami','icon'=>'🌊','ada'=>false],
-                ['nama'=>'Banjir','icon'=>'💧','ada'=>false],
+                ['nama'=>'Tsunami','icon'=>'🌊','ada'=>true],
+                ['nama'=>'Banjir','icon'=>'💧','ada'=>true],
                 ['nama'=>'Gunung Meletus','icon'=>'🌋','ada'=>false],
                 ['nama'=>'Tanah Longsor','icon'=>'⛰️','ada'=>false],
-                ['nama'=>'Kebakaran','icon'=>'🔥','ada'=>false],
+                ['nama'=>'Kebakaran','icon'=>'🔥','ada'=>true],
                 ['nama'=>'Angin Puting','icon'=>'🌪️','ada'=>false],
                 ['nama'=>'Kekeringan','icon'=>'☀️','ada'=>false],
             ];
@@ -756,6 +756,36 @@
                         { question: 'Apa yang harus dilakukan setelah guncangan berhenti?', description: 'Keluar menuju area terbuka dengan tenang, hindari bangunan dan kabel listrik.' }
                     ],
                     sesudah: ['Periksa kondisi diri dan keluarga.','Waspada gempa susulan.','Ikuti informasi resmi dari BMKG dan BNPB.']
+                },
+                'Tsunami': {
+                    ambang: ['Kenali tanda-tanda peringatan dini seperti gempa kuat atau air laut surut drastis.','Pahami peta rawan tsunami dan jalur evakuasi di daerahmu.','Siapkan tas siaga bencana untuk dibawa kapan saja.'],
+                    sebelum: ['Kenali tanda-tanda peringatan dini seperti gempa kuat atau air laut surut drastis.','Pahami peta rawan tsunami dan jalur evakuasi di daerahmu.','Siapkan tas siaga bencana untuk dibawa kapan saja.'],
+                    saat: [
+                        { question: 'Apa yang harus dilakukan jika mendengar sirine atau melihat air laut surut drastis?', description: 'Segera lari menjauhi pantai menuju daerah tinggi (minimal 10 meter dpl) secepat mungkin.' },
+                        { question: 'Bagaimana cara evakuasi yang benar?', description: 'Evakuasi dengan berjalan kaki bila memungkinkan untuk menghindari kemacetan parah.' },
+                        { question: 'Kapan boleh kembali ke rumah?', description: 'Jangan pernah kembali ke pantai hingga ada pernyataan aman resmi dari BMKG.' }
+                    ],
+                    sesudah: ['Tetap berada di daerah aman dan jauhi pesisir.','Hindari bangunan yang retak atau rusak.','Tunggu informasi resmi pemerintah sebelum kembali.']
+                },
+                'Banjir': {
+                    ambang: ['Perhatikan informasi cuaca, tinggi muka air, dan peringatan dini hujan lebat.','Amankan dokumen penting dan barang berharga di tempat yang lebih tinggi.','Pastikan saluran air di sekitar tempat tinggal tidak tersumbat.'],
+                    sebelum: ['Perhatikan informasi cuaca, tinggi muka air, dan peringatan dini hujan lebat.','Amankan dokumen penting dan barang berharga di tempat yang lebih tinggi.','Pastikan saluran air di sekitar tempat tinggal tidak tersumbat.'],
+                    saat: [
+                        { question: 'Apa yang harus dilakukan jika air mulai menggenang masuk ke rumah?', description: 'Matikan jaringan listrik dan gas utama untuk menghindari risiko tersengat arus atau ledakan.' },
+                        { question: 'Bagaimana cara mengevakuasi diri dengan aman?', description: 'Bergerak ke dataran yang lebih tinggi. Gunakan tongkat untuk mengecek kedalaman lubang jalan.' },
+                        { question: 'Bolehkah menerjang arus air?', description: 'Jangan berjalan menerjang arus banjir. Air setinggi lutut sudah cukup kuat untuk menyeret orang dewasa.' }
+                    ],
+                    sesudah: ['Bersihkan rumah dengan disinfektan untuk mencegah penyebaran kuman penyakit.','Jangan langsung menyalakan listrik sebelum dipastikan kering dan aman.','Hindari air genangan yang bisa menyebabkan infeksi kulit.']
+                },
+                'Kebakaran': {
+                    ambang: ['Sediakan Alat Pemadam Api Ringan (APAR) dan pelajari cara penggunaannya.','Pastikan tidak ada instalasi listrik yang kelebihan beban atau rusak.','Buat jalur evakuasi dan latih seluruh anggota keluarga.'],
+                    sebelum: ['Sediakan Alat Pemadam Api Ringan (APAR) dan pelajari cara penggunaannya.','Pastikan tidak ada instalasi listrik yang kelebihan beban atau rusak.','Buat jalur evakuasi dan latih seluruh anggota keluarga.'],
+                    saat: [
+                        { question: 'Apa yang harus dilakukan saat melihat api mulai membesar?', description: 'Tetap tenang, segera keluar lewat rute darurat tercepat, dan tekan tombol alarm kebakaran jika ada.' },
+                        { question: 'Bagaimana cara bergerak di ruangan yang penuh asap tebal?', description: 'Merangkak di bawah asap karena udara bersih ada di bawah, tutup mulut & hidung dengan kain basah.' },
+                        { question: 'Apa tindakan jika pakaian kita terbakar?', description: 'Berhenti berlari, rebahkan diri ke lantai, lindungi wajah, dan bergulinglah untuk memadamkan api (Stop, Drop, Roll).' }
+                    ],
+                    sesudah: ['Jangan kembali ke dalam bangunan sebelum dinyatakan aman oleh pemadam kebakaran.','Segera cari pertolongan medis jika ada yang mengalami luka bakar atau sesak napas.','Hubungi nomor darurat 113 untuk memastikan api telah padam sepenuhnya.']
                 }
             },
             getSteps()          { return this.steps[this.bencana]?.[this.fase] ?? []; },
